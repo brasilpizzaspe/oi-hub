@@ -2,24 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowRight, Check, Flame, Minus, Plus, ShoppingBag, Truck, X } from "lucide-react";
 
-type Product={id:string;name:string;category:string;description:string;price:number|null;active:boolean;image:string};
-const seed:Product[]=[
-{id:"mussarela",name:"Mussarela",category:"Salgadas",description:"Clássica, cremosa e cheia de sabor.",price:null,active:true,image:"https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=900&q=85"},
-{id:"calabresa",name:"Calabresa",category:"Salgadas",description:"Uma das favoritas da casa.",price:null,active:true,image:"https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=900&q=85"},
-{id:"frango-requeijao",name:"Frango com requeijão",category:"Salgadas",description:"Combinação cremosa para matar a fome.",price:null,active:true,image:"https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&fit=crop&w=900&q=85"},
-{id:"portuguesa",name:"Portuguesa",category:"Salgadas",description:"Sabor tradicional para compartilhar.",price:null,active:true,image:"https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=900&q=85"},
-{id:"marguerita",name:"Marguerita",category:"Salgadas",description:"Leve, aromática e irresistível.",price:null,active:true,image:"https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=900&q=85"},
-{id:"bacon",name:"Bacon",category:"Salgadas",description:"Para quem gosta de sabor marcante.",price:null,active:true,image:"https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=85"},
-{id:"chocolate",name:"Chocolate com granulado",category:"Doces",description:"Um final doce para a sua noite.",price:null,active:true,image:"https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=900&q=85"},
-{id:"romeu-julieta",name:"Romeu e Julieta",category:"Doces",description:"A combinação clássica de queijo e goiabada.",price:null,active:true,image:"https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=900&q=85"},
-{id:"coca-1l",name:"Coca-Cola 1 litro",category:"Bebidas",description:"Refrigerante para acompanhar.",price:null,active:true,image:"https://images.unsplash.com/photo-1554866585-cd94860890b7?auto=format&fit=crop&w=900&q=85"},
-{id:"antarctica-1l",name:"Antarctica 1 litro",category:"Bebidas",description:"Refrigerante para acompanhar.",price:null,active:true,image:"https://images.unsplash.com/photo-1629203851122-3726ecdf080e?auto=format&fit=crop&w=900&q=85"}
-];
+import { initialProducts, type Product } from "../lib/catalog";
 const money=(n:number)=>n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
-function loadProducts(){try{const s=localStorage.getItem("bp-products");return s?JSON.parse(s) as Product[]:seed}catch{return seed}}
+function loadProducts(){try{const s=localStorage.getItem("bp-products");return s?JSON.parse(s) as Product[]:initialProducts}catch{return initialProducts}}
 export const Route=createFileRoute("/")({component:Storefront,head:()=>({meta:[{title:"Brasil Pizzas | O sabor que aproxima"},{name:"description",content:"Escolha sua pizza favorita na Brasil Pizzas."}]})});
 function Storefront(){
-const [products,setProducts]=useState<Product[]>(seed),[category,setCategory]=useState("Todas"),[cart,setCart]=useState<{id:string;qty:number}[]>([]),[open,setOpen]=useState(false),[checkout,setCheckout]=useState(false),[form,setForm]=useState({name:"",phone:"",street:"",number:"",neighborhood:"",reference:"",payment:"Pix",notes:""}),[sent,setSent]=useState(false);
+const [products,setProducts]=useState<Product[]>(initialProducts),[category,setCategory]=useState("Todas"),[cart,setCart]=useState<{id:string;qty:number}[]>([]),[open,setOpen]=useState(false),[checkout,setCheckout]=useState(false),[form,setForm]=useState({name:"",phone:"",street:"",number:"",neighborhood:"",reference:"",payment:"Pix",notes:""}),[sent,setSent]=useState(false);
 useEffect(()=>{setProducts(loadProducts());const f=()=>setProducts(loadProducts());window.addEventListener("storage",f);return()=>window.removeEventListener("storage",f)},[]);
 const visible=products.filter(p=>p.active&&(category==="Todas"||p.category===category));
 const lines=cart.map(x=>({...x,product:products.find(p=>p.id===x.id)})).filter(x=>x.product);
