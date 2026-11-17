@@ -43,3 +43,15 @@ export async function fetchStoreProducts(): Promise<Product[]> {
     return initialProducts;
   }
 }
+
+export type StoreImages = { hero: string | null; about: string | null };
+export async function fetchStoreImages(): Promise<StoreImages> {
+  const fallback: StoreImages = { hero: null, about: null };
+  if (!SUPABASE_URL || !SUPABASE_KEY) return fallback;
+  try {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/site_images?select=slot,image_url`, { headers: { apikey: SUPABASE_KEY } });
+    if (!response.ok) return fallback;
+    const rows = await response.json() as Array<{ slot: string; image_url: string | null }>;
+    return { hero: rows.find(row => row.slot === "hero")?.image_url || null, about: rows.find(row => row.slot === "about")?.image_url || null };
+  } catch { return fallback; }
+}
