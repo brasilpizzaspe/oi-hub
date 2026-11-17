@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ArrowLeft, RefreshCw, Search, Clock3, PackageCheck } from "lucide-react";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
@@ -33,7 +33,7 @@ function TrackOrder() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
-  async function lookup(value = token) {
+  const lookup = useCallback(async (value = token) => {
     const cleanToken = value.trim();
     if (!/^[a-f0-9]{64}$/i.test(cleanToken)) {
       setError("Digite o código privado de 64 caracteres que recebeu ao registrar o pedido.");
@@ -61,7 +61,7 @@ function TrackOrder() {
     } finally {
       setBusy(false);
     }
-  }
+  }, [token]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -70,13 +70,13 @@ function TrackOrder() {
       setToken(initial);
       void lookup(initial);
     }
-  }, []);
+  }, [lookup]);
 
   useEffect(() => {
     if (!tracking) return;
     const timer = window.setInterval(() => { void lookup(token); }, 20000);
     return () => window.clearInterval(timer);
-  }, [tracking, token]);
+  }, [tracking, token, lookup]);
 
   return (
     <main className="min-h-screen bg-[#f5f2e9] px-4 py-10 text-[#174d38]">
