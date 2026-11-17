@@ -2,13 +2,13 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowRight, Check, Flame, Minus, Plus, ShoppingBag, Truck, X } from "lucide-react";
 
-import { initialProducts, type Product } from "../lib/catalog";
+import { fetchStoreProducts, initialProducts, type Product } from "../lib/catalog";
 const money=(n:number)=>n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
-function loadProducts(){try{const s=localStorage.getItem("bp-products");return s?JSON.parse(s) as Product[]:initialProducts}catch{return initialProducts}}
+
 export const Route=createFileRoute("/")({component:Storefront,head:()=>({meta:[{title:"Brasil Pizzas | O sabor que aproxima"},{name:"description",content:"Escolha sua pizza favorita na Brasil Pizzas."}]})});
 function Storefront(){
 const [products,setProducts]=useState<Product[]>(initialProducts),[category,setCategory]=useState("Todas"),[cart,setCart]=useState<{id:string;qty:number}[]>([]),[open,setOpen]=useState(false),[checkout,setCheckout]=useState(false),[form,setForm]=useState({name:"",phone:"",street:"",number:"",neighborhood:"",reference:"",payment:"Pix",notes:""}),[sent,setSent]=useState(false);
-useEffect(()=>{setProducts(loadProducts());const f=()=>setProducts(loadProducts());window.addEventListener("storage",f);return()=>window.removeEventListener("storage",f)},[]);
+useEffect(()=>{let active=true;void fetchStoreProducts().then(items=>{if(active)setProducts(items)});return()=>{active=false}},[]);
 const visible=products.filter(p=>p.active&&(category==="Todas"||p.category===category));
 const lines=cart.map(x=>({...x,product:products.find(p=>p.id===x.id)})).filter(x=>x.product);
 const total=lines.reduce((s,x)=>s+(x.product?.price||0)*x.qty,0),count=cart.reduce((s,x)=>s+x.qty,0);
