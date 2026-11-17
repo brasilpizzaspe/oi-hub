@@ -1,12 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect,useState } from "react";
 import { ArrowLeft,Eye,EyeOff,Save } from "lucide-react";
-type Product={id:string;name:string;category:string;description:string;price:number|null;active:boolean;image:string};
-const initial:Product[]=([
-["mussarela","Mussarela","Salgadas"],["calabresa","Calabresa","Salgadas"],["frango-requeijao","Frango com requeijão","Salgadas"],["portuguesa","Portuguesa","Salgadas"],["marguerita","Marguerita","Salgadas"],["bacon","Bacon","Salgadas"],["chocolate","Chocolate com granulado","Doces"],["romeu-julieta","Romeu e Julieta","Doces"],["coca-1l","Coca-Cola 1 litro","Bebidas"],["antarctica-1l","Antarctica 1 litro","Bebidas"]
-] as [string,string,string][]).map(x=>({id:x[0],name:x[1],category:x[2],description:"",price:null,active:true,image:""}));
+import { initialProducts, type Product } from "../lib/catalog";
 export const Route=createFileRoute("/admin")({component:Admin,head:()=>({meta:[{title:"Administração | Brasil Pizzas"},{name:"robots",content:"noindex,nofollow"}]})});
-function Admin(){const [products,setProducts]=useState<Product[]>(initial),[saved,setSaved]=useState(false);
+function Admin(){const [products,setProducts]=useState<Product[]>(initialProducts),[saved,setSaved]=useState(false);
 useEffect(()=>{try{const s=localStorage.getItem("bp-products");if(s)setProducts(JSON.parse(s) as Product[])}catch{}},[]);
 const update=(id:string,patch:Partial<Product>)=>{setProducts(old=>old.map(p=>p.id===id?{...p,...patch}:p));setSaved(false)};
 const save=()=>{localStorage.setItem("bp-products",JSON.stringify(products));setSaved(true);window.dispatchEvent(new Event("storage"))};
