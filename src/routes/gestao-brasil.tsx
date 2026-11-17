@@ -32,10 +32,12 @@ function PrivateManagement() {
   const [password, setPassword] = useState("");
   const [session, setSession] = useState<Session | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
-  const [orders, setOrders] = useState<Order[]>([]);\n  const [siteImages, setSiteImages] = useState<SiteImage[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [siteImages, setSiteImages] = useState<SiteImage[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");\n  const [uploadingSlot, setUploadingSlot] = useState<string | null>(null);
+  const [notice, setNotice] = useState("");
+  const [uploadingSlot, setUploadingSlot] = useState<string | null>(null);
   const [tab, setTab] = useState<"orders" | "products" | "images">("orders");
 
   const apiHeaders = useMemo(() => session ? { apikey: SUPABASE_KEY || "", Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" } : null, [session]);
@@ -46,10 +48,12 @@ function PrivateManagement() {
     const [productResponse, orderResponse, imageResponse] = await Promise.all([
       fetch(`${SUPABASE_URL}/rest/v1/products?select=id,name,category,description,price,active,image_url&order=sort_order.asc`, { headers }),
       fetch(`${SUPABASE_URL}/rest/v1/orders?select=*,order_items(*)&order=created_at.desc&limit=100`, { headers }),
+      fetch(`${SUPABASE_URL}/rest/v1/site_images?select=slot,title,description,recommended_ratio,recommended_dimensions,image_url`, { headers }),
     ]);
-    if (!productResponse.ok || !orderResponse.ok) throw new Error("Não foi possível carregar os dados da loja. Verifique sua autorização.");
+    if (!productResponse.ok || !orderResponse.ok || !imageResponse.ok) throw new Error("Não foi possível carregar os dados da loja. Verifique sua autorização.");
     setProducts(await productResponse.json());
-    setOrders(await orderResponse.json());\n    setSiteImages(await imageResponse.json());
+    setOrders(await orderResponse.json());
+    setSiteImages(await imageResponse.json());
   }
 
   async function signIn(event: FormEvent<HTMLFormElement>) {
@@ -134,7 +138,8 @@ function PrivateManagement() {
     } catch (e) { setError(e instanceof Error ? e.message : "Falha ao enviar imagem."); }
     finally { setUploadingSlot(null); }
   }
-\n  async function updateOrder(order: Order, status: string) {
+
+  async function updateOrder(order: Order, status: string) {
     if (!session || !apiHeaders || !SUPABASE_URL) return;
     setBusy(true); setError(""); setNotice("");
     try {
