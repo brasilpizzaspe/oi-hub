@@ -43,7 +43,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/acompanhar': typeof AcompanharRoute
-  __root__: typeof rootRouteImport
   '/gestao-brasil': typeof GestaoBrasilRoute
   '/': typeof IndexRoute
 }
