@@ -8,6 +8,9 @@ export type Product = {
   image: string;
 };
 
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
+
 export const initialProducts: Product[] = [
   { id: "mussarela", name: "Mussarela", category: "Salgadas", description: "Clássica, cremosa e cheia de sabor.", price: null, active: true, image: "https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=900&q=85" },
   { id: "calabresa", name: "Calabresa", category: "Salgadas", description: "Uma das favoritas da casa.", price: null, active: true, image: "https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=900&q=85" },
@@ -20,3 +23,23 @@ export const initialProducts: Product[] = [
   { id: "coca-1l", name: "Coca-Cola 1 litro", category: "Bebidas", description: "Refrigerante para acompanhar.", price: null, active: true, image: "https://images.unsplash.com/photo-1554866585-cd94860890b7?auto=format&fit=crop&w=900&q=85" },
   { id: "antarctica-1l", name: "Antarctica 1 litro", category: "Bebidas", description: "Refrigerante para acompanhar.", price: null, active: true, image: "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?auto=format&fit=crop&w=900&q=85" },
 ];
+
+export async function fetchStoreProducts(): Promise<Product[]> {
+  if (!SUPABASE_URL || !SUPABASE_KEY) return initialProducts;
+  try {
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/products?select=id,name,category,description,price,active,image_url&order=sort_order.asc`,
+      { headers: { apikey: SUPABASE_KEY } },
+    );
+    if (!response.ok) return initialProducts;
+    const rows = (await response.json()) as Array<Omit<Product, "image"> & { image_url: string | null }>;
+    if (!Array.isArray(rows) || rows.length === 0) return initialProducts;
+    return rows.map(({ image_url, ...product }) => ({
+      ...product,
+      price: product.price === null ? null : Number(product.price),
+      image: image_url || initialProducts.find((item) => item.id === product.id)?.image || "",
+    }));
+  } catch {
+    return initialProducts;
+  }
+}
