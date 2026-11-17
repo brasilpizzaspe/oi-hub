@@ -9,6 +9,7 @@ type Product = { id: string; name: string; category: string; description: string
 type OrderItem = { id: string; product_name: string; quantity: number; unit_price: number; line_total: number };
 type Order = { id: string; order_number: number; customer_name: string; customer_phone: string; street: string; street_number: string; neighborhood: string; reference: string | null; notes: string | null; subtotal: number; delivery_fee: number | null; total: number; status: string; payment_status: string; payment_method: string; created_at: string; estimated_delivery_at: string | null; order_items: OrderItem[] };
 type Session = { access_token: string; user: { id: string; email: string } };
+type SiteImage = { slot: string; title: string; description: string; recommended_ratio: string; recommended_dimensions: string; image_url: string | null };
 
 const money = (value: number) => value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 const toLocalDateTime = (value: string | null) => { if (!value) return ""; const date = new Date(value); return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16); };
@@ -31,24 +32,24 @@ function PrivateManagement() {
   const [password, setPassword] = useState("");
   const [session, setSession] = useState<Session | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);\n  const [siteImages, setSiteImages] = useState<SiteImage[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
-  const [tab, setTab] = useState<"orders" | "products">("orders");
+  const [notice, setNotice] = useState("");\n  const [uploadingSlot, setUploadingSlot] = useState<string | null>(null);
+  const [tab, setTab] = useState<"orders" | "products" | "images">("orders");
 
   const apiHeaders = useMemo(() => session ? { apikey: SUPABASE_KEY || "", Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" } : null, [session]);
 
   async function loadDashboard(current: Session) {
     if (!SUPABASE_URL || !SUPABASE_KEY) throw new Error("A conexão segura ainda não foi configurada no ambiente do site.");
     const headers = { apikey: SUPABASE_KEY, Authorization: `Bearer ${current.access_token}` };
-    const [productResponse, orderResponse] = await Promise.all([
+    const [productResponse, orderResponse, imageResponse] = await Promise.all([
       fetch(`${SUPABASE_URL}/rest/v1/products?select=id,name,category,description,price,active,image_url&order=sort_order.asc`, { headers }),
       fetch(`${SUPABASE_URL}/rest/v1/orders?select=*,order_items(*)&order=created_at.desc&limit=100`, { headers }),
     ]);
     if (!productResponse.ok || !orderResponse.ok) throw new Error("Não foi possível carregar os dados da loja. Verifique sua autorização.");
     setProducts(await productResponse.json());
-    setOrders(await orderResponse.json());
+    setOrders(await orderResponse.json());\n    setSiteImages(await imageResponse.json());
   }
 
   async function signIn(event: FormEvent<HTMLFormElement>) {
@@ -96,7 +97,44 @@ function PrivateManagement() {
     finally { setBusy(false); }
   }
 
-  async function updateOrder(order: Order, status: string) {
+
+  async function uploadImage(file: File, slot: string, product?: Product) {
+    if (!session || !SUPABASE_URL || !SUPABASE_KEY) return;
+    const allowed = ["image/jpeg", "image/png", "image/webp", "image/avif"];
+    if (!allowed.includes(file.type)) { setError("Use uma imagem JPG, PNG, WebP ou AVIF."); return; }
+    if (file.size > 12 * 1024 * 1024) { setError("A imagem deve ter no máximo 12 MB."); return; }
+    setUploadingSlot(slot); setError(""); setNotice("");
+    try {
+      const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+      const path = `${slot}/${crypto.randomUUID()}.${ext}`;
+      const upload = await fetch(`${SUPABASE_URL}/storage/v1/object/store-images/${path}`, {
+        method: "POST",
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${session.access_token}`, "Content-Type": file.type, "x-upsert": "false" },
+        body: file,
+      });
+      if (!upload.ok) throw new Error("Não foi possível enviar a imagem. Confira sua conexão e tente novamente.");
+      const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/store-images/${path}`;
+      if (product) {
+        const saved = await fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${encodeURIComponent(product.id)}`, {
+          method: "PATCH", headers: { ...apiHeaders, Prefer: "return=minimal" },
+          body: JSON.stringify({ image_url: publicUrl, updated_at: new Date().toISOString() }),
+        });
+        if (!saved.ok) throw new Error("Imagem enviada, mas não foi possível vinculá-la ao produto.");
+        setProducts(old => old.map(item => item.id === product.id ? { ...item, image_url: publicUrl } : item));
+        setNotice(`Imagem de ${product.name} atualizada no site.`);
+      } else {
+        const saved = await fetch(`${SUPABASE_URL}/rest/v1/site_images?slot=eq.${encodeURIComponent(slot)}`, {
+          method: "PATCH", headers: { ...apiHeaders, Prefer: "return=minimal" },
+          body: JSON.stringify({ image_url: publicUrl, updated_at: new Date().toISOString() }),
+        });
+        if (!saved.ok) throw new Error("Imagem enviada, mas não foi possível vinculá-la ao banner.");
+        setSiteImages(old => old.map(item => item.slot === slot ? { ...item, image_url: publicUrl } : item));
+        setNotice("Imagem do banner atualizada no site.");
+      }
+    } catch (e) { setError(e instanceof Error ? e.message : "Falha ao enviar imagem."); }
+    finally { setUploadingSlot(null); }
+  }
+\n  async function updateOrder(order: Order, status: string) {
     if (!session || !apiHeaders || !SUPABASE_URL) return;
     setBusy(true); setError(""); setNotice("");
     try {
@@ -168,9 +206,9 @@ function PrivateManagement() {
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3"><div><p className="text-sm text-[#758177]">Sessão administrativa</p><p className="font-medium">{session.user.email}</p></div><span className="rounded-full bg-[#e4eee6] px-3 py-1 text-xs font-semibold text-[#174d38]">Acesso verificado</span></div>
         {error && <p role="alert" className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
         {notice && <p role="status" className="mb-4 rounded-lg bg-[#e4eee6] p-3 text-sm text-[#174d38]">{notice}</p>}
-        <div className="mb-5 flex gap-2 border-b border-[#e1dac8]"><button onClick={() => setTab("orders")} className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold ${tab === "orders" ? "border-[#174d38]" : "border-transparent text-[#7d887f]"}`}><ShoppingBag size={16}/> Pedidos ({orders.length})</button><button onClick={() => setTab("products")} className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold ${tab === "products" ? "border-[#174d38]" : "border-transparent text-[#7d887f]"}`}><Package size={16}/> Cardápio ({products.length})</button></div>
+        <div className="mb-5 flex gap-2 border-b border-[#e1dac8]"><button onClick={() => setTab("orders")} className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold ${tab === "orders" ? "border-[#174d38]" : "border-transparent text-[#7d887f]"}`}><ShoppingBag size={16}/> Pedidos ({orders.length})</button><button onClick={() => setTab("products")} className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold ${tab === "products" ? "border-[#174d38]" : "border-transparent text-[#7d887f]"}`}><Package size={16}/> Cardápio ({products.length})</button><button onClick={() => setTab("images")} className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold ${tab === "images" ? "border-[#174d38]" : "border-transparent text-[#7d887f]"}`}>Imagens do site</button></div>
         {tab === "orders" ? <div className="space-y-4">{orders.length === 0 ? <div className="rounded-xl border border-[#e4ddca] bg-white p-8 text-center text-sm text-[#758177]">Nenhum pedido registrado ainda.</div> : orders.map(order => <article key={order.id} className="rounded-xl border border-[#e4ddca] bg-white p-5 shadow-sm"><div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-xs font-semibold tracking-wider text-[#9b7930]">PEDIDO #{order.order_number}</p><h2 className="mt-1 text-lg font-semibold">{order.customer_name}</h2><p className="text-sm text-[#758177]">{order.customer_phone} · {new Date(order.created_at).toLocaleString("pt-BR")}</p></div><select aria-label={`Status do pedido ${order.order_number}`} value={order.status} disabled={busy} onChange={e => void updateOrder(order, e.target.value)} className="rounded-lg border border-[#d9dfd8] bg-white px-3 py-2 text-sm">{statuses.map(([value,label]) => <option key={value} value={value}>{label}</option>)}</select></div><div className="mt-4 grid gap-4 border-t border-[#edf0eb] pt-4 md:grid-cols-2"><div><p className="text-xs font-semibold uppercase tracking-wide text-[#879188]">Entrega</p><p className="mt-1 text-sm">{order.street}, {order.street_number} · {order.neighborhood}</p>{order.reference && <p className="text-sm text-[#758177]">Ref.: {order.reference}</p>}<label className="mt-3 block text-xs font-medium text-[#758177]">Previsão de entrega<input type="datetime-local" value={toLocalDateTime(order.estimated_delivery_at)} onChange={e => setOrders(old => old.map(item => item.id === order.id ? { ...item, estimated_delivery_at: e.target.value ? new Date(e.target.value).toISOString() : null } : item))} className="mt-1 w-full rounded-lg border border-[#d9dfd8] px-3 py-2 text-sm text-[#174d38]"/></label><button disabled={busy} onClick={() => void saveEstimate(order)} className="mt-2 rounded-lg border border-[#d9dfd8] px-3 py-2 text-xs font-semibold disabled:opacity-60">Salvar previsão</button></div><div><p className="text-xs font-semibold uppercase tracking-wide text-[#879188]">Pagamento</p><p className="mt-1 text-sm">{order.payment_method} · {order.payment_status === "approved" ? "Aprovado" : order.payment_status === "pending" ? "Pendente" : order.payment_status}</p><p className="mt-1 font-semibold">{money(Number(order.total))}</p></div></div><div className="mt-3 border-t border-[#edf0eb] pt-3 text-sm">{(order.order_items || []).map(item => <p key={item.id}>{item.quantity}x {item.product_name} — {money(Number(item.line_total))}</p>)}{order.notes && <p className="mt-2 text-[#758177]">Obs.: {order.notes}</p>}</div></article>)}</div> :
-          <div className="grid gap-3 md:grid-cols-2">{products.map(product => <article key={product.id} className="rounded-xl border border-[#e4ddca] bg-white p-5"><div className="flex items-start justify-between gap-3"><div><p className="text-xs uppercase tracking-wide text-[#9b7930]">{product.category}</p><h2 className="mt-1 font-semibold">{product.name}</h2><p className="mt-1 text-xs text-[#879188]">{product.description}</p></div><button aria-label={product.active ? "Ocultar produto" : "Exibir produto"} onClick={() => setProducts(old => old.map(p => p.id === product.id ? { ...p, active: !p.active } : p))} className="rounded-lg border border-[#d9dfd8] p-2">{product.active ? <Eye size={17}/> : <EyeOff size={17}/>}</button></div><label className="mt-4 block text-xs font-medium text-[#758177]">Preço (R$)<input type="number" min="0" step="0.01" value={product.price ?? ""} onChange={e => setProducts(old => old.map(p => p.id === product.id ? { ...p, price: e.target.value === "" ? null : Number(e.target.value) } : p))} className="mt-1 w-full rounded-lg border border-[#d9dfd8] px-3 py-2 text-sm text-[#174d38]"/></label><button disabled={busy} onClick={() => void saveProduct(product)} className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-[#174d38] px-3 py-2 text-sm font-semibold text-white disabled:opacity-60"><Save size={15}/> Salvar produto</button></article>)}</div>}
+          <div className="grid gap-3 md:grid-cols-2">{products.map(product => <article key={product.id} className="rounded-xl border border-[#e4ddca] bg-white p-5"><div className="mb-3 overflow-hidden rounded-lg bg-[#f3f1e9]">{product.image_url ? <img src={product.image_url} alt={product.name} className="h-40 w-full object-cover"/> : <div className="flex h-32 items-center justify-center text-xs text-[#879188]">Sem imagem cadastrada</div>}</div><label className="mb-3 block text-xs font-medium text-[#758177]">Trocar foto do produto<input type="file" accept="image/jpeg,image/png,image/webp,image/avif" disabled={!!uploadingSlot} onChange={e => { const file=e.target.files?.[0]; if(file) void uploadImage(file, `product-${product.id}`, product); e.currentTarget.value=""; }} className="mt-1 block w-full text-xs"/></label><div className="flex items-start justify-between gap-3"><div><p className="text-xs uppercase tracking-wide text-[#9b7930]">{product.category}</p><h2 className="mt-1 font-semibold">{product.name}</h2><p className="mt-1 text-xs text-[#879188]">{product.description}</p></div><button aria-label={product.active ? "Ocultar produto" : "Exibir produto"} onClick={() => setProducts(old => old.map(p => p.id === product.id ? { ...p, active: !p.active } : p))} className="rounded-lg border border-[#d9dfd8] p-2">{product.active ? <Eye size={17}/> : <EyeOff size={17}/>}</button></div><label className="mt-4 block text-xs font-medium text-[#758177]">Preço (R$)<input type="number" min="0" step="0.01" value={product.price ?? ""} onChange={e => setProducts(old => old.map(p => p.id === product.id ? { ...p, price: e.target.value === "" ? null : Number(e.target.value) } : p))} className="mt-1 w-full rounded-lg border border-[#d9dfd8] px-3 py-2 text-sm text-[#174d38]"/></label><button disabled={busy} onClick={() => void saveProduct(product)} className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-[#174d38] px-3 py-2 text-sm font-semibold text-white disabled:opacity-60"><Save size={15}/> Salvar produto</button></article>)}</div>}
       </section>
     </main>
   );
