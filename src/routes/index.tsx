@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowRight, ArrowUpRight, Check, ChevronLeft, ChevronRight, Flame, Minus, Plus, ShoppingBag, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Check, Flame, Minus, Plus, ShoppingBag, X } from "lucide-react";
 
 import { fetchStoreProducts, fetchStoreImages, initialProducts, type Product } from "../lib/catalog";
 const money=(n:number)=>n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
