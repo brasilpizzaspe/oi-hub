@@ -17,7 +17,9 @@ const normalizeText=(value:string)=>value.normalize("NFD").replace(/[\u0300-\u03
 const isDrink=(p:Product)=>normalizeText(p.category).includes("bebid");
 const promotionPicks=products.filter(p=>p.active&&normalizeText(p.category).includes("promoc"));
 const menuPicks=products.filter(p=>p.active&&!isDrink(p)&&!normalizeText(p.category).includes("promoc")).slice(0,8);
-const heroPicks=[...menuPicks,...promotionPicks.filter(p=>!menuPicks.some(item=>item.id===p.id))];\nuseEffect(()=>{const el=heroPicksRef.current;if(el&&el.scrollWidth>el.clientWidth)el.scrollLeft=el.scrollWidth/3},[heroPicks.length]);\nconst keepHeroCarouselLooping=()=>{const el=heroPicksRef.current;if(!el)return;const segment=el.scrollWidth/3;if(el.scrollLeft<segment*.45)el.scrollLeft+=segment;else if(el.scrollLeft>segment*1.55)el.scrollLeft-=segment};
+const heroPicks=[...menuPicks,...promotionPicks.filter(p=>!menuPicks.some(item=>item.id===p.id))];
+useEffect(()=>{const el=heroPicksRef.current;if(el&&el.scrollWidth>el.clientWidth)el.scrollLeft=el.scrollWidth/3},[heroPicks.length]);
+const keepHeroCarouselLooping=()=>{const el=heroPicksRef.current;if(!el)return;const segment=el.scrollWidth/3;if(el.scrollLeft<segment*.45)el.scrollLeft+=segment;else if(el.scrollLeft>segment*1.55)el.scrollLeft-=segment};
 const openPickInMenu=(p:Product)=>{setCategory(p.category);document.getElementById("cardapio")?.scrollIntoView({behavior:"smooth",block:"start"});};
 const visible=products.filter(p=>p.active&&(category==="Todas"||p.category===category));
 const lines=cart.map(x=>({...x,product:products.find(p=>p.id===x.id)})).filter(x=>x.product);
