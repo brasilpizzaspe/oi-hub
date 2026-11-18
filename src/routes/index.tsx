@@ -10,7 +10,7 @@ const SUPABASE_URL = (import.meta.env.VITE_SUPABASE_URL as string | undefined) |
 const SUPABASE_KEY = (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined) || "sb_publishable_JGN8bSFsGCxTOIubmNmHIA_J36i5Mpp";
 function Storefront(){
 const [siteImages,setSiteImages]=useState<{hero:string|null;about:string|null}>({hero:null,about:null}),[products,setProducts]=useState<Product[]>(initialProducts),[category,setCategory]=useState("Todas"),[cart,setCart]=useState<{id:string;qty:number}[]>([]),[open,setOpen]=useState(false),[checkout,setCheckout]=useState(false),[form,setForm]=useState({name:"",phone:"",street:"",number:"",neighborhood:"",reference:"",payment:"Pix",notes:""}),[sent,setSent]=useState(false),[submitting,setSubmitting]=useState(false),[createdOrder,setCreatedOrder]=useState<{order_number:number;tracking_token:string;total:number;status:string}|null>(null),[orderError,setOrderError]=useState("");
-useEffect(()=>{let active=true;void fetchStoreProducts().then(items=>{if(active)setProducts(items)});void fetchStoreImages().then(images=>{if(active)setSiteImages(images)});return()=>{active=false}},[]);
+useEffect(()=>{let active=true;const refreshProducts=()=>void fetchStoreProducts().then(items=>{if(active)setProducts(items)});refreshProducts();void fetchStoreImages().then(images=>{if(active)setSiteImages(images)});const timer=window.setInterval(refreshProducts,30000);return()=>{active=false;window.clearInterval(timer)}},[]);
 const visible=products.filter(p=>p.active&&(category==="Todas"||p.category===category));
 const lines=cart.map(x=>({...x,product:products.find(p=>p.id===x.id)})).filter(x=>x.product);
 const total=lines.reduce((s,x)=>s+(x.product?.price||0)*x.qty,0),count=cart.reduce((s,x)=>s+x.qty,0);
