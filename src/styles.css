@@ -263,3 +263,28 @@ body,.store{background:#fff;color:#173b2c}
 .cart-notice.is-visible{opacity:1;visibility:visible;transform:translate(-50%,0)}
 .cart-panel{width:min(560px,52vw);box-shadow:-24px 0 70px #071c1233}
 @media(max-width:700px){.cart-panel{width:min(92vw,480px);padding:20px}.cart-notice{bottom:calc(22px + env(safe-area-inset-bottom));max-width:calc(100vw - 112px);left:calc((100vw - 90px)/2);transform:translate(-50%,14px)}.cart-notice.is-visible{transform:translate(-50%,0)}}
+
+/* Transições suaves — Hero, destaques e sacola */
+@keyframes cartOverlayIn{from{opacity:0}to{opacity:1}}
+@keyframes cartPanelIn{from{opacity:.72;transform:translate3d(34px,0,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+.overlay{animation:cartOverlayIn .34s cubic-bezier(.22,.7,.25,1) both;backdrop-filter:blur(3px)}
+.cart-panel{animation:cartPanelIn .48s cubic-bezier(.22,.75,.2,1) both;will-change:transform,opacity}
+.hero-picks{scroll-behavior:smooth;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scroll-padding-inline:20px}
+.hero-picks .pick{transition:transform .42s cubic-bezier(.2,.75,.25,1),box-shadow .42s ease,opacity .42s ease}
+.hero-picks .pick-mini{transition:transform .42s cubic-bezier(.2,.75,.25,1),box-shadow .42s ease,filter .42s ease}
+.hero-picks .pick-mini:active{transform:scale(.97)}
+.hero-picks .pick-mini:hover{transform:translateY(-5px);filter:brightness(1.035);box-shadow:0 20px 38px -20px #000b}
+.hero-picks-nav button{transition:transform .28s cubic-bezier(.2,.75,.25,1),background .28s ease,color .28s ease,border-color .28s ease}
+.hero-picks-nav button:active{transform:scale(.92)}
+@media(max-width:760px){
+  .hero-picks{scroll-snap-type:x proximity;scroll-padding-inline:20px;scrollbar-width:none;touch-action:pan-x pan-y}
+  .hero-picks .pick,.hero-picks .pick-mini{scroll-snap-align:center;scroll-snap-stop:normal}
+  .hero-picks .pick-mini:hover{transform:none}
+  .cart-panel{animation-name:cartPanelIn}
+}
+@media(prefers-reduced-motion:reduce){
+  .overlay,.cart-panel{animation:none}
+  .hero-picks{scroll-behavior:auto}
+  .hero-picks .pick,.hero-picks .pick-mini,.hero-picks-nav button{transition:none}
+}
+
