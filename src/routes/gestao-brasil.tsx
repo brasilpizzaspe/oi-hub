@@ -2,8 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Eye, EyeOff, LogOut, Package, RefreshCw, Save, ShieldCheck, ShoppingBag } from "lucide-react";
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
+const SUPABASE_URL = (import.meta.env.VITE_SUPABASE_URL as string | undefined) || "https://scocgrreppdbtqctesio.supabase.co";
+const SUPABASE_KEY = (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined) || "sb_publishable_JGN8bSFsGCxTOIubmNmHIA_J36i5Mpp";
 
 type Product = { id: string; name: string; category: string; description: string; price: number | null; active: boolean; image_url: string | null };
 type OrderItem = { id: string; product_name: string; quantity: number; unit_price: number; line_total: number };
