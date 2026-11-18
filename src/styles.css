@@ -97,3 +97,7 @@ body,.store{background:#fff;color:#173b2c}
 @media(max-width:850px){.hero-cinematic{min-height:560px}.experience-card{min-height:250px}}
 @media(max-width:600px){.hero-cinematic{min-height:590px;padding:76px 22px 64px;justify-content:flex-start}.hero-cinematic h1{font-size:clamp(48px,13vw,66px);margin:16px 0}.hero-cinematic .hero-art:after{background:linear-gradient(90deg,rgba(8,22,16,.82),rgba(8,22,16,.36)),linear-gradient(0deg,rgba(8,22,16,.42),transparent 70%)}.hero-cinematic .hero-image{background-position:58% center}.experience-section{padding:54px 0 20px}.experience-heading h2{font-size:36px}.experience-grid{grid-template-columns:1fr;gap:12px}.experience-card,.experience-card:nth-child(3){grid-column:auto;min-height:230px;padding:22px}.experience-card strong{font-size:34px}}
 @media(prefers-reduced-motion:reduce){.hero-cinematic .hero-image{animation:none}.experience-card{transition:none}}
+
+/* Vídeo do Hero: mantém o mesmo enquadramento cinematográfico da imagem de fallback */
+.hero-cinematic .hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 52%;display:block}
+@media(max-width:600px){.hero-cinematic .hero-video{object-position:58% center}}
