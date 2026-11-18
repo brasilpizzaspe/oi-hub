@@ -397,3 +397,17 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 .drink-suggestion-skip:hover{background:#fbf6e9;transform:translateY(-1px)}
 @media(max-width:600px){.drink-suggestion-backdrop{padding:12px}.drink-suggestion{padding:28px 18px 20px;border-radius:20px;max-height:90vh}.drink-suggestion h2{font-size:25px}.drink-suggestion-card{flex-basis:168px}.drink-suggestion-photo{height:106px}.drink-suggestion-skip{font-size:11px}}
 @media(prefers-reduced-motion:reduce){.drink-suggestion-backdrop,.drink-suggestion{animation:none}.drink-suggestion-close,.drink-suggestion-info>button,.drink-suggestion-skip{transition:none}}
+
+
+/* Ajuste do Hero: vídeo livre e vitrine posicionada abaixo */
+.hero-cinematic{min-height:clamp(800px,110svh,980px)}
+.hero-stage{top:38%;height:min(58%,50vw)}
+.hero-picks{bottom:18px;z-index:3}
+@media(max-width:760px){.hero-picks{margin:18px 0 28px;padding:0 20px 8px;order:4;position:relative;right:auto;bottom:auto;width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden}.hero-stage{margin:0 -2vw 0 0}}
+
+/* Loop bidirecional: conteúdo repetido e reposicionamento invisível */
+.hero-picks{scroll-snap-type:none;scroll-behavior:auto;overscroll-behavior-x:contain;scrollbar-width:none}
+.hero-picks::-webkit-scrollbar{display:none}
+.hero-picks .pick{scroll-snap-align:none;flex:0 0 220px;width:220px}
+@media(max-width:760px){.hero-picks .pick{flex:0 0 230px;width:230px}.hero-picks{scroll-snap-type:none}}
+@media(prefers-reduced-motion:reduce){.hero-picks{scroll-behavior:auto}}
