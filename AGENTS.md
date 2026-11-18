@@ -28,3 +28,7 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+- Hero media is always loaded at runtime from `site_images` (slot `hero`: `video_url` + `image_url` as poster) via `fetchStoreImages`; never hardcode a hero video/image — the admin panel must stay the single source.
+- Hero video renders inside a 16:9 `aspect-ratio` stage with `object-fit: cover` at native resolution — keeps any uploaded source (up to 4K) undistorted.

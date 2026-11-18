@@ -2,8 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 import { ArrowLeft, RefreshCw, Search, Clock3, PackageCheck } from "lucide-react";
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
+const SUPABASE_URL = import.meta.env["VITE_SUPABASE_URL"] as string | undefined;
+const SUPABASE_KEY = import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"] as string | undefined;
 const statusLabels: Record<string, string> = {
   received: "Pedido recebido",
   confirmed: "Pedido confirmado",

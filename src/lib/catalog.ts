@@ -8,8 +8,8 @@ export type Product = {
   image: string;
 };
 
-const SUPABASE_URL = (import.meta.env.VITE_SUPABASE_URL as string | undefined) || "https://scocgrreppdbtqctesio.supabase.co";
-const SUPABASE_KEY = (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined) || "sb_publishable_JGN8bSFsGCxTOIubmNmHIA_J36i5Mpp";
+const SUPABASE_URL = (import.meta.env["VITE_SUPABASE_URL"] as string | undefined) || "https://scocgrreppdbtqctesio.supabase.co";
+const SUPABASE_KEY = (import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"] as string | undefined) || "sb_publishable_JGN8bSFsGCxTOIubmNmHIA_J36i5Mpp";
 
 export const initialProducts: Product[] = [
   { id: "mussarela", name: "Mussarela", category: "Salgadas", description: "Molho de tomate, mussarela e orégano.", price: null, active: true, image: "https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=900&q=85" },

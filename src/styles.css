@@ -64,22 +64,7 @@ body,.store{background:#fff;color:#173b2c}
 }
 
 
-/* Landing page cinematográfica — integrada à paleta oficial verde e dourado */
-.hero-cinematic{position:relative;width:100%;max-width:none;min-height:min(690px,calc(100svh - 122px));margin:0;padding:clamp(76px,10vw,138px) max(calc((100% - 1160px)/2),24px);display:flex;align-items:center;overflow:hidden;background:#10271d}
-.hero-cinematic .hero-copy{position:relative;z-index:2;width:min(650px,100%);color:#fff}
-.hero-cinematic .eyebrow{color:#e6c36c}
-.hero-cinematic h1{font-size:clamp(54px,7vw,88px);color:#fff;max-width:760px;text-shadow:0 3px 24px #0005;font-family:Georgia,serif;font-weight:500;letter-spacing:-.055em}
-.hero-cinematic h1 em{color:#f0ce79}
-.hero-cinematic .hero-copy>p{max-width:470px;color:#f2eee5;font-size:clamp(14px,1.4vw,17px)}
-.hero-cinematic .hero-notes{color:#f5eee0}
-.hero-cinematic .hero-notes svg{color:#e6c36c}
-.hero-cinematic .primary-btn{background:#D6AD48;color:#173b2c;box-shadow:0 12px 30px #0003;border-radius:5px;font-weight:850;letter-spacing:.045em}
-.hero-cinematic .primary-btn:hover{background:#ebc96f}
-.hero-cinematic .hero-art{position:absolute;z-index:0;inset:0;height:auto;margin:0}
-.hero-cinematic .hero-image{position:absolute;inset:0;border-radius:0;background-position:center 52%;box-shadow:none;animation:heroSlowZoom 24s ease-in-out infinite alternate}
-.hero-cinematic .hero-art:before,.hero-cinematic .hero-stamp,.hero-cinematic .hero-caption{display:none}
-.hero-cinematic .hero-art:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,22,16,.88) 0%,rgba(8,22,16,.67) 42%,rgba(8,22,16,.12) 100%),linear-gradient(0deg,rgba(8,22,16,.24),transparent 45%)}
-@keyframes heroSlowZoom{from{transform:scale(1)}to{transform:scale(1.075)}}
+/* Seções de experiência */
 .experience-section{padding:76px 0 35px}
 .experience-heading{display:flex;align-items:end;justify-content:space-between;margin-bottom:25px}
 .experience-heading h2{font:500 clamp(34px,4vw,48px) Georgia,serif;letter-spacing:-.045em;margin:12px 0 8px;color:#173b2c}
@@ -94,10 +79,118 @@ body,.store{background:#fff;color:#173b2c}
 .experience-card strong em{color:#f0ce79}
 .experience-description{max-width:390px;font-size:12px;line-height:1.65;color:#f6f2e9}
 .experience-link{display:inline-flex;align-items:center;gap:10px;margin-top:5px;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#f0ce79}
-@media(max-width:850px){.hero-cinematic{min-height:560px}.experience-card{min-height:250px}}
-@media(max-width:600px){.hero-cinematic{min-height:590px;padding:76px 22px 64px;justify-content:flex-start}.hero-cinematic h1{font-size:clamp(48px,13vw,66px);margin:16px 0}.hero-cinematic .hero-art:after{background:linear-gradient(90deg,rgba(8,22,16,.82),rgba(8,22,16,.36)),linear-gradient(0deg,rgba(8,22,16,.42),transparent 70%)}.hero-cinematic .hero-image{background-position:58% center}.experience-section{padding:54px 0 20px}.experience-heading h2{font-size:36px}.experience-grid{grid-template-columns:1fr;gap:12px}.experience-card,.experience-card:nth-child(3){grid-column:auto;min-height:230px;padding:22px}.experience-card strong{font-size:34px}}
-@media(prefers-reduced-motion:reduce){.hero-cinematic .hero-image{animation:none}.experience-card{transition:none}}
+@media(max-width:850px){.experience-card{min-height:250px}}
+@media(max-width:600px){.experience-section{padding:54px 0 20px}.experience-heading h2{font-size:36px}.experience-grid{grid-template-columns:1fr;gap:12px}.experience-card,.experience-card:nth-child(3){grid-column:auto;min-height:230px;padding:22px}.experience-card strong{font-size:34px}}
+@media(prefers-reduced-motion:reduce){.experience-card{transition:none}}
 
-/* Vídeo do Hero: mantém o mesmo enquadramento cinematográfico da imagem de fallback */
-.hero-cinematic .hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 52%;display:block}
-@media(max-width:600px){.hero-cinematic .hero-video{object-position:58% center}}
+/* ============================================================
+   HERO CINEMATOGRÁFICO — Brasil Pizzas
+   Vídeo dinâmico (painel ADM) como protagonista, integrado ao
+   fundo vinho. Proporção nativa preservada (sem deformar), pronto
+   para fontes 4K: o palco usa aspect-ratio 16/9 + object-fit.
+   ============================================================ */
+.hero-cinematic{
+  --hero-bg:#17050a;--hero-wine:#3b0e15;--hero-red:#e1251b;--hero-red-deep:#b3120f;
+  --hero-cream:#fff4e6;--hero-gold:#f6b955;--hero-ember:#ff6a2b;
+  position:relative;isolation:isolate;overflow:hidden;
+  min-height:clamp(600px,calc(100svh - 122px),820px);
+  display:flex;flex-direction:column;justify-content:center;
+  background:
+    radial-gradient(60% 80% at 72% 48%,#4a1019 0%,transparent 70%),
+    radial-gradient(40% 60% at 8% 100%,#2a070d 0%,transparent 70%),
+    var(--hero-bg);
+  color:var(--hero-cream);
+}
+/* Palco do vídeo: 16:9 nativo, ancorado à direita */
+.hero-stage{
+  position:absolute;z-index:0;top:50%;right:0;
+  height:min(104%,58vw);aspect-ratio:16/9;transform:translateY(-50%);
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 24%,#000 97%,transparent 100%),linear-gradient(180deg,transparent 0%,#000 9%,#000 91%,transparent 100%);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(90deg,transparent 0%,#000 24%,#000 97%,transparent 100%),linear-gradient(180deg,transparent 0%,#000 9%,#000 91%,transparent 100%);
+  mask-composite:intersect;
+  animation:heroStageIn 1.6s cubic-bezier(.2,.7,.2,1) both;
+}
+.hero-video,.hero-media{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;object-position:center;background:var(--hero-bg) center/cover no-repeat}
+/* Selo giratório discreto, posicionado no espaço vazio à esquerda da pizza */
+.hero-seal{position:absolute;left:38%;top:12%;width:clamp(84px,8vw,112px);aspect-ratio:1;color:var(--hero-gold);opacity:.9;pointer-events:none}
+.hero-seal svg{width:100%;height:100%;animation:heroSpin 22s linear infinite}
+.hero-seal text{font:700 8.6px/1 Inter,ui-sans-serif,system-ui,sans-serif;fill:currentColor}
+.hero-seal i{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;color:var(--hero-red)}
+.hero-seal i:before{content:"";position:absolute;inset:32%;border-radius:50%;background:var(--hero-gold);box-shadow:0 0 0 6px #f6b95522}
+.hero-seal i svg{position:relative;width:22%;height:22%;animation:none;color:var(--hero-bg)}
+/* Véu para legibilidade + luz quente lateral (não cobre a pizza) */
+.hero-veil{position:absolute;inset:0;z-index:1;pointer-events:none;background:
+  linear-gradient(90deg,var(--hero-bg) 0%,#17050ae6 22%,#17050a8c 40%,transparent 60%),
+  linear-gradient(0deg,#17050a 0%,transparent 18%),
+  linear-gradient(180deg,#17050acc 0%,transparent 14%)}
+.hero-veil:after{content:"";position:absolute;left:30%;top:20%;width:40%;height:70%;background:radial-gradient(closest-side,#ff5a2a1f,transparent);filter:blur(10px);animation:heroBreath 7s ease-in-out infinite}
+.hero-inner{position:relative;z-index:2;padding:clamp(56px,8vh,96px) 0}
+.hero-cinematic .hero-copy{max-width:min(600px,50%)}
+.hero-cinematic .eyebrow{color:var(--hero-gold);font-size:10px;letter-spacing:.3em;gap:12px}
+.hero-cinematic .eyebrow:before{content:"";width:28px;height:1px;background:currentColor;opacity:.7}
+.hero-cinematic .eyebrow svg{color:var(--hero-ember)}
+.hero-cinematic h1{
+  font-family:Fraunces,Georgia,serif;font-optical-sizing:auto;font-weight:600;
+  font-size:clamp(50px,6.6vw,104px);line-height:.94;letter-spacing:-.035em;
+  margin:22px 0 26px;color:var(--hero-cream);text-wrap:balance;
+  text-shadow:0 4px 40px #0000008c;
+}
+.hero-cinematic h1 .hl-line{display:block}
+.hero-cinematic h1 .hl-hot{position:relative;display:inline-block;color:#fff}
+.hero-cinematic h1 .hl-hot:after{content:"";position:absolute;left:-2%;right:-2%;bottom:.06em;height:.13em;z-index:-1;border-radius:99px;background:linear-gradient(90deg,var(--hero-red),var(--hero-ember));transform:skewX(-14deg) scaleX(0);transform-origin:left;animation:heroUnderline 1s .9s cubic-bezier(.2,.7,.2,1) forwards}
+.hero-cinematic h1 em{font-style:italic;font-weight:500;color:var(--hero-gold);background:linear-gradient(100deg,#ffd58a 0%,var(--hero-gold) 45%,var(--hero-ember) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;padding-right:.06em}
+.hero-cinematic .hero-copy>p{max-width:440px;margin:0 0 34px;font-size:clamp(15px,1.25vw,17px);line-height:1.7;color:#f3e2d4;opacity:.88}
+.hero-actions{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.hero-cinematic .hero-cta{
+  position:relative;overflow:hidden;gap:16px;padding:9px 9px 9px 28px;min-height:58px;border-radius:999px;
+  background:linear-gradient(180deg,#f2392d 0%,var(--hero-red) 45%,var(--hero-red-deep) 100%);
+  color:#fff;font-size:13px;font-weight:800;letter-spacing:.14em;
+  box-shadow:inset 0 1px 0 #ffffff40,0 14px 34px -8px #e1251b99,0 0 0 1px #ff6a4b40;
+  transition:transform .25s ease,box-shadow .25s ease;
+}
+.hero-cinematic .hero-cta:hover{background:linear-gradient(180deg,#ff4a3c 0%,#ec2c20 45%,#c0150f 100%);transform:translateY(-2px);box-shadow:inset 0 1px 0 #ffffff50,0 20px 44px -8px #e1251bb3,0 0 0 1px #ff6a4b66}
+.hero-cinematic .hero-cta:before{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,#ffffff40,transparent);transform:skewX(-20deg);transition:left .7s ease}
+.hero-cinematic .hero-cta:hover:before{left:130%}
+.hero-cta-icon{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:#fff;color:var(--hero-red-deep);transition:transform .25s ease}
+.hero-cinematic .hero-cta:hover .hero-cta-icon{transform:translateX(3px) rotate(-8deg)}
+.hero-cinematic .hero-cta:focus-visible{outline:2px solid var(--hero-gold);outline-offset:4px}
+.hero-cinematic .hero-notes{margin:0;gap:20px;color:#f3e2d4;font-size:11px;letter-spacing:.06em}
+.hero-cinematic .hero-notes svg{color:var(--hero-gold)}
+.hero-scroll{position:absolute;z-index:2;left:max(24px,calc((100% - 1160px)/2));bottom:26px;display:flex;align-items:center;gap:12px;font-size:9px;letter-spacing:.32em;text-transform:uppercase;color:#f3e2d4b3}
+.hero-scroll:before{content:"";width:1px;height:34px;background:linear-gradient(180deg,transparent,var(--hero-gold));animation:heroDrip 2.4s ease-in-out infinite;transform-origin:top}
+/* Entrada escalonada da comunicação */
+.hero-reveal{opacity:0;transform:translateY(18px);animation:heroReveal .9s cubic-bezier(.2,.7,.2,1) forwards}
+.hero-reveal:nth-child(1){animation-delay:.15s}.hero-reveal:nth-child(2){animation-delay:.28s}.hero-reveal:nth-child(3){animation-delay:.42s}.hero-reveal:nth-child(4){animation-delay:.56s}.hero-reveal:nth-child(5){animation-delay:.7s}
+@keyframes heroReveal{to{opacity:1;transform:none}}
+@keyframes heroStageIn{from{opacity:0;transform:translateY(-50%) scale(1.04)}to{opacity:1;transform:translateY(-50%) scale(1)}}
+@keyframes heroUnderline{to{transform:skewX(-14deg) scaleX(1)}}
+@keyframes heroSpin{to{transform:rotate(360deg)}}
+@keyframes heroBreath{0%,100%{opacity:.6}50%{opacity:1}}
+@keyframes heroDrip{0%{transform:scaleY(0);opacity:0}40%{opacity:1}100%{transform:scaleY(1);opacity:0}}
+
+@media(max-width:1100px){.hero-cinematic .hero-copy{max-width:min(520px,52%)}.hero-seal{display:none}}
+@media(max-width:760px){
+  .hero-cinematic{min-height:0;justify-content:flex-start;background:radial-gradient(90% 50% at 70% 78%,#4a1019 0%,transparent 70%),var(--hero-bg)}
+  .hero-inner{padding:40px 0 0}
+  .hero-cinematic .hero-copy{max-width:none}
+  .hero-cinematic h1{font-size:clamp(40px,11.4vw,62px);margin:16px 0 18px}
+  .hero-cinematic .hero-copy>p{font-size:14px;margin-bottom:24px;max-width:36ch}
+  .hero-cinematic .hero-notes{display:none}
+  .hero-cinematic .hero-cta{min-height:54px;font-size:12px;padding-left:24px}
+  .hero-cta-icon{width:36px;height:36px}
+  /* No celular a pizza vem logo abaixo do texto, enquadrada pela direita */
+  .hero-stage{position:relative;top:auto;right:auto;transform:none;height:auto;width:162vw;align-self:flex-end;order:2;margin:-6vw -2vw 0 0;flex-shrink:0;animation-name:heroStageInMobile;
+    -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 18%,#000 86%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0%,#000 18%,#000 86%,transparent 100%)}
+  .hero-veil{background:linear-gradient(180deg,#17050acc 0%,transparent 45%),linear-gradient(0deg,#17050a 0%,transparent 12%)}
+  .hero-veil:after{display:none}
+  .hero-scroll{display:none}
+}
+@keyframes heroStageInMobile{from{opacity:0;transform:scale(1.04)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .hero-stage,.hero-reveal{animation:none;opacity:1}
+  .hero-reveal{transform:none}
+  .hero-seal svg,.hero-veil:after,.hero-scroll:before{animation:none}
+  .hero-cinematic h1 .hl-hot:after{animation:none;transform:skewX(-14deg)}
+  .hero-cinematic .hero-cta,.hero-cinematic .hero-cta:before,.hero-cta-icon{transition:none}
+}
