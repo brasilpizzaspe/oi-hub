@@ -121,7 +121,17 @@ body,.store{background:#fff;color:#173b2c}
 .hero-menu a:hover{background:#f6e3d6}
 .hero-menu a.active{background:var(--hero-red);color:#fff}
 .hero-bag{justify-self:end;position:relative;display:grid;place-items:center;width:48px;height:48px;border-radius:50%;border:0;background:#fff8f0;color:var(--hero-red-deep);cursor:pointer;box-shadow:0 10px 30px -10px #0008;transition:transform .2s}
+
 .hero-bag:hover{transform:translateY(-2px)}
+.hero-bag-icon{position:relative;display:grid;place-items:center}
+.hero-bag-flame{position:absolute;right:-9px;top:-11px;color:#f05a28;fill:#ff9b36;filter:drop-shadow(0 0 5px #ff6a2b99);transform-origin:50% 85%;animation:bagFlameFlicker .72s ease-in-out infinite alternate}
+.hero-bag.has-items{animation:bagReadyPulse 2s ease-in-out infinite}
+@keyframes bagFlameFlicker{0%{transform:rotate(-9deg) scale(.92);filter:drop-shadow(0 0 3px #ff6a2b88)}50%{transform:rotate(5deg) scale(1.08)}100%{transform:rotate(-3deg) scale(1);filter:drop-shadow(0 0 8px #ff6a2bcc)}}
+@keyframes bagReadyPulse{0%,100%{box-shadow:0 10px 30px -10px #0008,0 0 0 0 #f05a2833}50%{box-shadow:0 10px 30px -10px #0008,0 0 0 7px #f05a2800}}
+.cart-notice{position:fixed;z-index:30;top:88px;right:max(24px,calc((100vw - 1200px)/2));display:flex;align-items:center;gap:10px;max-width:min(360px,calc(100vw - 32px));padding:13px 18px;border:1px solid #ffffff24;border-radius:14px;background:#211015ee;color:#fff4e6;box-shadow:0 14px 40px #0005;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-size:13px;font-weight:700;opacity:0;visibility:hidden;transform:translateY(-10px);transition:opacity .22s ease,transform .22s ease,visibility .22s}
+.cart-notice svg{flex:0 0 auto;color:#f6b955}
+.cart-notice.is-visible{opacity:1;visibility:visible;transform:translateY(0)}
+
 .hero-bag b{position:absolute;top:-3px;right:-3px;min-width:20px;height:20px;padding:0 5px;border-radius:99px;display:grid;place-items:center;background:var(--hero-gold);color:#3a1a14;font-size:10px;font-weight:900}
 
 /* Comunicação */
@@ -237,6 +247,6 @@ body,.store{background:#fff;color:#173b2c}
 @media(prefers-reduced-motion:reduce){
   .hero-stage,.hero-reveal,.pick{animation:none;opacity:1}
   .hero-reveal{transform:none}
-  .hero-seal svg,.hero-float{animation:none}
+  .hero-seal svg,.hero-float,.hero-bag.has-items,.hero-bag-flame{animation:none}
   .hero-cta,.hero-cta:before,.hero-ghost,.pick-mini,.hero-bag{transition:none}
 }
