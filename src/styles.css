@@ -427,3 +427,23 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 .hero-picks .pick-promo .pick-foot button{background:#d6ad48;color:#17130a}
 .hero-picks .pick-promo .pick-foot button:hover{background:#f0c75e}
 @media(max-width:760px){.hero-picks{width:100%;max-width:100%;padding:0 20px 8px;margin:18px 0 28px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity}.hero-picks .pick,.hero-picks .pick-main{flex:0 0 230px;width:230px}}
+
+/* Ajustes solicitados: carrossel infinito, adicionais na sacola e ícone sem chama */
+.hero-bag-flame{display:none!important}
+.hero-bag.has-items{animation:none!important}
+.hero-picks{scrollbar-width:none;scroll-snap-type:none}
+.hero-picks::-webkit-scrollbar{display:none}
+.hero-picks .pick{scroll-snap-align:none}
+.cart-addons{margin:18px 0 16px;padding:16px 0 4px;border-top:1px solid #e8e9e2}
+.cart-addons-heading{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.cart-addons-heading>b{font-size:14px;color:#174d38}
+.cart-addons-heading>small{font-size:11px;color:#758078}
+.cart-addons-list{display:grid;gap:9px}
+.cart-addon{display:flex;align-items:center;gap:11px;padding:8px;border:1px solid #e8e9e2;border-radius:13px;background:#fff}
+.cart-addon-photo{width:52px;height:52px;flex:0 0 52px;border-radius:9px;background:#edf2ec center/cover}
+.cart-addon-info{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
+.cart-addon-info>b{font-size:12px;color:#18372b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cart-addon-info>small{font-size:11px;color:#758078}
+.cart-addon>button{width:36px;height:36px;flex:0 0 36px;display:grid;place-items:center;border:0;border-radius:50%;background:#174d38;color:#fff;cursor:pointer;transition:background .2s,transform .2s}
+.cart-addon>button:hover{background:#103b2b;transform:scale(1.05)}
+@media(prefers-reduced-motion:reduce){.hero-picks{scroll-behavior:auto}.cart-addon>button{transition:none}}
