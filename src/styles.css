@@ -447,3 +447,8 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 .cart-addon>button{width:36px;height:36px;flex:0 0 36px;display:grid;place-items:center;border:0;border-radius:50%;background:#174d38;color:#fff;cursor:pointer;transition:background .2s,transform .2s}
 .cart-addon>button:hover{background:#103b2b;transform:scale(1.05)}
 @media(prefers-reduced-motion:reduce){.hero-picks{scroll-behavior:auto}.cart-addon>button{transition:none}}
+
+
+/* Carrossel: navegação exclusivamente manual, com loop contínuo nos dois sentidos */
+.hero-picks{scroll-behavior:auto!important;scroll-snap-type:none!important;overscroll-behavior-x:contain}
+.hero-picks .pick,.hero-picks .pick-main{scroll-snap-align:none!important}
