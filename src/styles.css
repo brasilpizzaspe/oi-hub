@@ -253,3 +253,25 @@ body,.store{background:#fff;color:#173b2c}
   .hero-seal svg,.hero-float,.hero-bag.has-items{animation:none}\n  .hero-bag-flame{animation:bagFlameGlow 1.4s ease-in-out infinite alternate}
   .hero-cta,.hero-cta:before,.hero-ghost,.pick-mini,.hero-bag{transition:none}
 }
+
+
+/* Sacola flutuante 3D — Brasil Pizzas */
+.floating-cart.floating-cart-3d{display:grid;place-items:center;position:fixed;right:24px;bottom:24px;z-index:30;width:92px;height:104px;padding:0;border:0;border-radius:0;background:transparent;color:#fff;box-shadow:none;cursor:pointer;isolation:isolate;filter:drop-shadow(0 12px 14px #071c1280);transition:transform .28s ease,filter .28s ease}
+.floating-cart-3d:hover{transform:translateY(-5px) scale(1.035);filter:drop-shadow(0 17px 18px #071c12a6)}
+.floating-cart-fire{position:absolute;z-index:0;left:17px;top:-1px;width:58px;height:72px;transform-origin:50% 90%;opacity:0;filter:drop-shadow(0 0 9px #ff8b24a8);transition:opacity .35s ease}
+.floating-cart-3d.has-items .floating-cart-fire{opacity:1;animation:cartFireSlow 3.8s ease-in-out infinite}
+.floating-cart-fire svg{width:100%;height:100%;overflow:visible}
+.floating-cart-fire .fire-inner{transform-origin:50% 80%;animation:cartFireInner 2.9s ease-in-out infinite}
+.floating-cart-bag{position:relative;z-index:1;width:76px;height:76px;margin-top:23px;overflow:visible;filter:drop-shadow(0 5px 5px #06180f99)}
+.floating-cart-count{position:absolute;z-index:2;right:2px;bottom:4px;min-width:25px;height:25px;padding:0 6px;border:2px solid #fff3d5;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#f2ca69,#b98525);color:#173b2c;font-size:11px;font-weight:900;box-shadow:0 3px 9px #0005}
+.floating-cart-3d:not(.has-items) .floating-cart-count{background:#174d38;color:#fff;border-color:#d6ad48}
+@keyframes cartFireSlow{0%,100%{transform:translateY(2px) scaleX(.96) scaleY(.96) rotate(-2deg)}35%{transform:translateY(-3px) scaleX(1.03) scaleY(1.06) rotate(1.5deg)}68%{transform:translateY(1px) scaleX(.99) scaleY(1.02) rotate(-1deg)}}
+@keyframes cartFireInner{0%,100%{transform:scaleY(.94) translateY(1px);opacity:.82}50%{transform:scaleY(1.08) translateY(-2px);opacity:1}}
+.cart-notice{left:50%;right:auto;bottom:30px;top:auto;gap:12px;width:max-content;max-width:min(360px,calc(100vw - 32px));padding:10px 17px 10px 10px;border:1px solid #d6ad487a;border-radius:16px;background:linear-gradient(135deg,#214d38f5,#102f22f7);color:#fff;box-shadow:0 16px 42px #071c1266, inset 0 1px #ffffff20;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);font-size:13px;font-weight:650;opacity:0;visibility:hidden;transform:translate(-50%,14px);transition:opacity .25s ease,transform .25s ease,visibility .25s}
+.cart-notice-photo{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:end end;padding:3px;border-radius:11px;background-color:#f4e8cf;background-position:center;background-size:cover;box-shadow:0 3px 10px #0004}
+.cart-notice-photo svg{width:17px;height:17px;padding:3px;border-radius:50%;background:#d6ad48;color:#174d38;stroke-width:3;box-shadow:0 1px 4px #0004}
+.cart-notice strong{font-size:13px;letter-spacing:.01em}
+.cart-notice.is-visible{opacity:1;visibility:visible;transform:translate(-50%,0)}
+.cart-panel{width:min(560px,52vw);box-shadow:-24px 0 70px #071c1233}
+@media(max-width:700px){.floating-cart.floating-cart-3d{right:14px;bottom:calc(14px + env(safe-area-inset-bottom));width:82px;height:94px}.floating-cart-bag{width:68px;height:68px}.floating-cart-fire{left:15px;width:52px;height:64px}.floating-cart-count{right:0;bottom:1px}.cart-panel{width:min(92vw,480px);padding:20px}.cart-notice{bottom:calc(22px + env(safe-area-inset-bottom));max-width:calc(100vw - 112px);left:calc((100vw - 90px)/2);transform:translate(-50%,14px)}.cart-notice.is-visible{transform:translate(-50%,0)}}
+@media(prefers-reduced-motion:reduce){.floating-cart-3d,.floating-cart-fire,.floating-cart-fire .fire-inner,.cart-notice{animation:none!important;transition:none!important}}
