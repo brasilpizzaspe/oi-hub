@@ -225,7 +225,7 @@ body,.store{background:#fff;color:#173b2c}
   .hero-nav{order:1}.hero-veil{display:none}
   .hero-picks{order:4;position:relative;right:auto;bottom:auto;display:flex;gap:10px;margin:-88px 0 0;padding:0 20px 28px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
   .hero-picks::-webkit-scrollbar{display:none}
-  .hero-picks .pick,.hero-picks .pick-mini{display:flex;flex:0 0 auto;scroll-snap-align:start}
+  .hero-picks .pick,.hero-picks .pick-mini,.hero-picks .pick:nth-child(n){display:flex;flex:0 0 auto;scroll-snap-align:start}
   .hero-picks .pick-main{width:230px}
   .hero-picks .pick-mini{width:140px;align-self:flex-end}
   .hero-picks .pick-main .pick-photo{height:108px}
