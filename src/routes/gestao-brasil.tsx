@@ -39,6 +39,20 @@ function PrivateManagement() {
   const [notice, setNotice] = useState("");
   const [uploadingSlot, setUploadingSlot] = useState<string | null>(null);
   const [tab, setTab] = useState<"orders" | "products" | "images">("orders");
+  const [recoveryToken, setRecoveryToken] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [resetMode, setResetMode] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
+
+  useEffect(() => {
+    const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+    if (hash.get("type") === "recovery" && hash.get("access_token")) {
+      setRecoveryToken(hash.get("access_token") || "");
+      setResetMode(true);
+      window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+    }
+  }, []);
 
   const apiHeaders = useMemo(() => session ? { apikey: SUPABASE_KEY || "", Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" } : null, [session]);
 
@@ -54,6 +68,38 @@ function PrivateManagement() {
     setProducts(await productResponse.json());
     setOrders(await orderResponse.json());
     setSiteImages(await imageResponse.json());
+  }
+
+  async function requestPasswordReset(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault(); setBusy(true); setError(""); setNotice("");
+    try {
+      if (!SUPABASE_URL || !SUPABASE_KEY) throw new Error("A conexão segura ainda não foi configurada no ambiente do site.");
+      const redirectTo = `${window.location.origin}/gestao-brasil`;
+      const response = await fetch(`${SUPABASE_URL}/auth/v1/recover?redirect_to=${encodeURIComponent(redirectTo)}`, {
+        method: "POST", headers: { apikey: SUPABASE_KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+      if (!response.ok) { const payload = await response.json().catch(() => ({})); throw new Error(payload.msg || payload.message || "Não foi possível enviar o link. Confira o e-mail e tente novamente."); }
+      setResetSent(true); setNotice("Se o e-mail estiver cadastrado, você receberá um link para criar uma nova senha. Confira também o spam.");
+    } catch (e) { setError(e instanceof Error ? e.message : "Falha ao solicitar redefinição."); }
+    finally { setBusy(false); }
+  }
+
+  async function saveNewPassword(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault(); setBusy(true); setError(""); setNotice("");
+    try {
+      if (!SUPABASE_URL || !SUPABASE_KEY || !recoveryToken) throw new Error("O link de redefinição é inválido ou expirou. Solicite outro.");
+      if (newPassword.length < 8) throw new Error("A nova senha precisa ter pelo menos 8 caracteres.");
+      if (newPassword !== confirmPassword) throw new Error("As senhas não coincidem.");
+      const response = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+        method: "PUT", headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${recoveryToken}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ password: newPassword }),
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload.msg || payload.message || "Não foi possível alterar a senha. Solicite um novo link.");
+      setResetMode(false); setRecoveryToken(""); setNewPassword(""); setConfirmPassword(""); setPassword(""); setNotice("Senha alterada com sucesso. Entre com sua nova senha.");
+    } catch (e) { setError(e instanceof Error ? e.message : "Falha ao alterar a senha."); }
+    finally { setBusy(false); }
   }
 
   async function signIn(event: FormEvent<HTMLFormElement>) {
@@ -189,6 +235,10 @@ function PrivateManagement() {
     return () => window.clearInterval(timer);
   }, [session]);
 
+  if (resetMode) return (
+    <main className="min-h-screen bg-[#f5f2e9] px-4 py-12 text-[#174d38]"><div className="mx-auto flex min-h-[75vh] max-w-md flex-col justify-center"><div className="mb-8 text-center"><p className="text-xs font-semibold tracking-[.28em] text-[#9b7930]">BRASIL PIZZAS</p><h1 className="mt-3 text-3xl font-semibold">Criar nova senha</h1><p className="mt-2 text-sm text-[#64746a]">Escolha uma senha nova para acessar a gestão.</p></div><form onSubmit={saveNewPassword} className="rounded-2xl border border-[#e4ddca] bg-white p-7 shadow-xl"><label className="mb-4 block text-sm font-medium">Nova senha<input autoComplete="new-password" type="password" minLength={8} required value={newPassword} onChange={e => setNewPassword(e.target.value)} className="mt-2 w-full rounded-lg border border-[#d9dfd8] px-3 py-3" /></label><label className="mb-5 block text-sm font-medium">Confirme a nova senha<input autoComplete="new-password" type="password" minLength={8} required value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} className="mt-2 w-full rounded-lg border border-[#d9dfd8] px-3 py-3" /></label>{error && <p role="alert" className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}<button disabled={busy} className="w-full rounded-lg bg-[#174d38] px-4 py-3 font-semibold text-white disabled:opacity-60">{busy ? "Salvando..." : "Salvar nova senha"}</button></form></div></main>
+  );
+
   if (!session) return (
     <main className="min-h-screen bg-[#f5f2e9] px-4 py-12 text-[#174d38]">
       <div className="mx-auto flex min-h-[75vh] max-w-md flex-col justify-center">
@@ -198,7 +248,7 @@ function PrivateManagement() {
           <h1 className="mt-3 text-3xl font-semibold">Acesso reservado</h1>
           <p className="mt-2 text-sm text-[#64746a]">Entre com as credenciais autorizadas da loja.</p>
         </div>
-        <form onSubmit={signIn} className="rounded-2xl border border-[#e4ddca] bg-white p-7 shadow-xl shadow-[#174d38]/5">
+        {resetMode ? <form onSubmit={requestPasswordReset} className="rounded-2xl border border-[#e4ddca] bg-white p-7 shadow-xl shadow-[#174d38]/5"><label className="mb-4 block text-sm font-medium">E-mail cadastrado<input autoComplete="email" type="email" required value={email} onChange={e => setEmail(e.target.value)} className="mt-2 w-full rounded-lg border border-[#d9dfd8] px-3 py-3" placeholder="seu@email.com" /></label>{error && <p role="alert" className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}{notice && <p role="status" className="mb-4 rounded-lg bg-[#e4eee6] p-3 text-sm text-[#174d38]">{notice}</p>}<button disabled={busy || resetSent} className="w-full rounded-lg bg-[#174d38] px-4 py-3 font-semibold text-white disabled:opacity-60">{busy ? "Enviando..." : resetSent ? "Link solicitado" : "Enviar link de redefinição"}</button><button type="button" onClick={() => { setResetMode(false); setResetSent(false); setError(""); setNotice(""); }} className="mt-4 w-full text-sm text-[#64746a]">Voltar ao login</button></form> : <form onSubmit={signIn} className="rounded-2xl border border-[#e4ddca] bg-white p-7 shadow-xl shadow-[#174d38]/5">
           <label className="mb-4 block text-sm font-medium">E-mail
             <input autoComplete="username" type="email" required value={email} onChange={e => setEmail(e.target.value)} className="mt-2 w-full rounded-lg border border-[#d9dfd8] px-3 py-3 outline-none focus:border-[#174d38]" placeholder="seu@email.com" />
           </label>
@@ -207,8 +257,9 @@ function PrivateManagement() {
           </label>
           {error && <p role="alert" className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
           <button disabled={busy} className="w-full rounded-lg bg-[#174d38] px-4 py-3 font-semibold text-white transition hover:bg-[#103b2a] disabled:opacity-60">{busy ? "Verificando..." : "Entrar"}</button>
+          <button type="button" onClick={() => { setResetMode(true); setError(""); setNotice(""); }} className="mb-3 w-full text-sm font-medium text-[#9b7930] hover:underline">Esqueci minha senha</button>
           <p className="mt-5 text-center text-xs text-[#879188]">Área privada. Acesso monitorado e restrito.</p>
-        </form>
+        </form>}
         <a href="/" className="mt-6 text-center text-sm text-[#64746a] hover:text-[#174d38]">Voltar à página inicial</a>
       </div>
     </main>
