@@ -95,3 +95,77 @@ body,.store{background:#fff;color:#173b2c}
 @media(max-width:850px){.hero-cinematic{min-height:560px}.experience-card{min-height:250px}}
 @media(max-width:600px){.hero-cinematic{min-height:590px;padding:76px 22px 64px;justify-content:flex-start}.hero-cinematic h1{font-size:clamp(48px,13vw,66px);margin:16px 0}.hero-cinematic .hero-art:after{background:linear-gradient(90deg,rgba(8,22,16,.82),rgba(8,22,16,.36)),linear-gradient(0deg,rgba(8,22,16,.42),transparent 70%)}.hero-cinematic .hero-image{background-position:58% center}.experience-section{padding:54px 0 20px}.experience-heading h2{font-size:36px}.experience-grid{grid-template-columns:1fr;gap:12px}.experience-card,.experience-card:nth-child(3){grid-column:auto;min-height:230px;padding:22px}.experience-card strong{font-size:34px}}
 @media(prefers-reduced-motion:reduce){.hero-cinematic .hero-image{animation:none}.experience-card,.experience-card:before,.experience-link span{transition:none}}
+
+
+/* Brasil Pizzas — direção visual vermelha, cinematográfica e premium */
+:root{
+  color-scheme:light;
+  --ink:#321312;
+  --cream:#fffaf7;
+  --red:#b5121b;
+  --muted:#796a67;
+  --line:#eadfda;
+  --gold:#e7bd59;
+}
+body,.store{background:#fffaf7;color:#321312}
+.topline{background:#720d13;color:#fff4e8}
+.brand,.admin-brand{color:#8f1118}
+.brand b,.admin-brand b{color:#b5121b}
+.brand-mark{border-color:#b5121b;color:#b5121b}
+.eyebrow,.product-info>small,.admin-category{color:#b5121b}
+.hero-cinematic{
+  background:#650b12;
+}
+.hero-cinematic .eyebrow{color:#f2cb72}
+.hero-cinematic h1 em{color:#f5cd70}
+.hero-cinematic .hero-copy>p{color:#fff0e8}
+.hero-cinematic .hero-notes{color:#fff0e8}
+.hero-cinematic .hero-notes svg{color:#f2cb72}
+.hero-cinematic .primary-btn{
+  background:#e7bd59;
+  color:#4a1712;
+  box-shadow:0 12px 30px #29040766;
+}
+.hero-cinematic .primary-btn:hover{background:#f4d486}
+.hero-cinematic .hero-image{
+  background-image:linear-gradient(90deg,rgba(54,4,8,.25),rgba(110,5,12,.02)),url("https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=1800&q=90");
+  filter:saturate(1.18) contrast(1.06);
+}
+.hero-cinematic .hero-art:after{
+  background:
+    linear-gradient(90deg,rgba(68,5,10,.94) 0%,rgba(91,7,12,.76) 38%,rgba(108,9,13,.13) 100%),
+    linear-gradient(0deg,rgba(48,3,7,.3),transparent 48%);
+}
+.primary-btn,.product-bottom button{background:#b5121b}
+.primary-btn:hover,.product-bottom button:hover{background:#8f0d15}
+.promise i{color:#d6a83e}
+.promise{border-color:#eadfda}
+.how-order-heading h2 em,.section-heading h2 em{color:#b5121b}
+.tab.active,.tab:hover{background:#8f1118;border-color:#8f1118}
+.product-card{border-color:#eadfda}
+.product-info h3{color:#321312}
+.product-bottom{border-color:#eadfda}
+.price-notice{background:#fff3e5;border-left-color:#d6a83e;color:#68433b}
+.price-notice a,.text-link{color:#a50f18}
+.about-photo{border-color:#eadfda}
+.footer{background:#650b12}
+.footer-brand b{color:#e7bd59}
+.footer-inner>span,.footer-inner>a:last-child{color:#f1d9d2}
+.cart-nav{background:#fff;border-color:#eadfda}
+.cart-nav b,.floating-cart b{background:#e7bd59;color:#4a1712}
+.floating-cart{background:#760c14;color:#fff}
+.cart-panel,.checkout-modal{background:#fffaf7}
+.cart-total,.checkout-total,.panel-head{border-color:#eadfda}
+.admin-page{background:#fff8f3}
+.admin-nav{background:#fffaf7;border-color:#eadfda}
+.admin-warning{background:#fff3e5;border-left-color:#d6a83e}
+.save-btn{background:#8f1118}
+.toggle.active{border-color:#e7c8a2;color:#8f1118;background:#fff4e9}
+.experience-card{box-shadow:0 12px 32px #4a17121a}
+.experience-kicker,.experience-link{color:#f2cb72}
+.experience-heading h2 em{color:#b5121b}
+@media(max-width:600px){
+  .hero-cinematic .hero-art:after{
+    background:linear-gradient(90deg,rgba(68,5,10,.88),rgba(91,7,12,.44)),linear-gradient(0deg,rgba(48,3,7,.48),transparent 70%);
+  }
+}
