@@ -8,7 +8,9 @@ const SUPABASE_KEY = (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | 
 type Product = { id: string; name: string; category: string; description: string; price: number | null; active: boolean; image_url: string | null };
 type OrderItem = { id: string; product_name: string; quantity: number; unit_price: number; line_total: number };
 type Order = { id: string; order_number: number; customer_name: string; customer_phone: string; street: string; street_number: string; neighborhood: string; reference: string | null; notes: string | null; subtotal: number; delivery_fee: number | null; total: number; status: string; payment_status: string; payment_method: string; created_at: string; estimated_delivery_at: string | null; order_items: OrderItem[] };
-type Session = { access_token: string; user: { id: string; email: string } };
+type Session = { access_token: string; refresh_token: string; user: { id: string; email: string } };
+const REMEMBERED_EMAIL_KEY = "brasil-pizzas-admin-email";
+const PERSISTENT_SESSION_KEY = "brasil-pizzas-admin-session";
 type SiteImage = { slot: string; title: string; description: string; recommended_ratio: string; recommended_dimensions: string; image_url: string | null };
 
 const money = (value: number) => value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -28,7 +30,8 @@ export const Route = createFileRoute("/gestao-brasil")({
 });
 
 function PrivateManagement() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("brasilpizzaspe@gmail.com");
+  const [keepConnected, setKeepConnected] = useState(false);
   const [password, setPassword] = useState("");
   const [session, setSession] = useState<Session | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
@@ -144,6 +147,45 @@ function PrivateManagement() {
     finally { setBusy(false); }
   }
 
+  useEffect(() => {
+    try {
+      const remembered = window.localStorage.getItem(REMEMBERED_EMAIL_KEY);
+      if (remembered) setEmail(remembered);
+      const saved = window.localStorage.getItem(PERSISTENT_SESSION_KEY);
+      if (!saved) return;
+      const parsed = JSON.parse(saved) as Session;
+      if (!parsed.refresh_token || !parsed.user?.id) {
+        window.localStorage.removeItem(PERSISTENT_SESSION_KEY);
+        return;
+      }
+      setKeepConnected(true);
+      void (async () => {
+        try {
+          const refreshed = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
+            method: "POST", headers: { apikey: SUPABASE_KEY, "Content-Type": "application/json" },
+            body: JSON.stringify({ refresh_token: parsed.refresh_token }),
+          });
+          const payload = await refreshed.json();
+          if (!refreshed.ok || !payload.access_token || !payload.refresh_token || payload.user?.id !== parsed.user.id) throw new Error("Sessão expirada");
+          const current: Session = { access_token: payload.access_token, refresh_token: payload.refresh_token, user: { id: payload.user.id, email: payload.user.email } };
+          const membership = await fetch(`${SUPABASE_URL}/rest/v1/admin_users?select=user_id&user_id=eq.${encodeURIComponent(current.user.id)}`, {
+            headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${current.access_token}` },
+          });
+          const rows = membership.ok ? await membership.json() : [];
+          if (!Array.isArray(rows) || rows.length === 0) throw new Error("Acesso não autorizado");
+          await loadDashboard(current);
+          setSession(current);
+          window.localStorage.setItem(PERSISTENT_SESSION_KEY, JSON.stringify(current));
+        } catch {
+          window.localStorage.removeItem(PERSISTENT_SESSION_KEY);
+          setKeepConnected(false);
+        }
+      })();
+    } catch {
+      window.localStorage.removeItem(PERSISTENT_SESSION_KEY);
+    }
+  }, []);
+
   async function signIn(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true); setError(""); setNotice("");
@@ -155,7 +197,7 @@ function PrivateManagement() {
       });
       const payload = await response.json();
       if (!response.ok || !payload.access_token || !payload.user?.id) throw new Error("E-mail ou senha inválidos, ou acesso não autorizado.");
-      const current: Session = { access_token: payload.access_token, user: { id: payload.user.id, email: payload.user.email } };
+      const current: Session = { access_token: payload.access_token, refresh_token: payload.refresh_token, user: { id: payload.user.id, email: payload.user.email } };
       const membership = await fetch(`${SUPABASE_URL}/rest/v1/admin_users?select=user_id&user_id=eq.${encodeURIComponent(current.user.id)}`, {
         headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${current.access_token}` },
       });
@@ -292,11 +334,12 @@ function PrivateManagement() {
         </div>
         {resetMode ? <form onSubmit={requestPasswordReset} className="rounded-2xl border border-[#e4ddca] bg-white p-7 shadow-xl shadow-[#174d38]/5"><label className="mb-4 block text-sm font-medium">E-mail cadastrado<input autoComplete="email" type="email" required value={email} onChange={e => setEmail(e.target.value)} className="mt-2 w-full rounded-lg border border-[#d9dfd8] px-3 py-3" placeholder="seu@email.com" /></label>{error && <p role="alert" className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}{notice && <p role="status" className="mb-4 rounded-lg bg-[#e4eee6] p-3 text-sm text-[#174d38]">{notice}</p>}<button disabled={busy || resetSent} className="w-full rounded-lg bg-[#174d38] px-4 py-3 font-semibold text-white disabled:opacity-60">{busy ? "Enviando..." : resetSent ? "Link solicitado" : "Enviar link de redefinição"}</button><button type="button" onClick={() => { setResetMode(false); setResetSent(false); setError(""); setNotice(""); }} className="mt-4 w-full text-sm text-[#64746a]">Voltar ao login</button></form> : <form onSubmit={signIn} className="rounded-2xl border border-[#e4ddca] bg-white p-7 shadow-xl shadow-[#174d38]/5">
           <label className="mb-4 block text-sm font-medium">E-mail
-            <input autoComplete="username" type="email" required value={email} onChange={e => setEmail(e.target.value)} className="mt-2 w-full rounded-lg border border-[#d9dfd8] px-3 py-3 outline-none focus:border-[#174d38]" placeholder="seu@email.com" />
+            <input autoComplete="username" list="admin-email-suggestions" type="email" required value={email} onChange={e => setEmail(e.target.value)} onBlur={e => { if (e.target.value.trim()) window.localStorage.setItem(REMEMBERED_EMAIL_KEY, e.target.value.trim()); }} className="mt-2 w-full rounded-lg border border-[#d9dfd8] px-3 py-3 outline-none focus:border-[#174d38]" placeholder="brasilpizzaspe@gmail.com" /><datalist id="admin-email-suggestions"><option value="brasilpizzaspe@gmail.com" /></datalist>
           </label>
           <label className="mb-5 block text-sm font-medium">Senha
             <input autoComplete="current-password" type="password" required value={password} onChange={e => setPassword(e.target.value)} className="mt-2 w-full rounded-lg border border-[#d9dfd8] px-3 py-3 outline-none focus:border-[#174d38]" placeholder="Sua senha" />
           </label>
+          <label className="mb-4 flex items-center gap-2 text-sm text-[#64746a]"><input type="checkbox" checked={keepConnected} onChange={e => { setKeepConnected(e.target.checked); if (!e.target.checked) window.localStorage.removeItem(PERSISTENT_SESSION_KEY); }} className="h-4 w-4 accent-[#174d38]" /> Manter conectado neste dispositivo</label>
           {error && <p role="alert" className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
           <button disabled={busy} className="w-full rounded-lg bg-[#174d38] px-4 py-3 font-semibold text-white transition hover:bg-[#103b2a] disabled:opacity-60">{busy ? "Verificando..." : "Entrar"}</button>
           <button type="button" onClick={() => { setResetMode(true); setError(""); setNotice(""); }} className="mb-3 w-full text-sm font-medium text-[#9b7930] hover:underline">Esqueci minha senha</button>
@@ -312,7 +355,7 @@ function PrivateManagement() {
       <header className="border-b border-[#e4ddca] bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4">
           <div><p className="text-xs font-semibold tracking-[.25em] text-[#9b7930]">BRASIL PIZZAS</p><h1 className="text-xl font-semibold">Gestão da loja</h1></div>
-          <div className="flex items-center gap-3"><button onClick={() => void refresh()} disabled={busy} className="rounded-lg border border-[#d9dfd8] p-2" aria-label="Atualizar"><RefreshCw size={17}/></button><button onClick={() => { setSession(null); setProducts([]); setOrders([]); }} className="flex items-center gap-2 rounded-lg border border-[#d9dfd8] px-3 py-2 text-sm"><LogOut size={16}/> Sair</button></div>
+          <div className="flex items-center gap-3"><button onClick={() => void refresh()} disabled={busy} className="rounded-lg border border-[#d9dfd8] p-2" aria-label="Atualizar"><RefreshCw size={17}/></button><button onClick={() => { setSession(null); setProducts([]); setOrders([]); setSiteImages([]); window.localStorage.removeItem(PERSISTENT_SESSION_KEY); setKeepConnected(false); setNotice("Você saiu da área administrativa."); setError(""); }} className="flex items-center gap-2 rounded-lg border border-[#d9dfd8] px-3 py-2 text-sm"><LogOut size={16}/> Sair</button></div>
         </div>
       </header>
       <section className="mx-auto max-w-6xl px-4 py-8">
