@@ -13,7 +13,7 @@ const [siteImages,setSiteImages]=useState<{hero:string|null;heroVideo:string|nul
 useEffect(()=>{let active=true;const refreshProducts=()=>void fetchStoreProducts().then(items=>{if(active)setProducts(items)});refreshProducts();void fetchStoreImages().then(images=>{if(active)setSiteImages(images)});const timer=window.setInterval(refreshProducts,30000);return()=>{active=false;window.clearInterval(timer)}},[]);
 const [cartNotice,setCartNotice]=useState("");const [cartNoticeImage,setCartNoticeImage]=useState("");
 useEffect(()=>{if(!cartNotice)return;const timer=window.setTimeout(()=>setCartNotice(""),2200);return()=>window.clearTimeout(timer)},[cartNotice]);
-const normalizeText=(value:string)=>value.normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").toLowerCase().trim();
+const normalizeText=(value:string)=>value.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
 const isDrink=(p:Product)=>normalizeText(p.category).includes("bebid");
 const heroPicks=products.filter(p=>p.active&&!isDrink(p));
 const loopHeroPicks=heroPicks.flatMap(p=>[0,1,2,3,4].map(copy=>({product:p,copy})));
