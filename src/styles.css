@@ -56,3 +56,9 @@ body,.store{background:#fff;color:#173b2c}
 .toggle.active{border-color:#b8d1c0;color:#174D38;background:#eef5f0}
 .checkout-form input:focus,.checkout-form select:focus,.checkout-form textarea:focus,.price-field input:focus{outline:2px solid #D6AD48;outline-offset:1px}
 @media(max-width:600px){.brand{letter-spacing:.12em}.brand small{letter-spacing:.1em}}
+
+
+/* Remover o selo de identificação do Lovable em todas as rotas do site */
+#lovable-badge {
+  display: none !important;
+}
