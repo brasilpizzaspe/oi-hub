@@ -288,3 +288,31 @@ body,.store{background:#fff;color:#173b2c}
   .hero-picks .pick,.hero-picks .pick-mini,.hero-picks-nav button{transition:none}
 }
 
+
+/* Continuidade de navegação e transições entre áreas */
+html{scroll-behavior:smooth;scroll-padding-top:22px}
+#cardapio,#como-pedir,#sobre{scroll-margin-top:22px}
+.hero-menu a,.hero-brand,.hero-bag,.floating-cart,.icon-btn,.quantity button,.tab,.product-bottom button,.pick-foot button{
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .32s cubic-bezier(.2,.75,.25,1),background-color .32s ease,color .32s ease,border-color .32s ease,box-shadow .32s ease,opacity .32s ease;
+}
+.product-card{transition:transform .42s cubic-bezier(.2,.75,.25,1),box-shadow .42s ease,border-color .42s ease}
+.product-card:hover{transform:translateY(-5px);box-shadow:0 18px 36px #173b2c16;border-color:#d6ad4870}
+.product-photo{transition:transform .6s cubic-bezier(.2,.75,.25,1)}
+.product-card:hover .product-photo{background-size:cover}
+.checkout-modal{animation:checkoutPanelIn .42s cubic-bezier(.2,.75,.2,1) both;transform-origin:right center}
+@keyframes checkoutPanelIn{from{opacity:0;transform:translate3d(22px,0,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+.cart-lines,.empty-cart,.cart-total{animation:cartContentIn .38s .06s cubic-bezier(.2,.75,.2,1) both}
+@keyframes cartContentIn{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+.hero-picks{scroll-snap-type:x proximity;scrollbar-width:none}
+.hero-picks::-webkit-scrollbar{display:none}
+.hero-picks .pick,.hero-picks .pick-mini{scroll-snap-align:start}
+@media(max-width:760px){
+  .hero-picks{scroll-snap-type:x mandatory;scroll-padding-inline:20px}
+  .hero-picks .pick,.hero-picks .pick-mini{scroll-snap-align:start}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .checkout-modal,.cart-lines,.empty-cart,.cart-total{animation:none}
+  .product-card,.product-photo,.hero-menu a,.hero-brand,.hero-bag,.floating-cart,.icon-btn,.quantity button,.tab,.product-bottom button,.pick-foot button{transition:none}
+}
