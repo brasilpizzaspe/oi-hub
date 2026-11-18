@@ -316,3 +316,61 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
   .checkout-modal,.cart-lines,.empty-cart,.cart-total{animation:none}
   .product-card,.product-photo,.hero-menu a,.hero-brand,.hero-bag,.floating-cart,.icon-btn,.quantity button,.tab,.product-bottom button,.pick-foot button{transition:none}
 }
+
+
+/* Carrossel contínuo de pizzas no destaque: navegação por gesto/rolagem */
+.hero-picks{
+  display:flex;
+  width:min(560px,48vw);
+  max-width:100%;
+  grid-template-columns:none;
+  align-items:stretch;
+  overflow-x:auto;
+  overflow-y:hidden;
+  gap:12px;
+  padding:4px 2px 12px;
+  scroll-behavior:smooth;
+  scroll-snap-type:x proximity;
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-x pan-y;
+  scrollbar-width:thin;
+  scrollbar-color:#d6ad48a6 transparent;
+}
+.hero-picks .pick,
+.hero-picks .pick-mini,
+.hero-picks .pick:nth-child(n){
+  display:flex;
+  flex:0 0 220px;
+  width:220px;
+  min-width:0;
+  scroll-snap-align:start;
+}
+.hero-picks .pick-main .pick-photo{height:112px}
+.hero-picks::-webkit-scrollbar{height:5px}
+.hero-picks::-webkit-scrollbar-track{background:#ffffff30;border-radius:10px}
+.hero-picks::-webkit-scrollbar-thumb{background:#d6ad48a6;border-radius:10px}
+@media(max-width:760px){
+  .hero-picks{
+    width:100%;
+    max-width:100%;
+    padding:0 20px 28px;
+    margin:-88px 0 0;
+    scroll-snap-type:x proximity;
+    scrollbar-width:none;
+  }
+  .hero-picks::-webkit-scrollbar{display:none}
+  .hero-picks .pick,
+  .hero-picks .pick-main,
+  .hero-picks .pick-mini,
+  .hero-picks .pick:nth-child(n){
+    display:flex;
+    flex:0 0 230px;
+    width:230px;
+    scroll-snap-align:start;
+  }
+  .hero-picks .pick-main .pick-photo{height:108px}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero-picks{scroll-behavior:auto}
+}
