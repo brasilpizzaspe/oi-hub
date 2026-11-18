@@ -46,12 +46,53 @@ function PrivateManagement() {
   const [resetSent, setResetSent] = useState(false);
 
   useEffect(() => {
-    const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
-    if (hash.get("type") === "recovery" && hash.get("access_token")) {
-      setRecoveryToken(hash.get("access_token") || "");
+    let cancelled = false;
+    async function readRecoveryLink() {
+      const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+      const query = new URLSearchParams(window.location.search);
+      const type = hash.get("type") || query.get("type");
+      const accessToken = hash.get("access_token") || query.get("access_token");
+      const tokenHash = query.get("token_hash") || hash.get("token_hash");
+      const authError = hash.get("error_description") || query.get("error_description") || hash.get("error_code") || query.get("error_code");
+
+      if (type !== "recovery" && !tokenHash && !authError) return;
       setResetMode(true);
-      window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+
+      if (authError) {
+        setError("Este link de redefinição expirou ou já foi utilizado. Volte ao login e solicite um novo link.");
+        return;
+      }
+      if (accessToken) {
+        setRecoveryToken(accessToken);
+        window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+        return;
+      }
+      if (tokenHash && SUPABASE_URL && SUPABASE_KEY) {
+        try {
+          const response = await fetch(`${SUPABASE_URL}/auth/v1/verify`, {
+            method: "POST",
+            headers: { apikey: SUPABASE_KEY, "Content-Type": "application/json" },
+            body: JSON.stringify({ token_hash: tokenHash, type: "recovery" }),
+          });
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok || !payload.access_token) throw new Error("O link expirou ou já foi utilizado. Solicite outro.");
+          if (!cancelled) {
+            setRecoveryToken(payload.access_token);
+            window.history.replaceState(null, "", `${window.location.pathname}`);
+          }
+        } catch (e) {
+          if (!cancelled) setError(e instanceof Error ? e.message : "Não foi possível validar o link. Solicite outro.");
+        }
+        return;
+      }
+      if (!SUPABASE_URL || !SUPABASE_KEY) {
+        setError("A conexão do painel com o Supabase ainda não está configurada no site publicado.");
+      } else if (type === "recovery") {
+        setError("Não foi possível localizar o código de recuperação neste link. Solicite um novo.");
+      }
     }
+    void readRecoveryLink();
+    return () => { cancelled = true; };
   }, []);
 
   const apiHeaders = useMemo(() => session ? { apikey: SUPABASE_KEY || "", Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" } : null, [session]);
@@ -88,7 +129,8 @@ function PrivateManagement() {
   async function saveNewPassword(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setBusy(true); setError(""); setNotice("");
     try {
-      if (!SUPABASE_URL || !SUPABASE_KEY || !recoveryToken) throw new Error("O link de redefinição é inválido ou expirou. Solicite outro.");
+      if (!SUPABASE_URL || !SUPABASE_KEY) throw new Error("A conexão do painel com o Supabase ainda não está configurada no site publicado.");
+      if (!recoveryToken) throw new Error("O link de redefinição não foi validado ou expirou. Volte ao login e solicite outro.");
       if (newPassword.length < 8) throw new Error("A nova senha precisa ter pelo menos 8 caracteres.");
       if (newPassword !== confirmPassword) throw new Error("As senhas não coincidem.");
       const response = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
