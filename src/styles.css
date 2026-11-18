@@ -411,3 +411,5 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 .hero-picks .pick{scroll-snap-align:none;flex:0 0 220px;width:220px}
 @media(max-width:760px){.hero-picks .pick{flex:0 0 230px;width:230px}.hero-picks{scroll-snap-type:none}}
 @media(prefers-reduced-motion:reduce){.hero-picks{scroll-behavior:auto}}
+
+@media(max-width:760px){.hero-cinematic{min-height:0}.hero-stage{top:auto;height:auto}}
