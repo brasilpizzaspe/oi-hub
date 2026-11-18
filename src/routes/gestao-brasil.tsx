@@ -315,8 +315,27 @@ function PrivateManagement() {
 
   useEffect(() => {
     if (!session) return;
-    const timer = window.setInterval(() => { void loadDashboard(session).catch(() => undefined); }, 30000);
-    return () => window.clearInterval(timer);
+    const refreshTimer = window.setInterval(async () => {
+      try {
+        const response = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
+          method: "POST", headers: { apikey: SUPABASE_KEY, "Content-Type": "application/json" },
+          body: JSON.stringify({ refresh_token: session.refresh_token }),
+        });
+        const payload = await response.json();
+        if (!response.ok || !payload.access_token || !payload.refresh_token) throw new Error("Sessão expirada");
+        const renewed: Session = { access_token: payload.access_token, refresh_token: payload.refresh_token, user: { id: payload.user.id, email: payload.user.email } };
+        setSession(renewed);
+        if (window.localStorage.getItem(PERSISTENT_SESSION_KEY)) window.localStorage.setItem(PERSISTENT_SESSION_KEY, JSON.stringify(renewed));
+        await loadDashboard(renewed);
+      } catch {
+        setSession(null);
+        window.localStorage.removeItem(PERSISTENT_SESSION_KEY);
+        setKeepConnected(false);
+        setError("Sua sessão expirou. Entre novamente.");
+      }
+    }, 50 * 60 * 1000);
+    const pollTimer = window.setInterval(() => { void loadDashboard(session).catch(() => undefined); }, 30000);
+    return () => { window.clearInterval(refreshTimer); window.clearInterval(pollTimer); };
   }, [session]);
 
   if (resetMode) return (
