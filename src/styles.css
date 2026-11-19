@@ -464,3 +464,23 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 .about-contact-button:nth-child(3):hover{background:#e5c467}
 @media(max-width:600px){.about-contact-links{gap:8px}.about-contact-button{flex:1 1 100%;min-height:46px}}
 @media(prefers-reduced-motion:reduce){.about-contact-button{transition:none}}
+
+/* Convite de avaliação integrado ao acompanhamento: exibido somente após entrega */
+.tracking-review-card{position:relative;overflow:hidden;margin-top:24px;padding:24px 18px 18px;border:1px solid #d6ad48;border-radius:18px;background:linear-gradient(145deg,#173b2c,#174d38 65%,#215a40);color:#fff;text-align:center;box-shadow:0 14px 34px #174d3820;animation:tracking-review-rise .65s cubic-bezier(.2,.8,.2,1) both}
+.tracking-review-card:before{content:"";position:absolute;inset:-50% -25%;pointer-events:none;background:radial-gradient(circle at 50% 45%,#d6ad4824,transparent 55%);animation:tracking-review-glow 4.5s ease-in-out infinite}
+.tracking-review-dismiss{position:absolute;top:10px;right:10px;z-index:2;display:grid;place-items:center;width:34px;height:34px;border:1px solid #ffffff35;border-radius:50%;background:#ffffff0c;color:#fff;cursor:pointer}
+.tracking-review-celebration{position:relative;display:flex;justify-content:center;gap:5px;margin:4px auto 13px}
+.tracking-review-star{display:grid;place-items:center;width:34px;height:34px;color:#f4d47a;opacity:0;transform:scale(.4) rotate(-18deg);animation:tracking-review-star-pop .6s cubic-bezier(.18,.9,.3,1.35) forwards}
+.tracking-review-star svg{width:29px;height:29px;fill:#d6ad48;stroke:#f4d47a;filter:drop-shadow(0 0 5px #d6ad4870)}
+.tracking-review-star:nth-child(1){animation-delay:.25s}.tracking-review-star:nth-child(2){animation-delay:.48s}.tracking-review-star:nth-child(3){animation-delay:.71s}.tracking-review-star:nth-child(4){animation-delay:.94s}.tracking-review-star:nth-child(5){animation-delay:1.17s}
+.tracking-review-kicker{position:relative;margin:0 0 8px;color:#f4d47a;font-size:10px;font-weight:800;letter-spacing:.16em}
+.tracking-review-card h3{position:relative;margin:0 auto;max-width:380px;font-size:19px;line-height:1.3;font-weight:750;color:#fff}
+.tracking-review-copy{position:relative;margin:10px auto 18px;max-width:420px;font-size:13px;line-height:1.65;color:#e5eee8}
+.tracking-review-cta{position:relative;display:flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:48px;padding:12px 14px;border-radius:12px;background:#d6ad48;color:#173b2c;font-size:13px;font-weight:800;transition:transform .2s ease,background .2s ease}
+.tracking-review-cta:hover{transform:translateY(-2px);background:#e8c566}
+.tracking-review-later{position:relative;display:inline-flex;margin-top:13px;border:0;background:transparent;color:#e4eee7;font-size:12px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+@keyframes tracking-review-rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes tracking-review-star-pop{0%{opacity:0;transform:scale(.35) rotate(-20deg)}65%{opacity:1;transform:scale(1.2) rotate(5deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes tracking-review-glow{0%,100%{opacity:.35;transform:scale(.95)}50%{opacity:.8;transform:scale(1.08)}}
+@media(max-width:480px){.tracking-review-card{padding:22px 15px 16px}.tracking-review-star{width:30px;height:30px}.tracking-review-star svg{width:25px;height:25px}.tracking-review-card h3{font-size:17px}.tracking-review-cta{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.tracking-review-card,.tracking-review-card:before,.tracking-review-star{animation:none;opacity:1;transform:none}.tracking-review-cta{transition:none}}
