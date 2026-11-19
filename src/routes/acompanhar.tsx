@@ -33,7 +33,8 @@ function TrackOrder() {
   const [trackingToken, setTrackingToken] = useState("");
   const [tracking, setTracking] = useState<Tracking | null>(null);
   const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);  const [reviewDismissedToken, setReviewDismissedToken] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [reviewDismissedToken, setReviewDismissedToken] = useState("");
 
   const lookup = useCallback(async (value: string) => {
     const cleanToken = value.trim();
