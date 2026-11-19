@@ -12,7 +12,9 @@ const statusLabels: Record<string, string> = {
   delivered: "Entregue",
   cancelled: "Cancelado",
 };
-const paymentLabels: Record<string, string> = { pending: "Aguardando confirmação", approved: "Aprovado", failed: "Não aprovado", refunded: "Estornado" };\nconst TRACKING_STORAGE_KEY = "brasilpizzas:last-tracking-token:v1";\nconst REVIEW_DISMISSED_STORAGE_KEY = "brasilpizzas:review-dismissed-token:v1";
+const paymentLabels: Record<string, string> = { pending: "Aguardando confirmação", approved: "Aprovado", failed: "Não aprovado", refunded: "Estornado" };
+const TRACKING_STORAGE_KEY = "brasilpizzas:last-tracking-token:v1";
+const REVIEW_DISMISSED_STORAGE_KEY = "brasilpizzas:review-dismissed-token:v1";
 type Tracking = {
   order_number: number;
   status: string;
@@ -57,7 +59,7 @@ function TrackOrder() {
       });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error || "Não foi possível localizar o pedido.");
-      setTracking(payload.order);
+      setTracking(payload.order);\n      try { localStorage.setItem(TRACKING_STORAGE_KEY, cleanToken); } catch {}
       setTrackingToken(cleanToken);
       setError("");
     } catch (e) {
@@ -71,7 +73,9 @@ function TrackOrder() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const initial = params.get("codigo");
+    let initial = params.get("codigo");
+    if (!initial) { try { initial = localStorage.getItem(TRACKING_STORAGE_KEY); } catch {} }
+    try { setReviewDismissedToken(localStorage.getItem(REVIEW_DISMISSED_STORAGE_KEY) || ""); } catch {}
     if (initial) {
       setToken(initial);
       void lookup(initial);
