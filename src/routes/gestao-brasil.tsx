@@ -450,7 +450,7 @@ function VisualEditor(){
   type Block={id:string;kind:"hero"|"text"|"banner"|"button";title:string;body:string;color:string;align:"left"|"center"|"right";visible:boolean};
   const initial:Block[]=[{id:"hero",kind:"hero",title:"O sabor que aproxima",body:"Pizza feita para compartilhar momentos.",color:"#174d38",align:"center",visible:true},{id:"promo",kind:"banner",title:"Uma oferta especial",body:"Confira nossas promoções de hoje.",color:"#d6ad48",align:"center",visible:true},{id:"about",kind:"text",title:"Feita com carinho",body:"Ingredientes selecionados e sabor que reúne pessoas.",color:"#174d38",align:"left",visible:true},{id:"cta",kind:"button",title:"Peça sua pizza",body:"",color:"#174d38",align:"center",visible:true}];
   const key="brasilpizzas:visual-editor-draft:v1";
-  const [blocks,setBlocks]=useState<Block[]>(()=>{try{const saved=localStorage.getItem(key);return saved?JSON.parse(saved):initial}catch{return initial}});
+  const [blocks,setBlocks]=useState<Block[]>(()=>{try{if(typeof window==="undefined")return initial;const saved=window.localStorage.getItem(key);return saved?JSON.parse(saved):initial}catch{return initial}});
   const [selected,setSelected]=useState("hero");const [device,setDevice]=useState<"desktop"|"mobile">("desktop");const [history,setHistory]=useState<Block[][]>([]);const current=blocks.find(b=>b.id===selected)||blocks[0];
   const commit=(next:Block[])=>{setHistory(old=>[...old.slice(-19),blocks]);setBlocks(next)};
   const update=(id:string,patch:Partial<Block>)=>commit(blocks.map(b=>b.id===id?{...b,...patch}:b));
