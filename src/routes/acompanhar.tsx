@@ -12,7 +12,7 @@ const statusLabels: Record<string, string> = {
   delivered: "Entregue",
   cancelled: "Cancelado",
 };
-const paymentLabels: Record<string, string> = { pending: "Aguardando confirmação", approved: "Aprovado", failed: "Não aprovado", refunded: "Estornado" };
+const paymentLabels: Record<string, string> = { pending: "Aguardando confirmação", approved: "Aprovado", failed: "Não aprovado", refunded: "Estornado" };\nconst TRACKING_STORAGE_KEY = "brasilpizzas:last-tracking-token:v1";\nconst REVIEW_DISMISSED_STORAGE_KEY = "brasilpizzas:review-dismissed-token:v1";
 type Tracking = {
   order_number: number;
   status: string;
@@ -103,7 +103,7 @@ function TrackOrder() {
             <div className="mt-5 rounded-xl border border-[#e4eee6] p-4"><p className="text-xs font-semibold uppercase tracking-wide text-[#64746a]">Pagamento</p><p className="mt-1 text-sm font-semibold">{paymentLabels[tracking.payment_status] || "Status não informado"}</p></div>
             <div className="mt-5 rounded-xl bg-[#f5f2e9] p-4 text-sm"><p className="flex items-center gap-2 font-semibold"><Clock3 size={16}/> Atualização automática a cada 20 segundos</p><p className="mt-2 text-[#64746a]">Última atualização: {new Date(tracking.updated_at).toLocaleString("pt-BR")}</p>{tracking.estimated_delivery_at && <p className="mt-1">Previsão: {new Date(tracking.estimated_delivery_at).toLocaleString("pt-BR")}</p>}</div>
             {tracking.status === "delivered" && reviewDismissedToken !== trackingToken && <section className="tracking-review-card" aria-label="Convite para avaliar a Brasil Pizzas">
-              <button type="button" className="tracking-review-dismiss" aria-label="Fechar convite" onClick={() => setReviewDismissedToken(trackingToken)}><X size={17}/></button>
+              <button type="button" className="tracking-review-dismiss" aria-label="Fechar convite" onClick={() => { setReviewDismissedToken(trackingToken); try { localStorage.setItem(REVIEW_DISMISSED_STORAGE_KEY, trackingToken); } catch {} }}><X size={17}/></button>
               <div className="tracking-review-celebration" aria-hidden="true"><span className="tracking-review-star"><Star/></span><span className="tracking-review-star"><Star/></span><span className="tracking-review-star"><Star/></span><span className="tracking-review-star"><Star/></span><span className="tracking-review-star"><Star/></span></div>
               <p className="tracking-review-kicker">PEDIDO ENTREGUE · OBRIGADO ❤️</p>
               <h3>Esperamos que tenha aproveitado cada pedaço!</h3>
