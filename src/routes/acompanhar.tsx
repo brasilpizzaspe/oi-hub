@@ -59,7 +59,8 @@ function TrackOrder() {
       });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error || "Não foi possível localizar o pedido.");
-      setTracking(payload.order);\n      try { localStorage.setItem(TRACKING_STORAGE_KEY, cleanToken); } catch {}
+      setTracking(payload.order);
+      try { localStorage.setItem(TRACKING_STORAGE_KEY, cleanToken); } catch {}
       setTrackingToken(cleanToken);
       setError("");
     } catch (e) {
