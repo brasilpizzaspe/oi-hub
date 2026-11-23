@@ -114,7 +114,7 @@ function TrackOrder() {
               <h3>Esperamos que tenha aproveitado cada pedaço!</h3>
               <p className="tracking-review-copy">Sua opinião ajuda a Brasil Pizzas a crescer e a levar mais momentos gostosos até você.</p>
               <a className="tracking-review-cta" href="https://www.google.com/search?q=Brasil+Pizzas+Recife+avaliar+Google" target="_blank" rel="noopener noreferrer"><Star size={17} fill="currentColor"/> Avaliar nossa pizzaria no Google <ExternalLink size={15}/></a>
-              <button type="button" className="tracking-review-later" onClick={() => setReviewDismissedToken(trackingToken)}>Agora não</button>
+              <button type="button" className="tracking-review-later" onClick={() => { setReviewDismissedToken(trackingToken); try { localStorage.setItem(REVIEW_DISMISSED_STORAGE_KEY, trackingToken); } catch {} }}>Agora não</button>
             </section>}
             <button type="button" onClick={() => void lookup(trackingToken)} disabled={busy} className="mt-4 inline-flex items-center gap-2 text-sm font-semibold"><RefreshCw size={15}/> Atualizar agora</button>
           </div>}
