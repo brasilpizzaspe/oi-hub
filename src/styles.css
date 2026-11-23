@@ -747,3 +747,24 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
   .experience-bg,.store .product-photo:before,.store .experience-card:before{transition:none}
 }
 @media(max-width:600px){.store .how-order-steps article>span{min-width:66px}.store .product-bottom{gap:6px}.store .product-bottom b{font-size:13px;line-height:1.15}}
+
+
+/* Carrossel do topo com foco fluido: o cartão em destaque cresce e os vizinhos se reorganizam */
+.hero-picks{display:block!important;overflow:visible!important;padding:0!important;gap:0;height:300px;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab;animation:heroReveal .9s .8s cubic-bezier(.2,.7,.2,1) both}
+.hero-picks.is-dragging{cursor:grabbing}
+.hero-picks.is-dragging .pick{translate:0 0!important}
+.hero-picks .pick,.hero-picks .pick-main,.hero-picks .pick:nth-child(n){position:absolute;left:0;bottom:0;display:flex;flex:none;width:236px;margin:0;animation:none;transform-origin:50% 100%;will-change:transform,opacity;backface-visibility:hidden;translate:0 0;transition:translate .45s cubic-bezier(.2,.75,.25,1),box-shadow .45s ease;box-shadow:0 calc(12px + var(--focus,1) * 18px) calc(26px + var(--focus,1) * 30px) -20px color-mix(in srgb,#000 calc(55% + var(--focus,1) * 35%),transparent)}
+.hero-picks .pick::after{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--hero-bg);opacity:calc((1 - var(--focus,1)) * .18);pointer-events:none;transition:opacity .2s linear}
+.hero-picks .pick .pick-photo{transform:scale(calc(.97 + var(--focus,1) * .03));transform-origin:50% 100%}
+.hero-picks .pick.is-active:hover{translate:0 -5px}
+.hero-picks .pick:not(.is-active){cursor:pointer}
+.hero-picks .pick-promo{box-shadow:0 calc(12px + var(--focus,1) * 18px) calc(26px + var(--focus,1) * 30px) -18px color-mix(in srgb,#000 calc(55% + var(--focus,1) * 35%),transparent)}
+@media(max-width:760px){
+  .hero-picks{width:100%!important;margin:18px 0 22px!important}
+  .hero-picks .pick,.hero-picks .pick-main,.hero-picks .pick:nth-child(n){width:236px}
+  .hero-picks .pick.is-active:hover{translate:0 0}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero-picks{animation:none}
+  .hero-picks .pick{transition:none}
+}
