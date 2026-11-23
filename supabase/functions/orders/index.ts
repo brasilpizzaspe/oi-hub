@@ -63,10 +63,11 @@ Deno.serve(async (req: Request) => {
     const { data: zones, error: zonesError } = await db.from("delivery_zones").select("neighborhood,fee,active");
     if (zonesError) throw zonesError;
     const requestedNeighborhood = normalizeNeighborhood(neighborhood);
+    // Keep the legacy checkout operational until the store configures its first delivery zone.
     const deliveryZone = (zones || []).find((zone) => zone.active && normalizeNeighborhood(zone.neighborhood) === requestedNeighborhood);
-    if (!deliveryZone) return respond(422, { error: "Ainda não atendemos esse bairro. Confira o nome ou fale conosco pelo WhatsApp para consultar a área de entrega." });
-    const deliveryFee = Number(deliveryZone.fee);
-    if (!Number.isFinite(deliveryFee) || deliveryFee < 0) return respond(500, { error: "A taxa deste bairro está configurada incorretamente. Entre em contato com a loja." });
+    if ((zones || []).length > 0 && !deliveryZone) return respond(422, { error: "Ainda não atendemos esse bairro. Confira o nome ou fale conosco pelo WhatsApp para consultar a área de entrega." });
+    const deliveryFee = deliveryZone ? Number(deliveryZone.fee) : null;
+    if (deliveryFee !== null && (!Number.isFinite(deliveryFee) || deliveryFee < 0)) return respond(500, { error: "A taxa deste bairro está configurada incorretamente. Entre em contato com a loja." });
 
     if (!/^[+()\d\s.-]+$/.test(customer_phone) || phoneDigits.length < 10 || phoneDigits.length > 15) {
       return respond(400, { error: "Informe um telefone válido com DDD." });
@@ -116,7 +117,7 @@ Deno.serve(async (req: Request) => {
 
     const { data: order, error: orderError } = await db.from("orders").insert({
       customer_name, customer_phone, street, street_number, neighborhood, reference: reference || null,
-      payment_method, notes: notes || null, subtotal, delivery_fee: deliveryFee, total: Number((subtotal + deliveryFee).toFixed(2)),
+      payment_method, notes: notes || null, subtotal, delivery_fee: deliveryFee, total: Number((subtotal + (deliveryFee ?? 0)).toFixed(2)),
       status: "received", payment_status: "pending", tracking_token_hash: tokenHash,
     }).select("id,order_number,created_at").single();
     if (orderError) throw orderError;
