@@ -121,7 +121,7 @@ Deno.serve(async (req: Request) => {
       customer_name, customer_phone, street, street_number, municipality, neighborhood, reference: reference || null,
       payment_method, notes: notes || null, subtotal, delivery_fee: deliveryFee, total: Number((subtotal + (deliveryFee ?? 0)).toFixed(2)),
       status: "received", payment_status: "pending", tracking_token_hash: tokenHash,
-    }).select("id,order_number,created_at").single();
+    }).select("id,order_number,created_at,estimated_delivery_at").single();
     if (orderError) throw orderError;
 
     const { error: itemsError } = await db.from("order_items").insert(orderItems.map((item) => ({ ...item, order_id: order.id })));
