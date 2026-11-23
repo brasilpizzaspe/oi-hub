@@ -65,7 +65,6 @@ Deno.serve(async (req: Request) => {
     if (zonesError) throw zonesError;
     const requestedMunicipality = normalizeNeighborhood(municipality);
     const requestedNeighborhood = normalizeNeighborhood(neighborhood);
-    // Keep the legacy checkout operational until the store configures its first delivery zone.
     const deliveryZone = (zones || []).find((zone) => zone.active && normalizeNeighborhood(zone.municipality) === requestedMunicipality && normalizeNeighborhood(zone.neighborhood) === requestedNeighborhood);
     if ((zones || []).length > 0 && !deliveryZone) return respond(422, { error: "Ainda não atendemos esse bairro. Confira o nome ou fale conosco pelo WhatsApp para consultar a área de entrega." });
     const deliveryFee = deliveryZone ? Number(deliveryZone.fee) : null;
