@@ -484,3 +484,266 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 @keyframes tracking-review-glow{0%,100%{opacity:.35;transform:scale(.95)}50%{opacity:.8;transform:scale(1.08)}}
 @media(max-width:480px){.tracking-review-card{padding:22px 15px 16px}.tracking-review-star{width:30px;height:30px}.tracking-review-star svg{width:25px;height:25px}.tracking-review-card h3{font-size:17px}.tracking-review-cta{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.tracking-review-card,.tracking-review-card:before,.tracking-review-star{animation:none;opacity:1;transform:none}.tracking-review-cta{transition:none}}
+
+
+/* ============================================================
+   SITE CINEMATOGRÁFICO — continuação da linguagem do Hero
+   Vinho profundo + vermelho intenso + dourado, títulos condensados,
+   cartões de vidro, brilhos ambientes e revelação ao rolar.
+   Escopo: somente a vitrine (.store). Painel/ADM não são afetados.
+   ============================================================ */
+.store{
+  --bp-bg:#17050a;--bp-bg-2:#220810;--bp-wine:#4a1019;--bp-red:#e1251b;--bp-red-deep:#b3120f;
+  --bp-gold:#f6b955;--bp-gold-soft:#ffd27a;--bp-ember:#ff6a2b;--bp-cream:#fff4e6;--bp-paper:#fff8f0;
+  --bp-ink:#2a1410;--bp-text-dark:#f3e2d4;--bp-text-muted:#f3e2d4a8;--bp-text-light:#7a6259;
+  --bp-glass:#ffffff0d;--bp-glass-line:#ffffff1f;
+  --bp-ease:cubic-bezier(.2,.7,.2,1);
+  --bp-display:Anton,Impact,"Arial Narrow",sans-serif;
+  position:relative;overflow-x:clip;background:var(--bp-bg);color:var(--bp-text-dark);
+}
+
+/* ---------- Elementos compartilhados ---------- */
+.store .eyebrow{color:var(--bp-gold);font-size:10px;letter-spacing:.3em;gap:12px}
+.store .eyebrow:before{content:"";width:28px;height:1px;background:currentColor;opacity:.7}
+.store .how-order-heading h2,.store .experience-heading h2,.store .section-heading h2,.store .about h2{
+  font-family:var(--bp-display);font-weight:400;text-transform:uppercase;letter-spacing:.005em;
+  font-size:clamp(42px,5.6vw,84px);line-height:.95;margin:16px 0 14px;color:#fff;text-shadow:0 2px 24px #0006
+}
+.store .how-order-heading h2 em,.store .experience-heading h2 em,.store .about h2 em{
+  font-style:normal;font-weight:400;background:linear-gradient(100deg,var(--bp-gold-soft) 0%,var(--bp-gold) 40%,var(--bp-ember) 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none;filter:drop-shadow(0 4px 18px #0007)
+}
+.store .experience-heading p,.store .about p{color:var(--bp-text-muted);font-size:15px;line-height:1.7}
+
+/* Botões no padrão do Hero: pílula vermelha com reflexo */
+.store .primary-btn,.store .drink-suggestion-info>button{
+  position:relative;overflow:hidden;border-radius:999px;min-height:52px;padding:0 26px;font-size:13px;font-weight:800;letter-spacing:.06em;
+  background:linear-gradient(180deg,#f2392d 0%,var(--bp-red) 45%,var(--bp-red-deep) 100%);color:#fff;
+  box-shadow:inset 0 1px 0 #ffffff40,0 14px 30px -10px #e1251b99;transition:transform .25s ease,box-shadow .25s ease
+}
+.store .primary-btn:before,.store .drink-suggestion-info>button:before{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,#ffffff45,transparent);transform:skewX(-20deg);transition:left .7s ease}
+.store .primary-btn:not(:disabled):hover,.store .drink-suggestion-info>button:hover{transform:translateY(-2px);background:linear-gradient(180deg,#f2392d 0%,var(--bp-red) 45%,var(--bp-red-deep) 100%);box-shadow:inset 0 1px 0 #ffffff50,0 20px 40px -10px #e1251bb3}
+.store .primary-btn:not(:disabled):hover:before,.store .drink-suggestion-info>button:hover:before{left:130%}
+.store .text-link{color:var(--bp-gold);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.store .text-link svg{transition:transform .25s}
+.store .text-link:hover svg{transform:translateX(4px)}
+
+/* ---------- Faixa animada entre o Hero e o conteúdo ---------- */
+.bp-ribbon{position:relative;z-index:2;margin:6px -4vw 0;padding:14px 0;transform:rotate(-1.6deg);overflow:hidden;
+  background:linear-gradient(180deg,#f2392d,var(--bp-red) 50%,var(--bp-red-deep));box-shadow:0 18px 40px -16px #000c,inset 0 1px 0 #ffffff40}
+.bp-ribbon:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,var(--bp-red-deep) 0%,transparent 8%,transparent 92%,var(--bp-red-deep) 100%)}
+.bp-ribbon-track{display:flex;width:max-content;animation:bpMarquee 32s linear infinite}
+.bp-ribbon-group{display:flex;flex:0 0 auto}
+.bp-ribbon-group>span{display:inline-flex;align-items:center;gap:26px;padding-right:26px;font:400 clamp(18px,2vw,26px)/1 var(--bp-display);text-transform:uppercase;letter-spacing:.04em;color:#fff;white-space:nowrap}
+.bp-ribbon-group i{font-style:normal;font-size:.7em;color:var(--bp-gold-soft)}
+@keyframes bpMarquee{to{transform:translateX(-50%)}}
+
+/* ---------- Promessas: pílulas de vidro ---------- */
+.store .promise{position:relative;gap:14px;border:0;padding:64px 0 12px}
+.store .promise>div{justify-content:flex-start;gap:14px;padding:18px 20px;border:1px solid var(--bp-glass-line);border-radius:20px;background:var(--bp-glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:transform .35s var(--bp-ease),border-color .35s ease,background .35s ease}
+.store .promise>div:last-child{border:1px solid var(--bp-glass-line)}
+.store .promise>div:hover{transform:translateY(-3px);border-color:#f6b95566;background:#ffffff14}
+.store .promise i{flex:0 0 46px;width:46px;height:46px;display:grid;place-items:center;border-radius:50%;font-size:20px;color:var(--bp-gold);background:radial-gradient(circle at 35% 30%,#e1251b55,#e1251b14 70%);box-shadow:inset 0 0 0 1px #f6b95540}
+.store .promise b{font-size:14px;color:#fff;letter-spacing:.01em}
+.store .promise small{font-size:12px;color:var(--bp-text-muted)}
+
+/* ---------- Como pedir: números gigantes em contorno ---------- */
+.store .how-order{position:relative;padding:96px 0 24px}
+.store .how-order:before{content:"";position:absolute;z-index:-1;left:50%;top:10%;width:min(900px,120vw);height:420px;transform:translateX(-50%);background:radial-gradient(50% 50% at 50% 50%,#4a101999,transparent 70%);pointer-events:none;animation:bpGlowDrift 14s ease-in-out infinite alternate}
+.store .how-order-heading h2{margin-bottom:40px}
+.store .how-order-heading .eyebrow{justify-content:center}
+.store .how-order-steps{gap:16px}
+.store .how-order-steps article{position:relative;overflow:hidden;flex-direction:column;gap:18px;padding:28px 26px 30px;border:1px solid var(--bp-glass-line);border-radius:24px;background:linear-gradient(160deg,#ffffff12,#ffffff05);transition:transform .45s var(--bp-ease),border-color .45s ease,box-shadow .45s ease}
+.store .how-order-steps article:after{content:"";position:absolute;right:-40px;top:-40px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,#e1251b44,transparent 70%);transition:transform .6s var(--bp-ease)}
+.store .how-order-steps article:hover{transform:translateY(-6px);border-color:#f6b95566;box-shadow:0 30px 60px -30px #000}
+.store .how-order-steps article:hover:after{transform:scale(1.6)}
+.store .how-order-steps article>span{font:400 72px/.85 var(--bp-display);color:transparent;-webkit-text-stroke:1.5px var(--bp-gold);transition:color .45s ease}
+.store .how-order-steps article:hover>span{color:var(--bp-gold)}
+.store .how-order-steps b{font-size:17px;color:#fff;font-weight:800}
+.store .how-order-steps p{font-size:13px;line-height:1.65;color:var(--bp-text-muted);margin-top:8px}
+
+/* ---------- Experiências: cartões cinematográficos ---------- */
+.store .experience-section{padding:96px 0 40px}
+.store .experience-heading{margin-bottom:32px}
+.store .experience-grid{gap:16px}
+.store .experience-card{min-height:340px;padding:32px;border-radius:28px;border:1px solid var(--bp-glass-line);background:var(--bp-bg-2);box-shadow:0 30px 60px -30px #000;transition:transform .5s var(--bp-ease),box-shadow .5s ease,border-color .5s ease}
+.store .experience-card:nth-child(3){min-height:280px}
+.experience-bg{position:absolute;inset:0;z-index:-2;background-size:cover;background-position:center;transform:scale(1.02);transition:transform 1.2s var(--bp-ease)}
+.store .experience-card:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(95deg,#17050af2 0%,#17050ab3 40%,#17050a26 75%),linear-gradient(0deg,#17050acc 0%,transparent 45%)}
+.store .experience-card:before{content:"";position:absolute;z-index:1;top:0;bottom:0;left:-70%;width:45%;background:linear-gradient(100deg,transparent,#ffffff1f,transparent);transform:skewX(-20deg);transition:left 1s ease;pointer-events:none}
+.store .experience-card:hover{transform:translateY(-6px);border-color:#f6b95570;box-shadow:0 40px 80px -30px #000,0 0 0 1px #f6b95522}
+.store .experience-card:hover .experience-bg{transform:scale(1.1)}
+.store .experience-card:hover:before{left:140%}
+.store .experience-kicker{color:var(--bp-gold);letter-spacing:.24em;font-size:10px}
+.store .experience-card strong{font:400 clamp(38px,4.6vw,64px)/.95 var(--bp-display);text-transform:uppercase;letter-spacing:.01em;color:#fff}
+.store .experience-card strong em{font-style:normal;background:linear-gradient(100deg,var(--bp-gold-soft),var(--bp-gold) 45%,var(--bp-ember));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.store .experience-description{color:var(--bp-text-dark);font-size:14px;max-width:420px}
+.store .experience-link{display:inline-flex;align-items:center;gap:10px;margin-top:8px;padding:12px 20px;border-radius:999px;background:var(--bp-paper);color:var(--bp-ink);font-size:11px;letter-spacing:.1em;transition:background .3s ease,color .3s ease,gap .3s ease}
+.store .experience-card:hover .experience-link{background:var(--bp-red);color:#fff;gap:14px}
+
+/* ---------- Cardápio: folha creme que "sobe" sobre o fundo vinho ---------- */
+.store .menu-section{position:relative;isolation:isolate;margin-top:72px;padding:96px 0 104px;color:var(--bp-ink)}
+.store .menu-section:before{content:"";position:absolute;z-index:-1;inset:0 calc(50% - 50vw);background:radial-gradient(60% 40% at 85% 0%,#ffd9c2 0%,transparent 70%),var(--bp-cream);border-radius:44px;box-shadow:0 -30px 80px -30px #000c}
+.store .section-heading h2{color:var(--bp-ink);text-shadow:none}
+.store .section-heading h2 em{font-style:normal;font-weight:400;background:linear-gradient(100deg,var(--bp-red) 0%,var(--bp-red-deep) 60%,#7a0b12 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.store .menu-section .eyebrow{color:var(--bp-red-deep)}
+.store .section-heading p{font-size:15px;color:var(--bp-text-light)}
+.store .menu-count{display:inline-flex;align-items:center;padding:10px 16px;border-radius:999px;background:var(--bp-ink);color:var(--bp-paper);font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.store .tabs{gap:6px;padding:5px;margin:36px 0 30px;width:max-content;max-width:100%;border-radius:999px;background:#fff;box-shadow:0 10px 30px -14px #2a141055}
+.store .tab{border:0;background:transparent;padding:11px 20px;color:#3a1a14;font-size:13px;font-weight:700;white-space:nowrap}
+.store .tab:hover{background:#f6e3d6;color:#3a1a14}
+.store .tab.active{background:var(--bp-red);color:#fff;box-shadow:0 8px 20px -8px #e1251bcc}
+.store .product-grid{gap:18px}
+.store .product-card{display:flex;flex-direction:column;border:0;border-radius:24px;background:#fff;box-shadow:0 18px 40px -26px #2a141066;overflow:hidden}
+.store .product-card:hover{transform:translateY(-6px);border-color:transparent;box-shadow:0 30px 60px -28px #2a1410a0,0 0 0 1px #e1251b22}
+.store .product-photo{position:relative;overflow:hidden;height:196px;margin:8px 8px 0;border-radius:18px;background-color:#f3cdbd;isolation:isolate}
+.store .product-photo:before{content:"";position:absolute;inset:0;z-index:-1;background:inherit;background-size:cover;background-position:center;transition:transform 1s var(--bp-ease)}
+.store .product-photo:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,#17050a55,transparent 45%)}
+.store .product-card:hover .product-photo:before{transform:scale(1.1)}
+.store .product-card:hover .product-photo{transform:none}
+.store .product-photo span{top:10px;right:10px;padding:5px 9px;border-radius:999px;background:#17050a66;border:1px solid #ffffff33;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font:400 12px/1 var(--bp-display);letter-spacing:.08em}
+.store .product-info{display:flex;flex:1;flex-direction:column;padding:16px 18px 18px}
+.store .product-info>small{color:var(--bp-red-deep);font-size:9px;letter-spacing:.2em}
+.store .product-info h3{font:400 24px/1.05 var(--bp-display);text-transform:uppercase;letter-spacing:.01em;color:var(--bp-ink);margin:8px 0}
+.store .product-info p{font-size:12px;line-height:1.55;color:var(--bp-text-light);flex:1}
+.store .product-bottom{border-top:1px dashed #2a141022;margin-top:16px;padding-top:14px}
+.store .product-bottom b{font-size:17px;font-weight:900;color:var(--bp-red-deep)}
+.store .product-bottom button{width:42px;height:42px;background:var(--bp-ink);box-shadow:0 8px 18px -8px #2a1410aa}
+.store .product-bottom button svg{transition:transform .35s var(--bp-ease)}
+.store .product-bottom button:hover{background:var(--bp-red);transform:scale(1.08);box-shadow:0 10px 24px -8px #e1251bcc}
+.store .product-bottom button:hover svg{transform:rotate(90deg)}
+.store .price-notice{border:0;border-left:3px solid var(--bp-red);border-radius:16px;background:#fff;color:var(--bp-text-light);box-shadow:0 14px 30px -20px #2a141066}
+.store .price-notice b{font:400 20px var(--bp-display);text-transform:uppercase;color:var(--bp-ink)}
+
+/* ---------- Nossa casa ---------- */
+.store .about{position:relative;padding:112px 0 112px;gap:80px}
+.store .about:before{content:"";position:absolute;z-index:-1;left:-10%;top:20%;width:60%;height:70%;background:radial-gradient(50% 50% at 50% 50%,#4a1019cc,transparent 70%);pointer-events:none;animation:bpGlowFloat 16s ease-in-out infinite alternate}
+.about-frame{position:relative}
+.about-frame:before{content:"";position:absolute;inset:18px -18px -18px 18px;border:1px solid #f6b95566;border-radius:30px;pointer-events:none}
+.store .about-photo{position:relative;height:440px;border:0;border-radius:30px;box-shadow:0 40px 80px -30px #000}
+.about-seal{position:absolute;left:-34px;bottom:-34px;width:120px;height:120px;color:var(--bp-gold);border-radius:50%;background:var(--bp-bg);box-shadow:0 20px 40px -14px #000}
+.about-seal svg{width:100%;height:100%;animation:heroSpin 22s linear infinite}
+.about-seal text{font:700 8.6px/1 Inter,ui-sans-serif,system-ui,sans-serif;fill:currentColor}
+.about-seal i{position:absolute;inset:0;display:grid;place-items:center}
+.about-seal i:before{content:"";position:absolute;inset:31%;border-radius:50%;background:var(--bp-red);box-shadow:0 0 22px #e1251b88}
+.about-seal i svg{position:relative;width:22%;height:22%;animation:none;color:#fff}
+.store .about p{max-width:460px}
+.store .about-contact-button{min-height:50px;padding:0 20px;border:1.5px solid #fff4e6b3;background:transparent;color:var(--bp-cream);font-size:12px;letter-spacing:.04em;transition:transform .25s ease,background .25s ease,border-color .25s ease,box-shadow .25s ease}
+.store .about-contact-button:hover{background:#fff4e614;border-color:#fff;transform:translateY(-2px)}
+.store .about-contact-button:nth-child(1){border:0;background:linear-gradient(180deg,#f2392d,var(--bp-red) 45%,var(--bp-red-deep));color:#fff;box-shadow:inset 0 1px 0 #ffffff40,0 14px 30px -10px #e1251b99}
+.store .about-contact-button:nth-child(1):hover{box-shadow:inset 0 1px 0 #ffffff50,0 20px 40px -10px #e1251bb3}
+.store .about-contact-button:nth-child(2){background:transparent;color:var(--bp-cream)}
+.store .about-contact-button:nth-child(2):hover{background:#fff4e614}
+.store .about-contact-button:nth-child(3){border:0;background:linear-gradient(100deg,var(--bp-gold-soft),var(--bp-gold));color:var(--bp-ink)}
+.store .about-contact-button:nth-child(3):hover{background:linear-gradient(100deg,#ffe0a0,var(--bp-gold-soft))}
+
+/* ---------- Rodapé ---------- */
+.store .footer{position:relative;overflow:hidden;background:#0d0205;color:var(--bp-text-dark);padding:46px 0 36px;border-top:1px solid #f6b95533}
+.store .footer:before{content:"BRASIL PIZZAS";position:absolute;left:50%;bottom:-.22em;transform:translateX(-50%);font:400 clamp(70px,16vw,230px)/1 var(--bp-display);letter-spacing:.02em;white-space:nowrap;color:transparent;-webkit-text-stroke:1px #f6b9551f;pointer-events:none}
+.store .footer-inner{position:relative;padding-bottom:clamp(40px,9vw,120px)}
+.store .footer-brand{color:#fff;font-weight:900;letter-spacing:.16em}
+.store .footer-brand b{color:var(--bp-gold)}
+.store .footer-brand small{color:var(--bp-text-muted)}
+.store .footer-inner>span{color:var(--bp-text-muted);font-size:11px}
+
+/* ---------- Sacola, entrega e sugestão de bebida ---------- */
+.store .overlay{background:#0d0205a6;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.store .cart-panel,.store .checkout-modal{background:var(--bp-paper);color:var(--bp-ink)}
+.store .cart-panel{box-shadow:-30px 0 80px #000a}
+.store .panel-head{border-color:#2a14101a}
+.store .panel-head h2{font:400 36px/1 var(--bp-display);text-transform:uppercase;color:var(--bp-ink);margin:8px 0 0}
+.store .cart-panel .eyebrow,.store .drink-suggestion>.eyebrow{color:var(--bp-red-deep)}
+.store .icon-btn{border-color:#2a14101f;background:#fff;color:var(--bp-ink)}
+.store .icon-btn:hover{background:var(--bp-red);border-color:var(--bp-red);color:#fff;transform:rotate(90deg)}
+.store .empty-cart{color:var(--bp-text-light)}
+.store .empty-cart svg{color:var(--bp-red)}
+.store .empty-cart b{font:400 26px var(--bp-display);text-transform:uppercase;color:var(--bp-ink)}
+.store .cart-line{border-color:#2a14101a}
+.store .cart-line b{font:800 15px Inter,ui-sans-serif,system-ui,sans-serif;color:var(--bp-ink)}
+.store .cart-line small{color:var(--bp-red-deep);font-weight:700}
+.store .quantity{gap:8px;padding:4px;border-radius:999px;background:#fff;box-shadow:0 6px 16px -10px #2a141077}
+.store .quantity button{border:0;background:#f6e3d6;color:var(--bp-ink);cursor:pointer}
+.store .quantity button:hover:not(:disabled){background:var(--bp-red);color:#fff}
+.store .cart-total,.store .checkout-total{border-color:#2a14101a;color:var(--bp-text-light)}
+.store .cart-total b,.store .checkout-total b{font:400 26px var(--bp-display);color:var(--bp-ink)}
+.store .cart-addons{border-color:#2a14101a}
+.store .cart-addons-heading>b{color:var(--bp-ink)}
+.store .cart-addon{border:0;border-radius:16px;box-shadow:0 8px 20px -14px #2a141077}
+.store .cart-addon>button{background:var(--bp-ink)}
+.store .cart-addon>button:hover{background:var(--bp-red)}
+.store .checkout-form label{color:var(--bp-text-light)}
+.store .checkout-form input,.store .checkout-form select,.store .checkout-form textarea{border:1px solid #2a14101f;border-radius:14px;background:#fff;padding:13px 14px;font-size:14px;color:var(--bp-ink);transition:border-color .2s,box-shadow .2s}
+.store .checkout-form input:focus,.store .checkout-form select:focus,.store .checkout-form textarea:focus{outline:0;border-color:var(--bp-red);box-shadow:0 0 0 4px #e1251b1f}
+.store .success-state svg{color:var(--bp-red)}
+.store .success-state h3{font:400 32px var(--bp-display);text-transform:uppercase;color:var(--bp-ink)}
+.store .drink-suggestion-backdrop{background:#0d0205b3}
+.store .drink-suggestion{border:0;border-radius:28px;background:var(--bp-paper);color:var(--bp-ink);box-shadow:0 40px 100px #000a}
+.store .drink-suggestion h2{font:400 clamp(26px,4.4vw,38px)/1 var(--bp-display);text-transform:uppercase;letter-spacing:.01em;color:var(--bp-ink)}
+.store .drink-suggestion>p{color:var(--bp-text-light)}
+.store .drink-suggestion-card{border:0;border-radius:20px;box-shadow:0 14px 30px -20px #2a141088}
+.store .drink-suggestion-info>b{color:var(--bp-ink)}
+.store .drink-suggestion-info>strong{color:var(--bp-red-deep)}
+.store .drink-suggestion-info>button{min-height:40px;font-size:12px}
+.store .drink-suggestion-skip{border:1.5px solid var(--bp-ink);background:transparent;color:var(--bp-ink)}
+.store .drink-suggestion-skip:hover{background:var(--bp-ink);color:#fff}
+.store .drink-suggestion-close{border-color:#2a14101f;color:var(--bp-ink)}
+.store .cart-notice{border:1px solid #f6b95566;background:linear-gradient(135deg,#2a0a10f2,#17050af5);box-shadow:0 18px 44px #000a,inset 0 1px #ffffff1a}
+.store .cart-notice-photo svg{background:var(--bp-gold);color:var(--bp-ink)}
+.store .floating-cart{background:linear-gradient(180deg,#f2392d,var(--bp-red) 45%,var(--bp-red-deep));color:#fff;font-weight:800;box-shadow:inset 0 1px 0 #ffffff40,0 14px 30px -8px #e1251bb3}
+.store .floating-cart b{background:var(--bp-paper);color:var(--bp-red-deep)}
+
+/* ---------- Revelação ao rolar (somente navegadores compatíveis) ---------- */
+@keyframes bpReveal{from{opacity:0;transform:translateY(42px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+@keyframes bpGlowDrift{from{transform:translate(-50%,0) scale(1)}to{transform:translate(-46%,-20px) scale(1.12)}}
+@keyframes bpGlowFloat{from{transform:none}to{transform:translate(6%,-24px) scale(1.12)}}
+@supports (animation-timeline:view()){
+  .store .promise>div,.store .how-order-heading,.store .how-order-steps article,.store .experience-heading,.store .experience-card,
+  .store .section-heading,.store .product-card,.store .about-frame,.store .about>div:last-child{
+    animation:bpReveal linear both;animation-timeline:view();animation-range:entry 0% entry 55%
+  }
+}
+
+/* ---------- Ajustes para telas menores ---------- */
+@media(max-width:850px){.store .about{gap:56px}.store .product-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){.bp-ribbon{margin-top:0}}
+@media(max-width:600px){
+  .bp-ribbon{padding:11px 0}
+  .store .promise{grid-template-columns:1fr;gap:10px;padding:46px 0 4px}
+  .store .promise>div{padding:14px 16px}
+  .store .how-order{padding:72px 0 10px}
+  .store .how-order-heading h2,.store .experience-heading h2,.store .section-heading h2,.store .about h2{font-size:clamp(40px,12vw,56px)}
+  .store .how-order-heading h2{margin-bottom:26px}
+  .store .how-order-steps{gap:10px}
+  .store .how-order-steps article{flex-direction:row;align-items:center;gap:18px;padding:20px}
+  .store .how-order-steps article>span{font-size:52px;flex:0 0 auto}
+  .store .experience-section{padding:72px 0 24px}
+  .store .experience-card,.store .experience-card:nth-child(3){min-height:260px;padding:24px;border-radius:24px}
+  .store .experience-card strong{font-size:40px}
+  .store .menu-section{margin-top:48px;padding:64px 0 72px}
+  .store .menu-section:before{border-radius:32px}
+  .store .section-heading{flex-direction:column;align-items:flex-start;gap:14px}
+  .store .tabs{width:auto;overflow-x:auto;scrollbar-width:none;margin:26px 0 22px}
+  .store .tabs::-webkit-scrollbar{display:none}
+  .store .tab{padding:10px 16px;font-size:12px}
+  .store .product-grid{gap:10px}
+  .store .product-card{border-radius:20px}
+  .store .product-photo{height:128px;margin:6px 6px 0;border-radius:15px}
+  .store .product-info{padding:12px 12px 14px}
+  .store .product-info h3{font-size:19px}
+  .store .product-info p{font-size:11px;min-height:0}
+  .store .product-bottom{margin-top:12px;padding-top:10px}
+  .store .product-bottom b{font-size:14px}
+  .store .product-bottom button{width:36px;height:36px}
+  .store .about{padding:80px 0 96px;gap:56px}
+  .store .about-photo{height:300px;border-radius:24px}
+  .about-frame:before{inset:12px -10px -12px 12px;border-radius:24px}
+  .about-seal{width:92px;height:92px;left:-6px;bottom:-30px}
+  .store .footer{padding:36px 0 28px}
+}
+@media(prefers-reduced-motion:reduce){
+  .bp-ribbon-track,.store .how-order:before,.store .about:before,.about-seal svg{animation:none}
+  .store .promise>div,.store .how-order-heading,.store .how-order-steps article,.store .experience-heading,.store .experience-card,
+  .store .section-heading,.store .product-card,.store .about-frame,.store .about>div:last-child{animation:none}
+  .experience-bg,.store .product-photo:before,.store .experience-card:before{transition:none}
+}
+@media(max-width:600px){.store .how-order-steps article>span{min-width:66px}.store .product-bottom{gap:6px}.store .product-bottom b{font-size:13px;line-height:1.15}}
