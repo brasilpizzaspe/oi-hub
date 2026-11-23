@@ -11,16 +11,20 @@ create unique index if not exists delivery_zones_neighborhood_unique
 alter table public.delivery_zones enable row level security;
 grant select on public.delivery_zones to anon, authenticated;
 grant insert, update, delete on public.delivery_zones to authenticated;
+drop policy if exists "Anyone can read active delivery zones" on public.delivery_zones;
 create policy "Anyone can read active delivery zones"
   on public.delivery_zones for select to anon, authenticated
   using (active = true or exists (select 1 from public.admin_users where user_id = (select auth.uid())));
+drop policy if exists "Admins can insert delivery zones" on public.delivery_zones;
 create policy "Admins can insert delivery zones"
   on public.delivery_zones for insert to authenticated
   with check (exists (select 1 from public.admin_users where user_id = (select auth.uid())));
+drop policy if exists "Admins can update delivery zones" on public.delivery_zones;
 create policy "Admins can update delivery zones"
   on public.delivery_zones for update to authenticated
   using (exists (select 1 from public.admin_users where user_id = (select auth.uid())))
   with check (exists (select 1 from public.admin_users where user_id = (select auth.uid())));
+drop policy if exists "Admins can delete delivery zones" on public.delivery_zones;
 create policy "Admins can delete delivery zones"
   on public.delivery_zones for delete to authenticated
   using (exists (select 1 from public.admin_users where user_id = (select auth.uid())));
