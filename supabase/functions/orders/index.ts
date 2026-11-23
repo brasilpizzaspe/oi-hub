@@ -51,20 +51,22 @@ Deno.serve(async (req: Request) => {
     const customer_phone = clean(body.customer?.phone, 30, true);
     const street = clean(body.customer?.street, 160, true);
     const street_number = clean(body.customer?.number, 30, true);
+    const municipality = clean(body.customer?.municipality, 100, true);
     const neighborhood = clean(body.customer?.neighborhood, 100, true);
     const reference = clean(body.customer?.reference, 200);
     const notes = clean(body.notes, 500);
     const payment_method = clean(body.payment_method, 40, true);
-    if (!customer_name || !customer_phone || !street || !street_number || !neighborhood || !payment_method || notes === null || reference === null) {
+    if (!customer_name || !customer_phone || !street || !street_number || !municipality || !neighborhood || !payment_method || notes === null || reference === null) {
       return respond(400, { error: "Confira os dados obrigatórios e os limites dos campos." });
     }
     const phoneDigits = customer_phone.replace(/\D/g, "");
     const normalizeNeighborhood = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase().replace(/\s+/g, " ");
-    const { data: zones, error: zonesError } = await db.from("delivery_zones").select("neighborhood,fee,active");
+    const { data: zones, error: zonesError } = await db.from("delivery_zones").select("municipality,neighborhood,fee,active");
     if (zonesError) throw zonesError;
+    const requestedMunicipality = normalizeNeighborhood(municipality);
     const requestedNeighborhood = normalizeNeighborhood(neighborhood);
     // Keep the legacy checkout operational until the store configures its first delivery zone.
-    const deliveryZone = (zones || []).find((zone) => zone.active && normalizeNeighborhood(zone.neighborhood) === requestedNeighborhood);
+    const deliveryZone = (zones || []).find((zone) => zone.active && normalizeNeighborhood(zone.municipality) === requestedMunicipality && normalizeNeighborhood(zone.neighborhood) === requestedNeighborhood);
     if ((zones || []).length > 0 && !deliveryZone) return respond(422, { error: "Ainda não atendemos esse bairro. Confira o nome ou fale conosco pelo WhatsApp para consultar a área de entrega." });
     const deliveryFee = deliveryZone ? Number(deliveryZone.fee) : null;
     if (deliveryFee !== null && (!Number.isFinite(deliveryFee) || deliveryFee < 0)) return respond(500, { error: "A taxa deste bairro está configurada incorretamente. Entre em contato com a loja." });
@@ -116,7 +118,7 @@ Deno.serve(async (req: Request) => {
     const tokenHash = await sha256(token);
 
     const { data: order, error: orderError } = await db.from("orders").insert({
-      customer_name, customer_phone, street, street_number, neighborhood, reference: reference || null,
+      customer_name, customer_phone, street, street_number, municipality, neighborhood, reference: reference || null,
       payment_method, notes: notes || null, subtotal, delivery_fee: deliveryFee, total: Number((subtotal + (deliveryFee ?? 0)).toFixed(2)),
       status: "received", payment_status: "pending", tracking_token_hash: tokenHash,
     }).select("id,order_number,created_at").single();
