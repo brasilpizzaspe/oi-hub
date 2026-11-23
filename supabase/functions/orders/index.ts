@@ -61,13 +61,14 @@ Deno.serve(async (req: Request) => {
     }
     const phoneDigits = customer_phone.replace(/\D/g, "");
     const normalizeNeighborhood = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase().replace(/\s+/g, " ");
-    const { data: zones, error: zonesError } = await db.from("delivery_zones").select("municipality,neighborhood,fee,active");
+    const { data: zones, error: zonesError } = await db.from("delivery_zones").select("municipality,neighborhood,fee,estimated_distance_km,eta_minutes,active");
     if (zonesError) throw zonesError;
     const requestedMunicipality = normalizeNeighborhood(municipality);
     const requestedNeighborhood = normalizeNeighborhood(neighborhood);
     const deliveryZone = (zones || []).find((zone) => zone.active && normalizeNeighborhood(zone.municipality) === requestedMunicipality && normalizeNeighborhood(zone.neighborhood) === requestedNeighborhood);
     if ((zones || []).length > 0 && !deliveryZone) return respond(422, { error: "Ainda não atendemos esse bairro. Confira o nome ou fale conosco pelo WhatsApp para consultar a área de entrega." });
     const deliveryFee = deliveryZone ? Number(deliveryZone.fee) : null;
+    const etaMinutes = deliveryZone ? Number(deliveryZone.eta_minutes) : null;
     if (deliveryFee !== null && (!Number.isFinite(deliveryFee) || deliveryFee < 0)) return respond(500, { error: "A taxa deste bairro está configurada incorretamente. Entre em contato com a loja." });
 
     if (!/^[+()\d\s.-]+$/.test(customer_phone) || phoneDigits.length < 10 || phoneDigits.length > 15) {
