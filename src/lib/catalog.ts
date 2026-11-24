@@ -44,9 +44,9 @@ export async function fetchStoreProducts(): Promise<Product[]> {
   }
 }
 
-export type StoreImages = { hero: string | null; heroVideo: string | null; about: string | null };
+export type StoreImages = { hero: string | null; heroVideo: string | null; about: string | null; sealLogo: string | null };
 export async function fetchStoreImages(): Promise<StoreImages> {
-  const fallback: StoreImages = { hero: null, heroVideo: null, about: null };
+  const fallback: StoreImages = { hero: null, heroVideo: null, about: null, sealLogo: null };
   if (!SUPABASE_URL || !SUPABASE_KEY) return fallback;
   try {
     const response = await fetch(`${SUPABASE_URL}/rest/v1/site_images?select=slot,image_url,video_url`, { headers: { apikey: SUPABASE_KEY } });
@@ -56,6 +56,7 @@ export async function fetchStoreImages(): Promise<StoreImages> {
       hero: rows.find(row => row.slot === "hero")?.image_url || null,
       heroVideo: rows.find(row => row.slot === "hero")?.video_url || null,
       about: rows.find(row => row.slot === "about")?.image_url || null,
+      sealLogo: rows.find(row => row.slot === "about-seal-logo")?.image_url || null,
     };
   } catch { return fallback; }
 }
