@@ -141,7 +141,7 @@ Deno.serve(async (req: Request) => {
     try {
       await db.from("customer_profiles").upsert({
         user_id: customerId, full_name: customer_name, phone: customer_phone,
-        marketing_email: marketingEmail, marketing_whatsapp: marketingWhatsApp, updated_at: new Date().toISOString(),
+        marketing_email: marketingEmail, marketing_whatsapp: marketingWhatsApp, default_address: { street, number: street_number, municipality, neighborhood, reference: reference || "" }, updated_at: new Date().toISOString(),
       }, { onConflict: "user_id" });
       const trackingUrl = "https://brasil-pizzas.lovable.app/acompanhar?codigo=" + token;
       const now = new Date();
