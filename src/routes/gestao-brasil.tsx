@@ -38,7 +38,8 @@ function PrivateManagement() {
   const [session, setSession] = useState<Session | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
-  const [customers, setCustomers] = useState<CustomerProfile[]>([]);\n  const [campaignTitle,setCampaignTitle]=useState("");const [campaignMessage,setCampaignMessage]=useState("");const [campaignEmail,setCampaignEmail]=useState(true);const [campaignWhatsApp,setCampaignWhatsApp]=useState(true);const [campaignBusy,setCampaignBusy]=useState(false);
+  const [customers, setCustomers] = useState<CustomerProfile[]>([]);
+  const [campaignTitle,setCampaignTitle]=useState("");const [campaignMessage,setCampaignMessage]=useState("");const [campaignEmail,setCampaignEmail]=useState(true);const [campaignWhatsApp,setCampaignWhatsApp]=useState(true);const [campaignBusy,setCampaignBusy]=useState(false);
   const [siteImages, setSiteImages] = useState<SiteImage[]>([]);
   const [deliveryZones, setDeliveryZones] = useState<DeliveryZone[]>([]);
   const [deliveryZoneFilter, setDeliveryZoneFilter] = useState("all");
@@ -397,7 +398,8 @@ function PrivateManagement() {
     finally { setUploadingSlot(null); }
   }
 
-  async function sendCampaign() { if(!session||!SUPABASE_URL)return;const title=campaignTitle.trim(),message=campaignMessage.trim();if(!title||!message||(!campaignEmail&&!campaignWhatsApp)){setError("Preencha o título, mensagem e selecione pelo menos um canal.");return;}setCampaignBusy(true);setError("");setNotice("");try{const response=await fetch(SUPABASE_URL+"/functions/v1/customer-campaigns",{method:"POST",headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+session.access_token,"Content-Type":"application/json"},body:JSON.stringify({title,message,email:campaignEmail,whatsapp:campaignWhatsApp})});const payload=await response.json();if(!response.ok)throw new Error(payload.error||"Não foi possível criar a campanha.");setNotice("Campanha adicionada à fila: "+payload.queued+" mensagens ("+payload.email+" e-mail, "+payload.whatsapp+" WhatsApp).");setCampaignTitle("");setCampaignMessage("");}catch(e){setError(e instanceof Error?e.message:"Erro ao criar campanha.");}finally{setCampaignBusy(false);}}\nasync function updateOrder(order: Order, status: string) {
+  async function sendCampaign() { if(!session||!SUPABASE_URL)return;const title=campaignTitle.trim(),message=campaignMessage.trim();if(!title||!message||(!campaignEmail&&!campaignWhatsApp)){setError("Preencha o título, mensagem e selecione pelo menos um canal.");return;}setCampaignBusy(true);setError("");setNotice("");try{const response=await fetch(SUPABASE_URL+"/functions/v1/customer-campaigns",{method:"POST",headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+session.access_token,"Content-Type":"application/json"},body:JSON.stringify({title,message,email:campaignEmail,whatsapp:campaignWhatsApp})});const payload=await response.json();if(!response.ok)throw new Error(payload.error||"Não foi possível criar a campanha.");setNotice("Campanha adicionada à fila: "+payload.queued+" mensagens ("+payload.email+" e-mail, "+payload.whatsapp+" WhatsApp).");setCampaignTitle("");setCampaignMessage("");}catch(e){setError(e instanceof Error?e.message:"Erro ao criar campanha.");}finally{setCampaignBusy(false);}}
+async function updateOrder(order: Order, status: string) {
     if (!session || !apiHeaders || !SUPABASE_URL) return;
     setBusy(true); setError(""); setNotice("");
     try {
