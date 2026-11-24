@@ -897,3 +897,37 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 .customer-order-card.is-finished .customer-order-status{background:#dedede;color:#555}
 .customer-order-card.is-finished .customer-order-total{border-color:#ddd}
 .customer-order-card.is-finished:hover,.customer-order-card.is-finished:focus-visible{border-color:#aaa;box-shadow:0 4px 12px rgba(0,0,0,.06);outline:none}
+
+/* Sacola dourada com chamas */
+.gold-cart{position:fixed;right:18px;bottom:18px;z-index:15;display:flex;align-items:center;border:0;background:none;padding:0;cursor:pointer;color:#fff;font-family:inherit;filter:drop-shadow(0 12px 22px #0007)}
+.gold-cart .floating-cart{display:none}
+.gc-bag{position:relative;width:66px;height:70px;margin-right:-14px;z-index:2}
+.gc-svg{position:relative;z-index:2;width:100%;height:100%;filter:saturate(.75) brightness(.9);transition:filter .6s ease}
+.gold-cart.is-lit .gc-svg{filter:drop-shadow(0 0 8px #ffb33aaa);animation:gcBump .55s cubic-bezier(.3,1.6,.5,1)}
+.gc-panel{position:relative;z-index:1;display:grid;grid-template-columns:auto 22px;align-items:center;column-gap:10px;padding:10px 16px 10px 26px;border-radius:18px;background:linear-gradient(180deg,#e5261b,#a10d0d 60%,#7b0808);border:1.5px solid #f2c14e;box-shadow:inset 0 1px 0 #ffffff40,0 0 0 1px #6e450880,0 0 14px #f2c14e33;text-align:left}
+.gc-title{font-family:Anton,sans-serif;font-weight:400;font-size:17px;letter-spacing:.02em;line-height:1.1;grid-column:1}
+.gc-panel small{grid-column:1;font-size:12px;font-weight:700;color:#fff;white-space:nowrap}
+.gc-panel small em{font-style:normal;color:#ffd257}
+.gc-arrow{grid-column:2;grid-row:1/3;color:#fff}
+.gc-count{position:absolute;z-index:3;top:-12px;right:-8px;min-width:30px;height:30px;padding:0 6px;border-radius:99px;display:grid;place-items:center;font-size:14px;font-weight:900;color:#8e0f0b;background:radial-gradient(circle at 35% 30%,#fff3c2,#f2c14e 50%,#b37714);border:1.5px solid #fff1b8;box-shadow:0 3px 10px #0006}
+.gold-cart.is-lit .gc-count{animation:gcBump .5s cubic-bezier(.3,1.6,.5,1)}
+.gc-flames,.gc-embers{position:absolute;inset:-14px -12px 2px;pointer-events:none;opacity:0;transition:opacity .9s ease}
+.gold-cart.is-lit .gc-flames,.gold-cart.is-lit .gc-embers{opacity:1}
+.gc-flames i{position:absolute;bottom:4px;width:26px;height:46px;border-radius:50% 50% 45% 45%/65% 65% 35% 35%;background:radial-gradient(ellipse at 50% 85%,#fff6c0 0,#ffc23a 25%,#ff6a14 55%,#d4150a 75%,transparent 80%);filter:blur(3px);mix-blend-mode:screen;transform-origin:50% 100%;animation:gcFlame 1.4s ease-in-out infinite}
+.gc-flames i:nth-child(1){left:-2px;height:40px;animation-delay:-.2s}
+.gc-flames i:nth-child(2){left:16px;height:56px;animation-delay:-.7s}
+.gc-flames i:nth-child(3){left:34px;height:50px;animation-delay:-1.1s}
+.gc-flames i:nth-child(4){left:52px;height:44px;animation-delay:-.4s}
+.gc-flames i:nth-child(5){left:26px;height:62px;width:30px;opacity:.7;animation-delay:-.9s;animation-duration:1.8s}
+.gc-embers i{position:absolute;bottom:14px;width:3px;height:3px;border-radius:50%;background:#ffcf5a;box-shadow:0 0 6px 1px #ff8a1c;animation:gcEmber 2.4s linear infinite}
+.gc-embers i:nth-child(1){left:10px;animation-delay:0s}.gc-embers i:nth-child(2){left:30px;animation-delay:-.8s}.gc-embers i:nth-child(3){left:50px;animation-delay:-1.6s}.gc-embers i:nth-child(4){left:20px;animation-delay:-1.2s}.gc-embers i:nth-child(5){left:62px;animation-delay:-.4s}.gc-embers i:nth-child(6){left:40px;animation-delay:-2s}
+.gc-pulse{position:absolute;inset:6px;border-radius:50%;z-index:1;pointer-events:none;opacity:0}
+.gold-cart.is-lit .gc-pulse{animation:gcPulse .8s ease-out}
+.gold-cart:hover .gc-panel{box-shadow:inset 0 1px 0 #ffffff40,0 0 0 1px #6e450880,0 0 22px #f2c14e66}
+.gold-cart:focus-visible{outline:2px solid #f2c14e;outline-offset:4px;border-radius:20px}
+@keyframes gcFlame{0%,100%{transform:scale(1,1) translateY(0) skewX(0)}25%{transform:scale(.92,1.12) translateY(-2px) skewX(4deg)}50%{transform:scale(1.06,.9) skewX(-3deg)}75%{transform:scale(.95,1.08) translateY(-3px) skewX(2deg)}}
+@keyframes gcEmber{0%{transform:translate(0,0);opacity:0}15%{opacity:1}100%{transform:translate(6px,-64px);opacity:0}}
+@keyframes gcBump{0%{transform:scale(1)}40%{transform:scale(1.14)}100%{transform:scale(1)}}
+@keyframes gcPulse{0%{opacity:.9;box-shadow:0 0 0 0 #f2c14ecc}100%{opacity:0;box-shadow:0 0 0 26px #f2c14e00}}
+@media (max-width:640px){.gold-cart{right:12px;bottom:12px}.gc-bag{width:54px;height:58px}.gc-title{font-size:15px}.gc-panel{padding:8px 12px 8px 22px}}
+@media (prefers-reduced-motion:reduce){.gc-flames i,.gc-embers i,.gold-cart.is-lit .gc-svg,.gold-cart.is-lit .gc-count,.gold-cart.is-lit .gc-pulse{animation:none}}
