@@ -888,3 +888,12 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 }
 
 .delivery-neighborhood-autocomplete{position:relative;width:100%}.delivery-neighborhood-suggestions{position:absolute;z-index:40;top:calc(100% + 4px);left:0;right:0;max-height:230px;overflow-y:auto;background:#fff;border:1px solid #d9d9d9;border-radius:12px;box-shadow:0 12px 28px rgba(0,0,0,.14);padding:5px}.delivery-neighborhood-suggestions button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:10px 12px;border:0;border-radius:8px;background:transparent;color:#222;font:inherit;cursor:pointer}.delivery-neighborhood-suggestions button:hover,.delivery-neighborhood-suggestions button:focus{background:#f5f0eb;outline:none}.delivery-neighborhood-suggestions small{font-size:11px;color:#777;white-space:nowrap}.delivery-neighborhood-suggestions p{padding:10px 12px;margin:0;font-size:13px;color:#777}
+/* Customer orders: active orders are highlighted, finished orders are muted. */
+.customer-order-card.is-active{background:#fff4f2;border-color:#c9252d;cursor:pointer;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
+.customer-order-card.is-active:hover,.customer-order-card.is-active:focus-visible{border-color:#a71921;box-shadow:0 5px 16px rgba(185,25,36,.12);transform:translateY(-1px);outline:none}
+.customer-order-card.is-active .customer-order-status{background:#f9d9d6;color:#9f1d25}
+.customer-order-card.is-finished{background:#f1f1f1;border-color:#d8d8d8;cursor:pointer;color:#555}
+.customer-order-card.is-finished .customer-order-items,.customer-order-card.is-finished>small{color:#777}
+.customer-order-card.is-finished .customer-order-status{background:#dedede;color:#555}
+.customer-order-card.is-finished .customer-order-total{border-color:#ddd}
+.customer-order-card.is-finished:hover,.customer-order-card.is-finished:focus-visible{border-color:#aaa;box-shadow:0 4px 12px rgba(0,0,0,.06);outline:none}
