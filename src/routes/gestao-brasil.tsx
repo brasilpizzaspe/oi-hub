@@ -6,7 +6,8 @@ const SUPABASE_URL = (import.meta.env["VITE_SUPABASE_URL"] as string | undefined
 const SUPABASE_KEY = (import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"] as string | undefined) || "sb_publishable_JGN8bSFsGCxTOIubmNmHIA_J36i5Mpp";
 
 type Product = { id: string; name: string; category: string; description: string; price: number | null; active: boolean; image_url: string | null };
-type CustomerProfile = { user_id:string; email:string|null; full_name:string; phone:string|null; marketing_email:boolean; marketing_whatsapp:boolean; default_address:Record<string,string>; created_at:string; updated_at:string };\ntype OrderItem = { id: string; product_name: string; quantity: number; unit_price: number; line_total: number };
+type CustomerProfile = { user_id:string; email:string|null; full_name:string; phone:string|null; marketing_email:boolean; marketing_whatsapp:boolean; default_address:Record<string,string>; created_at:string; updated_at:string };
+type OrderItem = { id: string; product_name: string; quantity: number; unit_price: number; line_total: number };
 type Order = { id: string; order_number: number; customer_name: string; customer_phone: string; street: string; street_number: string; neighborhood: string; municipality: string | null; reference: string | null; notes: string | null; subtotal: number; delivery_fee: number | null; total: number; status: string; payment_status: string; payment_method: string; created_at: string; estimated_delivery_at: string | null; order_items: OrderItem[] };
 type Session = { access_token: string; refresh_token: string; user: { id: string; email: string } };
 const REMEMBERED_EMAIL_KEY = "brasil-pizzas-admin-email";
@@ -36,7 +37,8 @@ function PrivateManagement() {
   const [password, setPassword] = useState("");
   const [session, setSession] = useState<Session | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
-  const [orders, setOrders] = useState<Order[]>([]);\n  const [customers, setCustomers] = useState<CustomerProfile[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [customers, setCustomers] = useState<CustomerProfile[]>([]);
   const [siteImages, setSiteImages] = useState<SiteImage[]>([]);
   const [deliveryZones, setDeliveryZones] = useState<DeliveryZone[]>([]);
   const [deliveryZoneFilter, setDeliveryZoneFilter] = useState("all");
@@ -113,13 +115,15 @@ function PrivateManagement() {
       fetch(`${SUPABASE_URL}/rest/v1/products?select=id,name,category,description,price,active,image_url&order=sort_order.asc`, { headers }),
       fetch(`${SUPABASE_URL}/rest/v1/orders?select=*,order_items(*)&order=created_at.desc&limit=100`, { headers }),
       fetch(`${SUPABASE_URL}/rest/v1/site_images?select=slot,title,description,recommended_ratio,recommended_dimensions,image_url,video_url`, { headers }),
-      fetch(`${SUPABASE_URL}/rest/v1/delivery_zones?select=id,municipality,neighborhood,fee,estimated_distance_km,eta_minutes,active&order=municipality.asc,neighborhood.asc`, { headers }),\n      fetch(`${SUPABASE_URL}/rest/v1/customer_profiles?select=user_id,email,full_name,phone,marketing_email,marketing_whatsapp,default_address,created_at,updated_at&order=created_at.desc`, { headers }),
+      fetch(`${SUPABASE_URL}/rest/v1/delivery_zones?select=id,municipality,neighborhood,fee,estimated_distance_km,eta_minutes,active&order=municipality.asc,neighborhood.asc`, { headers }),
+      fetch(`${SUPABASE_URL}/rest/v1/customer_profiles?select=user_id,email,full_name,phone,marketing_email,marketing_whatsapp,default_address,created_at,updated_at&order=created_at.desc`, { headers }),
     ]);
     if (!productResponse.ok || !orderResponse.ok || !imageResponse.ok || !zoneResponse.ok || !customerResponse.ok) throw new Error("Não foi possível carregar os dados da loja. Verifique sua autorização.");
     setProducts(await productResponse.json());
     setOrders(await orderResponse.json());
     setSiteImages(await imageResponse.json());
-    setDeliveryZones((await zoneResponse.json()).map((zone: DeliveryZone) => ({ ...zone, fee: Number(zone.fee) })));\n    setCustomers(await customerResponse.json());
+    setDeliveryZones((await zoneResponse.json()).map((zone: DeliveryZone) => ({ ...zone, fee: Number(zone.fee) })));
+    setCustomers(await customerResponse.json());
   }
 
   async function requestPasswordReset(event: FormEvent<HTMLFormElement>) {
