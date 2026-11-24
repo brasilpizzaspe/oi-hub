@@ -816,3 +816,9 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 .customer-account-signout{display:flex;align-items:center;justify-content:center;gap:8px;background:transparent;border:1px solid #d8c8b9;border-radius:999px;padding:11px;color:#9d211c;cursor:pointer}
 @media(min-width:850px){.customer-account-modal{padding:42px 7vw!important}.customer-account-tiles{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:560px){.customer-account-welcome strong{font-size:20px}.customer-account-nav button{padding:8px 10px}.customer-order-card{padding:12px}.customer-order-card header{align-items:flex-start;flex-direction:column}.customer-account-content h3{font-size:23px}}
+
+/* Customer account: side drawer instead of a separate page or centered modal */
+.customer-auth-overlay{z-index:35;justify-content:flex-end;align-items:stretch;background:#1d140e88;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.customer-auth-drawer{inset:0 0 0 auto!important;width:min(480px,100%)!important;height:100%!important;max-height:100%!important;border-radius:0!important;box-shadow:-18px 0 55px #0002;transform:translateX(0);animation:customerDrawerIn .32s cubic-bezier(.22,.7,.25,1) both;}
+@keyframes customerDrawerIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+@media(max-width:520px){.customer-auth-drawer{width:100%!important;padding:22px 18px!important}}
