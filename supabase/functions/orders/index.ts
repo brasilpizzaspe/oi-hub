@@ -46,6 +46,14 @@ Deno.serve(async (req: Request) => {
     }
 
     if (body?.action !== "create") return respond(400, { error: "Ação inválida." });
+    const bearer = req.headers.get("Authorization")?.replace(/^Bearer\\s+/i, "") || "";
+    if (!bearer) return respond(401, { error: "Entre na sua conta para finalizar o pedido." });
+    const { data: authData, error: authError } = await db.auth.getUser(bearer);
+    if (authError || !authData.user) return respond(401, { error: "Sua sessão expirou. Entre novamente para continuar." });
+    const customerId = authData.user.id;
+    const customerEmail = authData.user.email || "";
+    const marketingEmail = body?.marketing_consent?.email === true;
+    const marketingWhatsApp = body?.marketing_consent?.whatsapp === true;
 
     const customer_name = clean(body.customer?.name, 100, true);
     const customer_phone = clean(body.customer?.phone, 30, true);
@@ -120,7 +128,7 @@ Deno.serve(async (req: Request) => {
     const { data: order, error: orderError } = await db.from("orders").insert({
       customer_name, customer_phone, street, street_number, municipality, neighborhood, reference: reference || null,
       payment_method, notes: notes || null, subtotal, delivery_fee: deliveryFee, total: Number((subtotal + (deliveryFee ?? 0)).toFixed(2)),
-      status: "received", payment_status: "pending", tracking_token_hash: tokenHash, customer_id: customerId,
+      status: "received", payment_status: "pending", tracking_token_hash: tokenHash, customer_id: customerId, customer_id: customerId,
     }).select("id,order_number,created_at,estimated_delivery_at").single();
     if (orderError) throw orderError;
 
@@ -129,6 +137,26 @@ Deno.serve(async (req: Request) => {
       await db.from("orders").delete().eq("id", order.id);
       throw itemsError;
     }
+    // Persist account data and enqueue transactional notifications and opted-in post-sale at 90 minutes.
+    try {
+      await db.from("customer_profiles").upsert({
+        user_id: customerId, full_name: customer_name, phone: customer_phone,
+        marketing_email: marketingEmail, marketing_whatsapp: marketingWhatsApp, updated_at: new Date().toISOString(),
+      }, { onConflict: "user_id" });
+      const trackingUrl = "https://brasil-pizzas.lovable.app/acompanhar?codigo=" + token;
+      const now = new Date();
+      const postSale = new Date(now.getTime() + 90 * 60 * 1000).toISOString();
+      const orderPayload = { customer_name, order_number: order.order_number, total: Number((subtotal + (deliveryFee ?? 0)).toFixed(2)), tracking_url: trackingUrl };
+      const rows = [
+        { order_id: order.id, customer_id: customerId, channel: "whatsapp", message_type: "order_confirmation", recipient: customer_phone, payload: orderPayload, scheduled_at: now.toISOString() },
+        ...(customerEmail ? [{ order_id: order.id, customer_id: customerId, channel: "email", message_type: "order_confirmation", recipient: customerEmail, payload: orderPayload, scheduled_at: now.toISOString() }] : []),
+        ...(marketingWhatsApp ? [{ order_id: order.id, customer_id: customerId, channel: "whatsapp", message_type: "post_sale_thanks", recipient: customer_phone, payload: { customer_name, order_number: order.order_number, tracking_url: trackingUrl }, scheduled_at: postSale }] : []),
+        ...(marketingEmail && customerEmail ? [{ order_id: order.id, customer_id: customerId, channel: "email", message_type: "post_sale_thanks", recipient: customerEmail, payload: { customer_name, order_number: order.order_number, tracking_url: trackingUrl }, scheduled_at: postSale }] : []),
+      ];
+      const { error: queueError } = await db.from("customer_notification_queue").insert(rows);
+      if (queueError) console.error("notification queue insert error", queueError);
+    } catch (queueFailure) { console.error("customer profile/queue error", queueFailure); }
+
     return respond(201, {
       order_number: order.order_number,
       tracking_token: token,
