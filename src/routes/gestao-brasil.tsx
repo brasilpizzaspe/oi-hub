@@ -520,8 +520,9 @@ function DevelopmentLog({session}:{session:Session}) {
   const [category,setCategory]=useState("Implementação");
   const [status,setStatus]=useState("Concluído");
   const [details,setDetails]=useState("");
+  const todayLocal=()=>{const now=new Date();return new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,10);};
   const [entryDate,setEntryDate]=useState(todayLocal());
-  const baseHeaders={apikey:SUPABASE_KEY,Authorization:`Bearer ${session.access_token}`};\n  const todayLocal=()=>{const now=new Date();return new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,10);};
+  const baseHeaders={apikey:SUPABASE_KEY,Authorization:`Bearer ${session.access_token}`};
   async function loadEntries(){
     setLoading(true);setError("");
     try{
