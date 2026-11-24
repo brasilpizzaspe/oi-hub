@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ArrowUpRight, Check, Flame, Instagram, MessageCircle, Minus, Plus, Star, UserRound, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Check, Flame, Instagram, MessageCircle, Minus, Plus, ShoppingBag, Star, UserRound, X } from "lucide-react";
 
 import { useFocusCarousel } from "../hooks/use-focus-carousel";
 import { fetchStoreProducts, fetchStoreImages, initialProducts, type Product } from "../lib/catalog";
