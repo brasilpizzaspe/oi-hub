@@ -627,6 +627,7 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 .about-seal i{position:absolute;inset:0;display:grid;place-items:center}
 .about-seal i:before{content:"";position:absolute;inset:31%;border-radius:50%;background:var(--bp-red);box-shadow:0 0 22px #e1251b88}
 .about-seal i svg{position:relative;width:22%;height:22%;animation:none;color:#fff}
+.about-seal i img{position:relative;width:46%;height:46%;object-fit:contain;animation:none;z-index:1}
 .store .about p{max-width:460px}
 .store .about-contact-button{min-height:50px;padding:0 20px;border:1.5px solid #fff4e6b3;background:transparent;color:var(--bp-cream);font-size:12px;letter-spacing:.04em;transition:transform .25s ease,background .25s ease,border-color .25s ease,box-shadow .25s ease}
 .store .about-contact-button:hover{background:#fff4e614;border-color:#fff;transform:translateY(-2px)}
