@@ -102,7 +102,7 @@ function TrackOrder() {
           <h1 className="mt-2 text-3xl font-semibold">Acompanhe seu pedido</h1>
           <p className="mt-2 text-sm text-[#64746a]">Acompanhe usando apenas o número do pedido e o WhatsApp informado na compra — não precisa de código.</p>
           <form className="mt-6 flex flex-col gap-3" onSubmit={(event) => { event.preventDefault(); void lookupByOrder(orderNumber, phone); }}>
-            <label className="flex flex-col gap-1 text-sm font-medium">Número do pedido<input inputMode="numeric" value={orderNumber} onChange={(event) => setOrderNumber(event.target.value.replace(/\\D/g, ""))} placeholder="Ex.: 3" autoComplete="off" className="min-w-0 rounded-lg border border-[#d9dfd8] px-3 py-3 text-sm outline-none focus:border-[#174d38]"/></label>
+            <label className="flex flex-col gap-1 text-sm font-medium">Número do pedido<input inputMode="numeric" value={orderNumber} onChange={(event) => setOrderNumber(event.target.value.replace(/[^0-9]/g, ""))} placeholder="Ex.: 3" autoComplete="off" className="min-w-0 rounded-lg border border-[#d9dfd8] px-3 py-3 text-sm outline-none focus:border-[#174d38]"/></label>
             <label className="flex flex-col gap-1 text-sm font-medium">WhatsApp usado no pedido<input inputMode="tel" value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="(00) 00000-0000" autoComplete="tel" className="min-w-0 rounded-lg border border-[#d9dfd8] px-3 py-3 text-sm outline-none focus:border-[#174d38]"/></label>
             <button disabled={busy} className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#b71924] px-5 py-3 text-sm font-bold text-white disabled:opacity-60"><Search size={16}/>{busy ? "Consultando..." : "Acompanhar pedido"}</button>
           </form>
