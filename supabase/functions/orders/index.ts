@@ -33,6 +33,23 @@ Deno.serve(async (req: Request) => {
   if (req.method !== "POST") return respond(405, { error: "Método não permitido." });
   try {
     const body = await req.json();
+    if (body?.action === "track_by_order") {
+      const orderNumber = Number(body.order_number);
+      const phone = clean(body.phone, 30, true);
+      const phoneDigits = (phone || "").replace(/\\D/g, "");
+      if (!Number.isInteger(orderNumber) || orderNumber < 1 || !phone || phoneDigits.length < 10 || phoneDigits.length > 15) {
+        return respond(400, { error: "Informe o número do pedido e o WhatsApp usado na compra." });
+      }
+      const { data: order, error } = await db.from("orders")
+        .select("order_number,customer_phone,status,payment_status,created_at,updated_at,estimated_delivery_at,order_items(product_name,quantity)")
+        .eq("order_number", orderNumber).maybeSingle();
+      if (error) throw error;
+      if (!order || (order.customer_phone || "").replace(/\\D/g, "") !== phoneDigits) {
+        return respond(404, { error: "Não encontramos um pedido com esses dados. Confira o número e o WhatsApp." });
+      }
+      const { customer_phone: _privatePhone, ...publicOrder } = order;
+      return respond(200, { order: publicOrder });
+    }
     if (body?.action === "track") {
       const token = clean(body.token, 128, true);
       if (!token || !/^[a-f0-9]{64}$/i.test(token)) return respond(400, { error: "Código de acompanhamento inválido." });
