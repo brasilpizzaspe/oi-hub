@@ -75,6 +75,7 @@ Deno.serve(async (req: Request) => {
     const requestedNeighborhood = normalizeNeighborhood(neighborhood);
     const deliveryZone = (zones || []).find((zone) => zone.active && normalizeNeighborhood(zone.municipality) === requestedMunicipality && normalizeNeighborhood(zone.neighborhood) === requestedNeighborhood);
     if ((zones || []).length > 0 && !deliveryZone) return respond(422, { error: "Ainda não atendemos esse bairro. Confira o nome ou fale conosco pelo WhatsApp para consultar a área de entrega." });
+    const savedNeighborhood = deliveryZone?.neighborhood || neighborhood;
     const deliveryFee = deliveryZone ? Number(deliveryZone.fee) : null;
     const etaMinutes = deliveryZone ? Number(deliveryZone.eta_minutes) : null;
     if (deliveryFee !== null && (!Number.isFinite(deliveryFee) || deliveryFee < 0)) return respond(500, { error: "A taxa deste bairro está configurada incorretamente. Entre em contato com a loja." });
@@ -126,7 +127,7 @@ Deno.serve(async (req: Request) => {
     const tokenHash = await sha256(token);
 
     const { data: order, error: orderError } = await db.from("orders").insert({
-      customer_name, customer_phone, street, street_number, municipality, neighborhood, reference: reference || null,
+      customer_name, customer_phone, street, street_number, municipality, neighborhood: savedNeighborhood, reference: reference || null,
       payment_method, notes: notes || null, subtotal, delivery_fee: deliveryFee, total: Number((subtotal + (deliveryFee ?? 0)).toFixed(2)),
       status: "received", payment_status: "pending", tracking_token_hash: tokenHash, customer_id: customerId,
     }).select("id,order_number,created_at,estimated_delivery_at").single();
@@ -141,7 +142,7 @@ Deno.serve(async (req: Request) => {
     try {
       await db.from("customer_profiles").upsert({
         user_id: customerId, email: customerEmail, full_name: customer_name, phone: customer_phone,
-        marketing_email: marketingEmail, marketing_whatsapp: marketingWhatsApp, default_address: { street, number: street_number, municipality, neighborhood, reference: reference || "" }, updated_at: new Date().toISOString(),
+        marketing_email: marketingEmail, marketing_whatsapp: marketingWhatsApp, default_address: { street, number: street_number, municipality, neighborhood: savedNeighborhood, reference: reference || "" }, updated_at: new Date().toISOString(),
       }, { onConflict: "user_id" });
       const { data: savedAddresses, error: savedAddressesError } = await db.from("customer_addresses")
         .select("id,label,street,street_number,municipality,neighborhood,reference,is_default")
@@ -152,9 +153,9 @@ Deno.serve(async (req: Request) => {
           normalizeAddressPart(address.street) === normalizeAddressPart(street) &&
           normalizeAddressPart(address.street_number) === normalizeAddressPart(street_number) &&
           normalizeAddressPart(address.municipality) === normalizeAddressPart(municipality) &&
-          normalizeAddressPart(address.neighborhood) === normalizeAddressPart(neighborhood)
+          normalizeAddressPart(address.neighborhood) === normalizeAddressPart(savedNeighborhood)
         );
-        const addressRecord = { label: existingAddress?.label || "Pedido", street, street_number, municipality, neighborhood, reference: reference || "", updated_at: new Date().toISOString() };
+        const addressRecord = { label: existingAddress?.label || "Pedido", street, street_number, municipality, neighborhood: savedNeighborhood, reference: reference || "", updated_at: new Date().toISOString() };
         if (existingAddress) {
           await db.from("customer_addresses").update(addressRecord).eq("id", existingAddress.id).eq("user_id", customerId);
         } else {
