@@ -931,5 +931,5 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 @keyframes gcEmber{0%{transform:translate(0,0) scale(1);opacity:0}12%{opacity:1}55%{transform:translate(3px,-38px) scale(.85);opacity:.8}100%{transform:translate(-3px,-72px) scale(.4);opacity:0}}
 @keyframes gcBump{0%{transform:scale(1)}40%{transform:scale(1.14)}100%{transform:scale(1)}}
 @keyframes gcPulse{0%{opacity:.9;box-shadow:0 0 0 0 #f2c14ecc}100%{opacity:0;box-shadow:0 0 0 26px #f2c14e00}}
-@media (max-width:640px){.gold-cart{right:12px;bottom:12px}.gc-bag{width:56px;height:60px;margin-right:-18px}.gc-title{font-size:15px}.gc-panel{padding:8px 12px 8px 28px}.gc-flames i:nth-child(3){height:50px}.gc-flames i:nth-child(2){height:44px}}
+@media (max-width:640px){.gold-cart{right:12px;bottom:12px}.gc-bag{width:60px;height:64px;margin-right:-20px}.gc-flames,.gc-embers{transform:scale(.88);transform-origin:center bottom}.gc-title{font-size:15px}.gc-panel{padding:8px 12px 8px 28px}.gc-flames i:nth-child(3){height:50px}.gc-flames i:nth-child(2){height:44px}}
 @media (prefers-reduced-motion:reduce){.gc-flames i,.gc-flames i:before,.gc-embers i,.gold-cart.is-lit .gc-svg,.gold-cart.is-lit .gc-count,.gold-cart.is-lit .gc-pulse{animation:none}}
