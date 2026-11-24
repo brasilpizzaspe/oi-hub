@@ -76,6 +76,29 @@ function TrackOrder() {
     }
   }, []);
 
+  const lookupByOrder = useCallback(async (orderValue: string, phoneValue: string) => {
+    const orderDigits = orderValue.trim();
+    const phoneDigits = phoneValue.replace(/[^0-9]/g, "");
+    if (!/^[0-9]+$/.test(orderDigits) || phoneDigits.length < 10 || phoneDigits.length > 15) {
+      setError("Informe o número do pedido e o WhatsApp usado na compra.");
+      return;
+    }
+    if (!SUPABASE_URL || !SUPABASE_KEY) { setError("O acompanhamento ainda não está configurado."); return; }
+    setBusy(true);
+    try {
+      const response = await fetch(SUPABASE_URL + "/functions/v1/orders", {
+        method: "POST", headers: { apikey: SUPABASE_KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "track_by_order", order_number: Number(orderDigits), phone: phoneValue }),
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error || "Não foi possível localizar o pedido.");
+      setTracking(payload.order); setTrackingOrderNumber(orderDigits); setTrackingPhone(phoneValue); setTrackingToken(""); setError("");
+    } catch (e) {
+      setTracking(null); setTrackingOrderNumber(""); setTrackingPhone("");
+      setError(e instanceof Error ? e.message : "Erro ao consultar o pedido.");
+    } finally { setBusy(false); }
+  }, []);
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     let initial = params.get("codigo");\n    const orderFromLink = params.get("pedido");\n    if (orderFromLink) setOrderNumber(orderFromLink);
