@@ -103,14 +103,23 @@ function TrackOrder() {
     const params = new URLSearchParams(window.location.search);
     let initial = params.get("codigo");
     const orderFromLink = params.get("pedido");
-    if (orderFromLink) setOrderNumber(orderFromLink);
-    if (!initial) { try { initial = localStorage.getItem(TRACKING_STORAGE_KEY); } catch {} }
+    let phoneFromLink = params.get("telefone") || "";
+    if (!phoneFromLink) { try { phoneFromLink = sessionStorage.getItem("brasilpizzas:tracking-phone") || ""; } catch {} }
+    if (orderFromLink) {
+      setOrderNumber(orderFromLink);
+      if (phoneFromLink) {
+        setPhone(phoneFromLink);
+        setError("");
+        void lookupByOrder(orderFromLink, phoneFromLink);
+      }
+    }
+    if (!initial && !orderFromLink) { try { initial = localStorage.getItem(TRACKING_STORAGE_KEY); } catch {} }
     try { setReviewDismissedToken(localStorage.getItem(REVIEW_DISMISSED_STORAGE_KEY) || ""); } catch {}
     if (initial) {
       setToken(initial);
       void lookup(initial);
     }
-  }, [lookup]);
+  }, [lookup, lookupByOrder]);
 
   useEffect(() => {
     if (!tracking) return;
@@ -126,12 +135,13 @@ function TrackOrder() {
           <p className="text-xs font-semibold tracking-[.25em] text-[#9b7930]">BRASIL PIZZAS</p>
           <h1 className="mt-2 text-3xl font-semibold">Acompanhe seu pedido</h1>
           <p className="mt-2 text-sm text-[#64746a]">Acompanhe usando apenas o número do pedido e o WhatsApp informado na compra — não precisa de código.</p>
-          <form className="mt-6 flex flex-col gap-3" onSubmit={(event) => { event.preventDefault(); void lookupByOrder(orderNumber, phone); }}>
+          {!tracking && <form className="mt-6 flex flex-col gap-3" onSubmit={(event) => { event.preventDefault(); void lookupByOrder(orderNumber, phone); }}>
             <label className="flex flex-col gap-1 text-sm font-medium">Número do pedido<input inputMode="numeric" value={orderNumber} onChange={(event) => setOrderNumber(event.target.value.replace(/[^0-9]/g, ""))} placeholder="Ex.: 3" autoComplete="off" className="min-w-0 rounded-lg border border-[#d9dfd8] px-3 py-3 text-sm outline-none focus:border-[#174d38]"/></label>
             <label className="flex flex-col gap-1 text-sm font-medium">WhatsApp usado no pedido<input inputMode="tel" value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="(00) 00000-0000" autoComplete="tel" className="min-w-0 rounded-lg border border-[#d9dfd8] px-3 py-3 text-sm outline-none focus:border-[#174d38]"/></label>
             <button disabled={busy} className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#b71924] px-5 py-3 text-sm font-bold text-white disabled:opacity-60"><Search size={16}/>{busy ? "Consultando..." : "Acompanhar pedido"}</button>
-          </form>
+          </form>}
           {error && <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
+          {tracking && <button type="button" onClick={()=>{setTracking(null);setTrackingOrderNumber("");setTrackingPhone("");setOrderNumber("");setPhone("");setError("");try{sessionStorage.removeItem("brasilpizzas:tracking-phone");}catch{}}} className="mt-4 text-sm font-semibold text-[#b71924] underline underline-offset-4">Consultar outro pedido</button>}
           {tracking && <div className="mt-7 border-t border-[#edf0eb] pt-6">
             <div className="flex items-center justify-between gap-3"><div><p className="text-xs font-semibold tracking-wide text-[#9b7930]">PEDIDO</p><h2 className="text-2xl font-semibold">#{tracking.order_number}</h2></div><span className="rounded-full bg-[#e4eee6] px-3 py-2 text-xs font-semibold">{statusLabels[tracking.status] || tracking.status}</span></div>
             <div className="mt-5 space-y-3">{tracking.order_items?.map((item, index) => <div key={index} className="flex items-center justify-between text-sm"><span>{item.quantity}x {item.product_name}</span><PackageCheck size={16}/></div>)}</div>
