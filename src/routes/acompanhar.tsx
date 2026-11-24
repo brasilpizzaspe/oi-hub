@@ -102,7 +102,8 @@ function TrackOrder() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     let initial = params.get("codigo");
-    const orderFromLink = params.get("pedido");\n    if (orderFromLink) setOrderNumber(orderFromLink);
+    const orderFromLink = params.get("pedido");
+    if (orderFromLink) setOrderNumber(orderFromLink);
     if (!initial) { try { initial = localStorage.getItem(TRACKING_STORAGE_KEY); } catch {} }
     try { setReviewDismissedToken(localStorage.getItem(REVIEW_DISMISSED_STORAGE_KEY) || ""); } catch {}
     if (initial) {
