@@ -523,7 +523,7 @@ function ProjectManual({session}:{session:Session}){
  const filtered=entries.filter(e=>(categoryFilter==="Todas"||e.category===categoryFilter)&&(`${e.title} ${e.summary} ${e.content} ${e.prompt} ${e.category}`.toLowerCase().includes(query.toLowerCase())));
  const current=entries.find(e=>e.id===selected)||null;
  function reset(){setSelected(null);setEditing(false);setTitle("");setCategory("Fundamentos e planejamento");setSummary("");setContent("");setPrompt("");setLinksText("");setImagesText("");}
- function edit(e:ManualEntry){setSelected(e.id);setEditing(true);setTitle(e.title);setCategory(e.category);setSummary(e.summary);setContent(e.content);setPrompt(e.prompt);setLinksText((e.links||[]).map(x=>x.label+" | "+x.url).join("\n"));setImagesText((e.image_urls||[]).join("\n");}
+ function edit(e:ManualEntry){setSelected(e.id);setEditing(true);setTitle(e.title);setCategory(e.category);setSummary(e.summary);setContent(e.content);setPrompt(e.prompt);setLinksText((e.links||[]).map(x=>x.label+" | "+x.url).join("\n"));setImagesText((e.image_urls||[]).join("\n"));}
  function newDoc(){reset();setEditing(true);}
  async function copyText(value:string,label:string){try{await navigator.clipboard.writeText(value);setNotice(label+" copiado para a área de transferência.");setError("");}catch{setError("Não foi possível copiar automaticamente. Selecione e copie o texto.");}}
  function parseLinks(raw:string){return raw.split("\n").map(line=>line.trim()).filter(Boolean).map(line=>{const [label,url]=line.split("|").map(x=>x.trim());return {label:label||url||"Link",url:url||label||""};}).filter(x=>/^https?:\/\//i.test(x.url));}
