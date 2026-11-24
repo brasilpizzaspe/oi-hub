@@ -140,7 +140,7 @@ Deno.serve(async (req: Request) => {
     // Persist account data and enqueue transactional notifications and opted-in post-sale at 90 minutes.
     try {
       await db.from("customer_profiles").upsert({
-        user_id: customerId, full_name: customer_name, phone: customer_phone,
+        user_id: customerId, email: customerEmail, full_name: customer_name, phone: customer_phone,
         marketing_email: marketingEmail, marketing_whatsapp: marketingWhatsApp, default_address: { street, number: street_number, municipality, neighborhood, reference: reference || "" }, updated_at: new Date().toISOString(),
       }, { onConflict: "user_id" });
       const trackingUrl = "https://brasil-pizzas.lovable.app/acompanhar?codigo=" + token;
