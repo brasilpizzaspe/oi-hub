@@ -768,3 +768,50 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
   .hero-picks{animation:none}
   .hero-picks .pick{transition:none}
 }
+
+/* Minha Conta — central do cliente */
+.customer-account-modal{overflow-y:auto!important;background:#fffaf2!important;padding:clamp(16px,4vw,38px)!important}
+.customer-account{width:min(100%,880px);margin:0 auto;color:var(--ink)}
+.customer-account-welcome{display:flex;align-items:center;gap:14px;padding:10px 0 22px}
+.customer-account-avatar{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:#f4e6d8;color:#8f211c}
+.customer-account-welcome strong{display:block;font:500 24px Georgia}
+.customer-account-welcome small{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+.customer-account-nav{display:flex;gap:7px;overflow-x:auto;padding:0 0 15px;border-bottom:1px solid var(--line);scrollbar-width:thin}
+.customer-account-nav button{white-space:nowrap;border:1px solid #e9ded1;background:transparent;border-radius:999px;padding:9px 13px;font-size:11px;color:#67584d;cursor:pointer}
+.customer-account-nav button.is-active{background:#a31d19;color:white;border-color:#a31d19}
+.customer-account-content{padding:22px 0}
+.customer-account-content h3{font:500 26px Georgia;margin:0 0 18px}
+.customer-account-content h4{font:500 20px Georgia;margin:26px 0 10px}
+.customer-account-notice{background:#f1e5d9;border:1px solid #e2d0bf;border-radius:8px;padding:11px 13px;font-size:12px}
+.customer-account-loading{color:var(--muted);font-size:12px}
+.customer-account-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.customer-account-tiles button{display:flex;flex-direction:column;align-items:flex-start;gap:7px;padding:17px;border:1px solid var(--line);border-radius:12px;background:#fff;cursor:pointer;text-align:left;color:var(--ink)}
+.customer-account-tiles button svg{color:#9f211c;width:20px;height:20px}
+.customer-account-tiles b{font-size:13px}.customer-account-tiles small{color:var(--muted);font-size:11px}
+.customer-account-last{display:grid;gap:7px;margin-top:18px;padding:16px;border:1px solid var(--line);border-radius:12px;background:white}
+.customer-account-last span,.customer-account-last small{font-size:11px;color:var(--muted)}
+.customer-account-last b{font-size:14px}
+.customer-account-last button{justify-self:start;display:flex;align-items:center;border:0;background:none;color:#a3221d;font-size:12px;padding:6px 0;cursor:pointer}
+.customer-account-empty{display:grid;justify-items:center;text-align:center;padding:36px 12px;color:var(--muted);gap:10px}
+.customer-account-empty svg{width:34px;height:34px}.customer-account-empty b{color:var(--ink)}
+.customer-account-empty p{font-size:12px;margin:0}
+.customer-account-empty button,.customer-order-actions button,.customer-order-actions a,.customer-address-actions button{border:1px solid #cbb9a8;border-radius:999px;padding:8px 12px;background:white;color:#8f211c;font-size:11px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+.customer-orders-list{display:grid;gap:12px}
+.customer-order-card{background:white;border:1px solid var(--line);border-radius:12px;padding:15px}
+.customer-order-card header{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.customer-order-card header b{font-size:14px}.customer-order-card>small{display:block;color:var(--muted);font-size:10px;margin:7px 0}
+.customer-order-status{font-size:10px;font-weight:700;border-radius:999px;padding:6px 9px;background:#f1e5d9;color:#704d30}
+.customer-order-status.status-delivered{background:#e4f0e6;color:#27613a}.customer-order-status.status-cancelled{background:#f8e3e1;color:#a3221d}
+.customer-order-items{display:grid;gap:4px;padding:9px 0;font-size:11px;color:#685b50}
+.customer-order-total{display:flex;justify-content:space-between;padding:9px 0;border-top:1px solid var(--line);font-size:12px}
+.customer-order-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.customer-address-card{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff;margin-bottom:10px}
+.customer-address-card>div:first-child{display:flex;flex-wrap:wrap;align-items:center;gap:7px}
+.customer-address-card p{width:100%;font-size:12px;margin:5px 0;color:var(--ink)}
+.customer-address-card small{font-size:11px;color:var(--muted)}
+.customer-address-default{font-size:9px;background:#e4f0e6;color:#27613a;padding:4px 7px;border-radius:999px}
+.customer-address-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.customer-address-actions button.danger{color:#a3221d}
+.customer-account-signout{display:flex;align-items:center;justify-content:center;gap:8px;background:transparent;border:1px solid #d8c8b9;border-radius:999px;padding:11px;color:#9d211c;cursor:pointer}
+@media(min-width:850px){.customer-account-modal{padding:42px 7vw!important}.customer-account-tiles{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:560px){.customer-account-welcome strong{font-size:20px}.customer-account-nav button{padding:8px 10px}.customer-order-card{padding:12px}.customer-order-card header{align-items:flex-start;flex-direction:column}.customer-account-content h3{font-size:23px}}
