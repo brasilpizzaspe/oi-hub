@@ -134,7 +134,7 @@ function TrackOrder() {
         <section className="rounded-2xl border border-[#e4ddca] bg-white p-6 shadow-xl shadow-[#174d38]/5 sm:p-8">
           <p className="text-xs font-semibold tracking-[.25em] text-[#9b7930]">BRASIL PIZZAS</p>
           <h1 className="mt-2 text-3xl font-semibold">Acompanhe seu pedido</h1>
-          <p className="mt-2 text-sm text-[#64746a]">Acompanhe usando apenas o número do pedido e o WhatsApp informado na compra — não precisa de código.</p>
+          <p className="mt-2 text-sm text-[#64746a]">{tracking ? "Seu pedido está sendo atualizado automaticamente. Você pode consultar outro pedido quando quiser." : "Informe o número do pedido e o WhatsApp usado na compra para consultar o andamento — não precisa de código."}</p>
           {!tracking && <form className="mt-6 flex flex-col gap-3" onSubmit={(event) => { event.preventDefault(); void lookupByOrder(orderNumber, phone); }}>
             <label className="flex flex-col gap-1 text-sm font-medium">Número do pedido<input inputMode="numeric" value={orderNumber} onChange={(event) => setOrderNumber(event.target.value.replace(/[^0-9]/g, ""))} placeholder="Ex.: 3" autoComplete="off" className="min-w-0 rounded-lg border border-[#d9dfd8] px-3 py-3 text-sm outline-none focus:border-[#174d38]"/></label>
             <label className="flex flex-col gap-1 text-sm font-medium">WhatsApp usado no pedido<input inputMode="tel" value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="(00) 00000-0000" autoComplete="tel" className="min-w-0 rounded-lg border border-[#d9dfd8] px-3 py-3 text-sm outline-none focus:border-[#174d38]"/></label>
