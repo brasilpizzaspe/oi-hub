@@ -36,7 +36,7 @@ Deno.serve(async (req: Request) => {
     if (body?.action === "track_by_order") {
       const orderNumber = Number(body.order_number);
       const phone = clean(body.phone, 30, true);
-      const phoneDigits = (phone || "").replace(/\\D/g, "");
+      const phoneDigits = (phone || "").replace(/[^0-9]/g, "");
       if (!Number.isInteger(orderNumber) || orderNumber < 1 || !phone || phoneDigits.length < 10 || phoneDigits.length > 15) {
         return respond(400, { error: "Informe o número do pedido e o WhatsApp usado na compra." });
       }
@@ -44,7 +44,7 @@ Deno.serve(async (req: Request) => {
         .select("order_number,customer_phone,status,payment_status,created_at,updated_at,estimated_delivery_at,order_items(product_name,quantity)")
         .eq("order_number", orderNumber).maybeSingle();
       if (error) throw error;
-      if (!order || (order.customer_phone || "").replace(/\\D/g, "") !== phoneDigits) {
+      if (!order || (order.customer_phone || "").replace(/[^0-9]/g, "") !== phoneDigits) {
         return respond(404, { error: "Não encontramos um pedido com esses dados. Confira o número e o WhatsApp." });
       }
       const { customer_phone: _privatePhone, ...publicOrder } = order;
