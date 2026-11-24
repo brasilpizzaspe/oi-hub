@@ -150,8 +150,8 @@ Deno.serve(async (req: Request) => {
       const rows = [
         { order_id: order.id, customer_id: customerId, channel: "whatsapp", message_type: "order_confirmation", recipient: customer_phone, payload: orderPayload, scheduled_at: now.toISOString() },
         ...(customerEmail ? [{ order_id: order.id, customer_id: customerId, channel: "email", message_type: "order_confirmation", recipient: customerEmail, payload: orderPayload, scheduled_at: now.toISOString() }] : []),
-        ...(marketingWhatsApp ? [{ order_id: order.id, customer_id: customerId, channel: "whatsapp", message_type: "post_sale_thanks", recipient: customer_phone, payload: { customer_name, order_number: order.order_number, tracking_url: trackingUrl }, scheduled_at: postSale }] : []),
-        ...(marketingEmail && customerEmail ? [{ order_id: order.id, customer_id: customerId, channel: "email", message_type: "post_sale_thanks", recipient: customerEmail, payload: { customer_name, order_number: order.order_number, tracking_url: trackingUrl }, scheduled_at: postSale }] : []),
+        { order_id: order.id, customer_id: customerId, channel: "whatsapp", message_type: "post_sale_thanks", recipient: customer_phone, payload: { customer_name, order_number: order.order_number, tracking_url: trackingUrl }, scheduled_at: postSale },
+        ...(customerEmail ? [{ order_id: order.id, customer_id: customerId, channel: "email", message_type: "post_sale_thanks", recipient: customerEmail, payload: { customer_name, order_number: order.order_number, tracking_url: trackingUrl }, scheduled_at: postSale }] : []),
       ];
       const { error: queueError } = await db.from("customer_notification_queue").insert(rows);
       if (queueError) console.error("notification queue insert error", queueError);
