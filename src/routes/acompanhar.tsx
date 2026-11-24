@@ -101,7 +101,8 @@ function TrackOrder() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    let initial = params.get("codigo");\n    const orderFromLink = params.get("pedido");\n    if (orderFromLink) setOrderNumber(orderFromLink);
+    let initial = params.get("codigo");
+    const orderFromLink = params.get("pedido");\n    if (orderFromLink) setOrderNumber(orderFromLink);
     if (!initial) { try { initial = localStorage.getItem(TRACKING_STORAGE_KEY); } catch {} }
     try { setReviewDismissedToken(localStorage.getItem(REVIEW_DISMISSED_STORAGE_KEY) || ""); } catch {}
     if (initial) {
@@ -112,9 +113,9 @@ function TrackOrder() {
 
   useEffect(() => {
     if (!tracking) return;
-    const timer = window.setInterval(() => { void lookup(trackingToken); }, 20000);
+    const timer = window.setInterval(() => { if (trackingToken) void lookup(trackingToken); else if (trackingOrderNumber && trackingPhone) void lookupByOrder(trackingOrderNumber, trackingPhone); }, 20000);
     return () => window.clearInterval(timer);
-  }, [tracking, trackingToken, lookup]);
+  }, [tracking, trackingToken, trackingOrderNumber, trackingPhone, lookup, lookupByOrder]);
 
   return (
     <main className="min-h-screen bg-[#f5f2e9] px-4 py-10 text-[#174d38]">
