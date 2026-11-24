@@ -520,8 +520,8 @@ function DevelopmentLog({session}:{session:Session}) {
   const [category,setCategory]=useState("Implementação");
   const [status,setStatus]=useState("Concluído");
   const [details,setDetails]=useState("");
-  const [entryDate,setEntryDate]=useState(new Date().toISOString().slice(0,10));
-  const baseHeaders={apikey:SUPABASE_KEY,Authorization:`Bearer ${session.access_token}`};
+  const [entryDate,setEntryDate]=useState(todayLocal());
+  const baseHeaders={apikey:SUPABASE_KEY,Authorization:`Bearer ${session.access_token}`};\n  const todayLocal=()=>{const now=new Date();return new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,10);};
   async function loadEntries(){
     setLoading(true);setError("");
     try{
@@ -544,7 +544,7 @@ function DevelopmentLog({session}:{session:Session}) {
       const res=await fetch(url,{method:isEdit?"PATCH":"POST",headers:{...baseHeaders,"Content-Type":"application/json",Prefer:"return=representation"},body:JSON.stringify(isEdit?body:{...body,created_by:session.user.id})});
       const payload=await res.json().catch(()=>[]);
       if(!res.ok)throw new Error(payload?.message||payload?.details||"Não foi possível salvar o registro.");
-      if(isEdit){setEntries(old=>old.map(item=>item.id===editingId?(payload[0]||{...item,...body}):item));setNotice("Registro atualizado.");}
+      if(isEdit){setEntries(old=>old.map(item=>item.id===editingId?(payload[0]||{...item,...body}):item).sort((a,b)=>b.entry_date.localeCompare(a.entry_date)||b.created_at.localeCompare(a.created_at)));setNotice("Registro atualizado.");}
       else{setEntries(old=>[payload[0],...old].sort((a,b)=>b.entry_date.localeCompare(a.entry_date)||b.created_at.localeCompare(a.created_at)));setNotice("Novo registro adicionado ao diário.");}
       resetForm();
     }catch(err){setError(err instanceof Error?err.message:"Erro ao salvar.");}
