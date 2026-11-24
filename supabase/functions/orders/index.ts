@@ -68,7 +68,7 @@ Deno.serve(async (req: Request) => {
       return respond(400, { error: "Confira os dados obrigatórios e os limites dos campos." });
     }
     const phoneDigits = customer_phone.replace(/\D/g, "");
-    const normalizeNeighborhood = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase().replace(/\s+/g, " ");
+    const normalizeNeighborhood = (value: string) => { const roman: Record<string, string> = { i: "1", ii: "2", iii: "3", iv: "4", v: "5", vi: "6", vii: "7", viii: "8", ix: "9", x: "10" }; return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9\s]/g, " ").trim().split(/\s+/).map((token) => roman[token] || token).join(" "); };
     const { data: zones, error: zonesError } = await db.from("delivery_zones").select("municipality,neighborhood,fee,estimated_distance_km,eta_minutes,active");
     if (zonesError) throw zonesError;
     const requestedMunicipality = normalizeNeighborhood(municipality);
@@ -143,6 +143,24 @@ Deno.serve(async (req: Request) => {
         user_id: customerId, email: customerEmail, full_name: customer_name, phone: customer_phone,
         marketing_email: marketingEmail, marketing_whatsapp: marketingWhatsApp, default_address: { street, number: street_number, municipality, neighborhood, reference: reference || "" }, updated_at: new Date().toISOString(),
       }, { onConflict: "user_id" });
+      const { data: savedAddresses, error: savedAddressesError } = await db.from("customer_addresses")
+        .select("id,label,street,street_number,municipality,neighborhood,reference,is_default")
+        .eq("user_id", customerId);
+      if (!savedAddressesError) {
+        const normalizeAddressPart = (value: string) => normalizeNeighborhood(value);
+        const existingAddress = (savedAddresses || []).find((address) =>
+          normalizeAddressPart(address.street) === normalizeAddressPart(street) &&
+          normalizeAddressPart(address.street_number) === normalizeAddressPart(street_number) &&
+          normalizeAddressPart(address.municipality) === normalizeAddressPart(municipality) &&
+          normalizeAddressPart(address.neighborhood) === normalizeAddressPart(neighborhood)
+        );
+        const addressRecord = { label: existingAddress?.label || "Pedido", street, street_number, municipality, neighborhood, reference: reference || "", updated_at: new Date().toISOString() };
+        if (existingAddress) {
+          await db.from("customer_addresses").update(addressRecord).eq("id", existingAddress.id).eq("user_id", customerId);
+        } else {
+          await db.from("customer_addresses").insert({ user_id: customerId, ...addressRecord, is_default: (savedAddresses || []).length === 0 });
+        }
+      }
       const trackingUrl = "https://brasil-pizzas.lovable.app/acompanhar?codigo=" + token;
       const now = new Date();
       const postSale = new Date(now.getTime() + 90 * 60 * 1000).toISOString();
