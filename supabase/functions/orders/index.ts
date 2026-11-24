@@ -46,7 +46,7 @@ Deno.serve(async (req: Request) => {
     }
 
     if (body?.action !== "create") return respond(400, { error: "Ação inválida." });
-    const bearer = req.headers.get("Authorization")?.replace(/^Bearer\\s+/i, "") || "";
+    const bearer = req.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
     if (!bearer) return respond(401, { error: "Entre na sua conta para finalizar o pedido." });
     const { data: authData, error: authError } = await db.auth.getUser(bearer);
     if (authError || !authData.user) return respond(401, { error: "Sua sessão expirou. Entre novamente para continuar." });
