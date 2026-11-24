@@ -32,6 +32,10 @@ export const Route = createFileRoute("/acompanhar")({
 
 function TrackOrder() {
   const [token, setToken] = useState("");
+  const [orderNumber, setOrderNumber] = useState("");
+  const [phone, setPhone] = useState("");
+  const [trackingOrderNumber, setTrackingOrderNumber] = useState("");
+  const [trackingPhone, setTrackingPhone] = useState("");
   const [trackingToken, setTrackingToken] = useState("");
   const [tracking, setTracking] = useState<Tracking | null>(null);
   const [error, setError] = useState("");
@@ -74,7 +78,7 @@ function TrackOrder() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    let initial = params.get("codigo");
+    let initial = params.get("codigo");\n    const orderFromLink = params.get("pedido");\n    if (orderFromLink) setOrderNumber(orderFromLink);
     if (!initial) { try { initial = localStorage.getItem(TRACKING_STORAGE_KEY); } catch {} }
     try { setReviewDismissedToken(localStorage.getItem(REVIEW_DISMISSED_STORAGE_KEY) || ""); } catch {}
     if (initial) {
@@ -96,10 +100,11 @@ function TrackOrder() {
         <section className="rounded-2xl border border-[#e4ddca] bg-white p-6 shadow-xl shadow-[#174d38]/5 sm:p-8">
           <p className="text-xs font-semibold tracking-[.25em] text-[#9b7930]">BRASIL PIZZAS</p>
           <h1 className="mt-2 text-3xl font-semibold">Acompanhe seu pedido</h1>
-          <p className="mt-2 text-sm text-[#64746a]">Informe o código privado que recebeu ao finalizar o pedido. Ele permite consultar somente o seu pedido.</p>
-          <form className="mt-6 flex flex-col gap-3 sm:flex-row" onSubmit={(event) => { event.preventDefault(); void lookup(token); }}>
-            <input value={token} onChange={(event) => setToken(event.target.value.trim())} placeholder="Cole seu código de acompanhamento" autoComplete="off" className="min-w-0 flex-1 rounded-lg border border-[#d9dfd8] px-3 py-3 text-sm outline-none focus:border-[#174d38]"/>
-            <button disabled={busy} className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#174d38] px-5 py-3 text-sm font-semibold text-white disabled:opacity-60"><Search size={16}/>{busy ? "Consultando..." : "Consultar"}</button>
+          <p className="mt-2 text-sm text-[#64746a]">Acompanhe usando apenas o número do pedido e o WhatsApp informado na compra — não precisa de código.</p>
+          <form className="mt-6 flex flex-col gap-3" onSubmit={(event) => { event.preventDefault(); void lookupByOrder(orderNumber, phone); }}>
+            <label className="flex flex-col gap-1 text-sm font-medium">Número do pedido<input inputMode="numeric" value={orderNumber} onChange={(event) => setOrderNumber(event.target.value.replace(/\\D/g, ""))} placeholder="Ex.: 3" autoComplete="off" className="min-w-0 rounded-lg border border-[#d9dfd8] px-3 py-3 text-sm outline-none focus:border-[#174d38]"/></label>
+            <label className="flex flex-col gap-1 text-sm font-medium">WhatsApp usado no pedido<input inputMode="tel" value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="(00) 00000-0000" autoComplete="tel" className="min-w-0 rounded-lg border border-[#d9dfd8] px-3 py-3 text-sm outline-none focus:border-[#174d38]"/></label>
+            <button disabled={busy} className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#b71924] px-5 py-3 text-sm font-bold text-white disabled:opacity-60"><Search size={16}/>{busy ? "Consultando..." : "Acompanhar pedido"}</button>
           </form>
           {error && <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
           {tracking && <div className="mt-7 border-t border-[#edf0eb] pt-6">
@@ -116,7 +121,7 @@ function TrackOrder() {
               <a className="tracking-review-cta" href="https://www.google.com/search?q=Brasil+Pizzas+Recife+avaliar+Google" target="_blank" rel="noopener noreferrer"><Star size={17} fill="currentColor"/> Avaliar nossa pizzaria no Google <ExternalLink size={15}/></a>
               <button type="button" className="tracking-review-later" onClick={() => { setReviewDismissedToken(trackingToken); try { localStorage.setItem(REVIEW_DISMISSED_STORAGE_KEY, trackingToken); } catch {} }}>Agora não</button>
             </section>}
-            <button type="button" onClick={() => void lookup(trackingToken)} disabled={busy} className="mt-4 inline-flex items-center gap-2 text-sm font-semibold"><RefreshCw size={15}/> Atualizar agora</button>
+            <button type="button" onClick={() => trackingToken ? void lookup(trackingToken) : void lookupByOrder(trackingOrderNumber, trackingPhone)} disabled={busy} className="mt-4 inline-flex items-center gap-2 text-sm font-semibold"><RefreshCw size={15}/> Atualizar agora</button>
           </div>}
         </section>
       </div>
