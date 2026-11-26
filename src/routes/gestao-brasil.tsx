@@ -403,7 +403,7 @@ function PrivateManagement() {
       if (!saved.ok) throw new Error("Não foi possível remover a referência da imagem no banco de dados.");
       setSiteImages(old => old.map(image => image.slot === item.slot ? { ...image, image_url: null } : image));
       const marker = "/storage/v1/object/public/store-images/";
-      const path = item.image_url.includes(marker) ? decodeURIComponent(item.image_url.split(marker)[1].split("?")[0]) : null;
+      const path = item.image_url.includes(marker) ? decodeURIComponent((item.image_url.split(marker)[1]??"").split("?")[0]??"") : null;
       if (path) {
         const removed = await fetch(`${SUPABASE_URL}/storage/v1/object/store-images/${path.split("/").map(encodeURIComponent).join("/")}`, { method: "DELETE", headers: apiHeaders });
         if (!removed.ok && removed.status !== 404) {
@@ -638,7 +638,7 @@ function DevelopmentLog({session}:{session:Session}) {
   }
   const statusStyle=(value:string)=>value==="Concluído"?"bg-[#e4eee6] text-[#174d38]":value==="Em andamento"?"bg-blue-50 text-blue-800":value==="Planejado"?"bg-amber-50 text-amber-900":"bg-gray-100 text-gray-700";
   const statusIcon=(value:string)=>value==="Concluído"?<CheckCircle2 size={15}/>:value==="Em andamento"?<Clock3 size={15}/>:<CircleDashed size={15}/>;
-  const dateLabel=(value:string)=>{const [y,m,d]=value.split("-").map(Number);return new Date(y,m-1,d).toLocaleDateString("pt-BR",{day:"2-digit",month:"long",year:"numeric"});};
+  const dateLabel=(value:string)=>{const [y,m,d]=value.split("-").map(Number);return new Date(y??0,(m??1)-1,d??1).toLocaleDateString("pt-BR",{day:"2-digit",month:"long",year:"numeric"});};
   return <div className="space-y-5">
     <div className="rounded-xl border border-[#e4ddca] bg-white p-5"><div className="flex flex-wrap items-start justify-between gap-3"><div><h2 className="text-xl font-semibold">Diário de desenvolvimento</h2><p className="mt-1 text-sm text-[#758177]">Histórico privado da evolução do site: decisões, funcionalidades, correções, testes e próximos passos.</p></div><div className="rounded-lg bg-[#f5f2e9] px-4 py-2 text-sm"><b>{entries.length}</b> registro(s)</div></div><div className="mt-4 grid gap-2 sm:grid-cols-3"><div className="rounded-lg bg-[#e4eee6] p-3 text-sm"><b>{entries.filter(x=>x.status==="Concluído").length}</b><span className="ml-2">Concluídos</span></div><div className="rounded-lg bg-blue-50 p-3 text-sm"><b>{entries.filter(x=>x.status==="Em andamento").length}</b><span className="ml-2">Em andamento</span></div><div className="rounded-lg bg-amber-50 p-3 text-sm"><b>{entries.filter(x=>x.status==="Planejado").length}</b><span className="ml-2">Planejados</span></div></div></div>
     {(error||notice)&&<p className={error?"rounded-lg bg-red-50 p-3 text-sm text-red-700":"rounded-lg bg-[#e4eee6] p-3 text-sm text-[#174d38]"} role={error?"alert":"status"}>{error||notice}</p>}
