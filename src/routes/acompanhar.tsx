@@ -42,13 +42,13 @@ function TrackOrder() {
     const container = ribbonsRef.current;
     if (!container) return;
     const strips = Array.from(container.querySelectorAll<HTMLElement>(".tracking-ribbon span"));
-    const speeds = [34, 47, 26, 39, 55, 31, 44, 23, 51];
+    const speeds = [11, 14, 9, 16, 12, 18, 10, 15, 8];
     const startedAt = performance.now();
     let frame = 0;
     const animate = (now: number) => {
       const elapsed = (now - startedAt) / 1000;
       strips.forEach((strip, index) => {
-        const cycle = Math.max(strip.scrollHeight, strip.getBoundingClientRect().height, window.innerHeight * 2);
+        const cycle = Math.max(1, strip.scrollHeight / 2);
         const offset = ((elapsed * speeds[index % speeds.length] + index * cycle / strips.length) % cycle);
         strip.style.setProperty("translate", `0 ${offset}px`, "important");
       });
@@ -65,7 +65,7 @@ function TrackOrder() {
 
   return (
     <main className="tracking-page min-h-screen overflow-hidden bg-[#f5f2e9] px-4 py-10 text-[#174d38]">
-      <div className="tracking-ribbons" aria-hidden="true" ref={ribbonsRef}>{Array.from({length:9},(_,i)=><div key={i} className={`tracking-ribbon tracking-ribbon-${i+1}`} style={{left:`${4+i*11.5}%`,animationDuration:`${21+i*4.7}s`,animationDelay:`${-i*2.3}s`}}><span>{"BRASIL PIZZAS  •  ".repeat(18)}</span></div>)}</div>
+      <div className="tracking-ribbons" aria-hidden="true" ref={ribbonsRef}>{Array.from({length:9},(_,i)=><div key={i} className={`tracking-ribbon tracking-ribbon-${i+1}`} style={{left:`${4+i*11.5}%`,animationDuration:`${21+i*4.7}s`,animationDelay:`${-i*2.3}s`}}><span>{"BRASIL PIZZAS  •  ".repeat(36)}</span></div>)}</div>
       <div className="relative mx-auto min-h-[620px] max-w-xl">
         <a href="/" className="tracking-back-link relative z-20 mb-8 inline-flex items-center gap-2"><ArrowLeft size={16}/> Voltar à Brasil Pizzas</a>
         {trackingStampImage && <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[90px] z-0 h-[285px] w-[285px] -translate-x-1/2 sm:left-[-190px] sm:top-[105px] sm:h-[490px] sm:w-[490px] sm:translate-x-0"><svg viewBox="0 0 400 400" className="absolute inset-0 h-full w-full animate-[spin_28s_linear_infinite] overflow-visible"><defs><path id="tracking-stamp-circle" d="M 200,200 m -153,0 a153,153 0 1,1 306,0 a153,153 0 1,1 -306,0"/></defs><text fill="#762f2f" fontSize="18" fontWeight="700" letterSpacing="3.1"><textPath href="#tracking-stamp-circle" startOffset="0%">BRASIL PIZZAS · BRASIL PIZZAS · BRASIL PIZZAS · BRASIL PIZZAS · BRASIL PIZZAS · BRASIL PIZZAS · </textPath></text></svg><img src={trackingStampImage} alt="" className="absolute left-1/2 top-1/2 h-[74%] w-[74%] -translate-x-1/2 -translate-y-1/2 object-contain opacity-90"/></div>} 
