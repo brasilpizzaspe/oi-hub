@@ -985,3 +985,10 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 .customer-avatar-options button:hover{transform:translateY(-2px);background:#342626;border-color:#b71924}
 .customer-avatar-options button.selected{border:2px solid #e13b45;background:#3b2023;box-shadow:0 0 0 2px rgba(183,25,36,.22)}
 @media(max-width:420px){.customer-avatar-picker{padding:18px}.customer-avatar-options{gap:8px}.customer-avatar-options button{font-size:27px}}
+
+/* Refinamento dos cards de pizza no carrossel principal */
+.hero-picks .pick .pick-photo{height:176px!important;margin:0!important;border-radius:18px 18px 0 0!important;background-size:cover!important;background-position:center!important}
+.hero-picks .pick .pick-body{padding:13px 15px 14px!important}
+.hero-picks .pick .pick-body h3{font-size:19px!important;line-height:1.22!important;font-weight:900!important}
+.hero-picks .pick .pick-foot{margin-top:9px!important}
+@media(max-width:760px){.hero-picks .pick .pick-photo{height:164px!important}}
