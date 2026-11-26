@@ -1089,3 +1089,12 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
  .tracking-login-message{font-size:14px!important}
  .tracking-login-button{min-height:50px!important;font-size:14px!important}
 }
+
+/* Mobile ribbon final: loops continuously downward at different speeds; text repeated along the entire strip */
+@media(max-width:640px){
+ .tracking-ribbons{inset:0!important;height:100%!important;overflow:hidden!important}
+ .tracking-ribbon{top:-65vh!important;height:230vh!important;width:30px!important;overflow:visible!important;transform:none!important;animation-name:bpMobileRibbonDown!important;animation-timing-function:linear!important;animation-iteration-count:infinite!important;animation-direction:normal!important;will-change:transform!important}
+ .tracking-ribbon:nth-child(2n),.tracking-ribbon:nth-child(3n){animation-direction:normal!important}
+ .tracking-ribbon span{position:absolute!important;top:0!important;left:50%!important;width:max-content!important;display:block!important;white-space:nowrap!important;writing-mode:vertical-rl!important;text-orientation:mixed!important;transform:translateX(-50%)!important;letter-spacing:.13em!important;font-size:13px!important;line-height:1.5!important}
+ @keyframes bpMobileRibbonDown{from{transform:translate3d(0,-25vh,0)}to{transform:translate3d(0,25vh,0)}}
+}
