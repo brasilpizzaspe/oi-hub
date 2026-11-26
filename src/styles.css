@@ -1112,3 +1112,15 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
  .tracking-ribbon:after{background:repeating-linear-gradient(0deg,transparent 0 17px,#f8f4ec42 17px 19px,transparent 19px 37px),radial-gradient(ellipse at 30% 18%,#f8f4ec 0 3%,transparent 5%),radial-gradient(ellipse at 75% 63%,#f8f4ec 0 3%,transparent 5%)!important}
  @keyframes bpRibbonLoopDown{0%{transform:translate(-50%,-50%)}100%{transform:translate(-50%,0)}}
 }
+
+@media(max-width:640px){
+ .tracking-ribbon:nth-child(1) span{animation-duration:19s!important}
+ .tracking-ribbon:nth-child(2) span{animation-duration:24s!important}
+ .tracking-ribbon:nth-child(3) span{animation-duration:29s!important}
+ .tracking-ribbon:nth-child(4) span{animation-duration:34s!important}
+ .tracking-ribbon:nth-child(5) span{animation-duration:22s!important}
+ .tracking-ribbon:nth-child(6) span{animation-duration:38s!important}
+ .tracking-ribbon:nth-child(7) span{animation-duration:27s!important}
+ .tracking-ribbon:nth-child(8) span{animation-duration:32s!important}
+ .tracking-ribbon:nth-child(9) span{animation-duration:41s!important}
+}
