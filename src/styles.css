@@ -970,3 +970,18 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 .customer-account-modal ::-webkit-scrollbar{width:8px}.customer-account-modal ::-webkit-scrollbar-thumb{background:#e9b85a44;border-radius:9px}
 @media (prefers-reduced-motion:reduce){.customer-auth-seal,.customer-account-content,.customer-auth-drawer .checkout-form,.customer-account-loading::before{animation:none!important}}
 .customer-auth-drawer .checkout-form label{color:#e9b85a!important;opacity:1!important}
+
+/* Avatar picker - Brasil Pizzas */
+.customer-account-avatar{background:linear-gradient(145deg,#b71924,#7d1018)!important;color:#fff!important;border-radius:50%!important;min-width:48px;min-height:48px;padding:0!important;box-shadow:0 4px 14px rgba(183,25,36,.25);transition:transform .18s,box-shadow .18s}
+.customer-account-avatar:hover{transform:scale(1.06);box-shadow:0 6px 18px rgba(183,25,36,.35)}
+.customer-avatar-picker-backdrop{position:fixed;inset:0;z-index:10050;background:rgba(10,8,8,.72);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:18px}
+.customer-avatar-picker{width:min(100%,390px);background:#171414;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.45)}
+.customer-avatar-picker .panel-head{margin-bottom:12px}
+.customer-avatar-picker h2{margin:4px 0;font-size:1.3rem}
+.customer-avatar-picker p{color:#c9c0c0;font-size:.92rem;margin:0 0 18px}
+.customer-avatar-picker small{display:block;color:#a9a0a0;margin-top:15px;text-align:center}
+.customer-avatar-options{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.customer-avatar-options button{aspect-ratio:1;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:#262020;color:white;font-size:30px;cursor:pointer;transition:transform .15s,border-color .15s,background .15s}
+.customer-avatar-options button:hover{transform:translateY(-2px);background:#342626;border-color:#b71924}
+.customer-avatar-options button.selected{border:2px solid #e13b45;background:#3b2023;box-shadow:0 0 0 2px rgba(183,25,36,.22)}
+@media(max-width:420px){.customer-avatar-picker{padding:18px}.customer-avatar-options{gap:8px}.customer-avatar-options button{font-size:27px}}
