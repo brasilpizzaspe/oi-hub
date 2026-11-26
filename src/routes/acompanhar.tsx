@@ -41,6 +41,8 @@ function TrackOrder() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [reviewDismissedToken, setReviewDismissedToken] = useState("");
+  const [trackingStampImage, setTrackingStampImage] = useState("");
+  useEffect(() => { let active = true; fetch(SUPABASE_URL + "/rest/v1/site_images?select=image_url&slot=eq.tracking-stamp-logo", { headers: { apikey: SUPABASE_KEY || "" }, cache: "no-store" }).then(res => res.ok ? res.json() : []).then(rows => { if (active && rows?.[0]?.image_url) setTrackingStampImage(rows[0].image_url); }).catch(() => {}); return () => { active = false; }; }, []);
 
   const lookup = useCallback(async (value: string) => {
     const cleanToken = value.trim();
@@ -128,10 +130,10 @@ function TrackOrder() {
   }, [tracking, trackingToken, trackingOrderNumber, trackingPhone, lookup, lookupByOrder]);
 
   return (
-    <main className="min-h-screen bg-[#f5f2e9] px-4 py-10 text-[#174d38]">
-      <div className="mx-auto max-w-xl">
-        <a href="/" className="mb-8 inline-flex items-center gap-2 text-sm text-[#64746a] hover:text-[#174d38]"><ArrowLeft size={16}/> Voltar à Brasil Pizzas</a>
-        <section className="rounded-2xl border border-[#e4ddca] bg-white p-6 shadow-xl shadow-[#174d38]/5 sm:p-8">
+    <main className="min-h-screen overflow-hidden bg-[#f5f2e9] px-4 py-10 text-[#174d38]">
+      <div className="relative mx-auto min-h-[560px] max-w-4xl">
+        <a href="/" className="relative z-20 mb-8 inline-flex items-center gap-2 text-sm text-[#64746a] hover:text-[#174d38]"><ArrowLeft size={16}/> Voltar à Brasil Pizzas</a>
+        {trackingStampImage && <div aria-hidden="true" className="pointer-events-none absolute left-[-12px] top-[115px] z-0 h-[390px] w-[390px] sm:left-0 sm:top-[120px] sm:h-[430px] sm:w-[430px]"><svg viewBox="0 0 400 400" className="absolute inset-0 h-full w-full animate-[spin_28s_linear_infinite] overflow-visible"><defs><path id="tracking-stamp-circle" d="M 200,200 m -153,0 a153,153 0 1,1 306,0 a153,153 0 1,1 -306,0"/></defs><text fill="#762f2f" fontSize="18" fontWeight="700" letterSpacing="3.1"><textPath href="#tracking-stamp-circle" startOffset="0%">BRASIL PIZZAS · BRASIL PIZZAS · BRASIL PIZZAS · BRASIL PIZZAS · </textPath></text></svg><img src={trackingStampImage} alt="" className="absolute left-1/2 top-1/2 h-[74%] w-[74%] -translate-x-1/2 -translate-y-1/2 object-contain opacity-90"/></div>}\n        <section className="relative z-10 ml-auto max-w-xl rounded-2xl border border-[#e4ddca] bg-white/95 p-6 shadow-xl shadow-[#174d38]/5 backdrop-blur-sm sm:p-8">
           <p className="text-xs font-semibold tracking-[.25em] text-[#9b7930]">BRASIL PIZZAS</p>
           <h1 className="mt-2 text-3xl font-semibold">Acompanhe seu pedido</h1>
           <p className="mt-2 text-sm text-[#64746a]">{tracking ? "Seu pedido está sendo atualizado automaticamente. Você pode consultar outro pedido quando quiser." : "Informe o número do pedido e o WhatsApp usado na compra para consultar o andamento — não precisa de código."}</p>
