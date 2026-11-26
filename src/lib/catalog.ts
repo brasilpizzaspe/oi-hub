@@ -71,3 +71,8 @@ export async function fetchAccountAvatars(): Promise<string[]> {
     return rows.map(row => row.image_url).filter((url): url is string => !!url);
   } catch { return []; }
 }
+
+export async function fetchStoreContent(): Promise<Record<string,string>> {
+  if (!SUPABASE_URL || !SUPABASE_KEY) return {};
+  try { const response=await fetch(`${SUPABASE_URL}/rest/v1/site_content_settings?select=content&id=eq.storefront`,{headers:{apikey:SUPABASE_KEY},cache:"no-store"}); if(!response.ok)return {}; const rows=await response.json() as Array<{content:Record<string,string>}>; return rows[0]?.content||{}; } catch { return {}; }
+}
