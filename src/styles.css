@@ -1066,3 +1066,26 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
  .tracking-ribbon:nth-child(3n){opacity:.15!important;}
  @keyframes bpRibbonMobileDrift{0%{transform:translateY(-2.5vh)}100%{transform:translateY(2.5vh)}}
 }
+
+/* Acompanhar — correção final mobile: faixas animadas cobrindo toda a altura e layout dos controles */
+.tracking-back-link{padding:11px 16px!important;border:1px solid #762f2f!important;border-radius:999px!important;background:#762f2f!important;color:#fff!important;font-size:13px!important;font-weight:700!important;box-shadow:0 5px 16px #762f2f22!important;transition:transform .2s,filter .2s!important}
+.tracking-back-link:hover{transform:translateY(-2px)!important;filter:brightness(1.08)!important}
+.tracking-login-box{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:14px!important;padding:18px!important;background:#f5f0e6!important}
+.tracking-login-message{display:block!important;font-size:15px!important;line-height:1.55!important;color:#351d18!important}
+.tracking-login-button{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-height:48px!important;padding:12px 16px!important;border-radius:12px!important;background:#b71924!important;color:#d9b86c!important;font-weight:800!important;text-align:center!important;white-space:normal!important;line-height:1.25!important;box-shadow:0 7px 18px #b7192424!important}
+@media(max-width:640px){
+ .tracking-page{min-height:100svh!important}
+ .tracking-ribbons{position:absolute!important;inset:0!important;height:100%!important;overflow:hidden!important}
+ .tracking-ribbon{top:0!important;height:100%!important;width:30px!important;overflow:hidden!important;transform:none!important;animation-name:bpMobileRibbonMove!important;animation-timing-function:linear!important;animation-iteration-count:infinite!important;animation-duration:var(--bp-ribbon-duration,26s)!important;opacity:.13!important;filter:none!important}
+ .tracking-ribbon span{display:block!important;position:absolute!important;top:0!important;left:50%!important;width:max-content!important;white-space:nowrap!important;writing-mode:vertical-rl!important;text-orientation:mixed!important;transform:translateX(-50%)!important;letter-spacing:.13em!important;font-size:13px!important;line-height:1.5!important}
+ .tracking-ribbon:nth-child(odd){opacity:.1!important}
+ .tracking-ribbon:nth-child(3n){opacity:.16!important}
+ .tracking-ribbon:after{background:repeating-linear-gradient(0deg,transparent 0 17px,#f8f4ec42 17px 19px,transparent 19px 37px),radial-gradient(ellipse at 30% 18%,#f8f4ec 0 3%,transparent 5%),radial-gradient(ellipse at 75% 63%,#f8f4ec 0 3%,transparent 5%)!important}
+ @keyframes bpMobileRibbonMove{0%{transform:translateY(-24vh)}100%{transform:translateY(24vh)}}
+ .tracking-page>.relative{min-height:calc(100svh - 40px)!important}
+ .tracking-panel{margin-top:clamp(100px,24vh,180px)!important}
+ .tracking-back-link{font-size:12px!important;padding:10px 14px!important}
+ .tracking-login-box{gap:12px!important}
+ .tracking-login-message{font-size:14px!important}
+ .tracking-login-button{min-height:50px!important;font-size:14px!important}
+}
