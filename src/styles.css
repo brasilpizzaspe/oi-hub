@@ -1056,3 +1056,13 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 .tracking-ribbon:nth-child(2n){animation-direction:alternate!important;}
 .tracking-ribbon:nth-child(3n){animation-direction:alternate-reverse!important;}
 @media(max-width:640px){.tracking-ribbon{top:-55vh!important;height:210vh!important} @keyframes bpRibbonScrollStrong{0%{transform:translate3d(0,-18vh,0) rotate(180deg)}100%{transform:translate3d(0,18vh,0) rotate(180deg)}}}
+
+/* Mobile: faixas ocupam o fundo inteiro desde o topo; texto horizontal girado 90° */
+@media(max-width:640px){
+ .tracking-ribbons{inset:0!important;}
+ .tracking-ribbon{top:0!important;height:100%!important;width:34px!important;transform:none!important;overflow:visible!important;animation-name:bpRibbonMobileDrift!important;animation-duration:var(--ribbon-speed,30s)!important;}
+ .tracking-ribbon span{position:absolute!important;left:50%!important;top:50%!important;width:180vh!important;display:block!important;white-space:nowrap!important;writing-mode:horizontal-tb!important;text-align:center!important;transform:translate(-50%,-50%) rotate(90deg)!important;transform-origin:center!important;font-size:12px!important;letter-spacing:.12em!important;}
+ .tracking-ribbon:nth-child(odd){opacity:.12!important;filter:blur(.15px)!important;}
+ .tracking-ribbon:nth-child(3n){opacity:.15!important;}
+ @keyframes bpRibbonMobileDrift{0%{transform:translateY(-2.5vh)}100%{transform:translateY(2.5vh)}}
+}
