@@ -357,7 +357,7 @@ function PrivateManagement() {
     if (!session || !SUPABASE_URL || !SUPABASE_KEY) return;
     const allowed = ["image/jpeg", "image/png", "image/webp", "image/avif"];
     if (!allowed.includes(file.type)) { setError("Use uma imagem JPG, PNG, WebP ou AVIF."); return; }
-    if (file.size > (slot === "about-seal-logo" || slot === "hero-flame-icon" || slot === "tracking-stamp-logo" || slot.startsWith("account-avatar-") ? 2 * 1024 * 1024 : 12 * 1024 * 1024)) { setError(slot === "about-seal-logo" || slot === "hero-flame-icon" || slot.startsWith("account-avatar-") ? "A logo, ícone ou avatar deve ter no máximo 2 MB." : "A imagem deve ter no máximo 12 MB."); return; }
+    if (file.size > (slot === "about-seal-logo" || slot === "hero-flame-icon" || slot === "tracking-stamp-logo" || slot.startsWith("account-avatar-") ? 2 * 1024 * 1024 : 12 * 1024 * 1024)) { setError(slot === "about-seal-logo" || slot === "hero-flame-icon" || slot === "tracking-stamp-logo" || slot.startsWith("account-avatar-") ? "A logo, carimbo, ícone ou avatar deve ter no máximo 2 MB." : "A imagem deve ter no máximo 12 MB."); return; }
     setUploadingSlot(slot); setError(""); setNotice("");
     try {
       const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
