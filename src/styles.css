@@ -1139,3 +1139,9 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
  .tracking-ribbon:nth-child(8) span{animation-duration:32s!important}
  .tracking-ribbon:nth-child(9) span{animation-duration:41s!important}
 }
+
+
+/* Movimento mobile controlado por JS: evita conflitos com transform do texto vertical. */
+@media(max-width:640px){
+ .tracking-ribbon span{animation:none!important;translate:0 0!important;will-change:translate!important}
+}
