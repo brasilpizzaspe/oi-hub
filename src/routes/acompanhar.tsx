@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, RefreshCw, Clock3, PackageCheck, Star, ExternalLink, X, Check } from "lucide-react";
 
 const SUPABASE_URL = import.meta.env["VITE_SUPABASE_URL"] as string | undefined;
@@ -31,12 +31,32 @@ export const Route = createFileRoute("/acompanhar")({
 
 function TrackOrder() {
   const [tracking, setTracking] = useState<Tracking | null>(null);
+  const ribbonsRef = useRef<HTMLDivElement | null>(null);
   const [reviewDismissedToken, setReviewDismissedToken] = useState("");
   const [trackingStampImage, setTrackingStampImage] = useState("");
   const [accountOrders, setAccountOrders] = useState<Tracking[]>([]);
   const [accountLoading, setAccountLoading] = useState(true);
   const [selectedOrderNumber, setSelectedOrderNumber] = useState<number | null>(null);
   const [accountSignedIn, setAccountSignedIn] = useState(false);
+  useEffect(() => {
+    const container = ribbonsRef.current;
+    if (!container) return;
+    const strips = Array.from(container.querySelectorAll<HTMLElement>(".tracking-ribbon span"));
+    const speeds = [34, 47, 26, 39, 55, 31, 44, 23, 51];
+    const startedAt = performance.now();
+    let frame = 0;
+    const animate = (now: number) => {
+      const elapsed = (now - startedAt) / 1000;
+      strips.forEach((strip, index) => {
+        const cycle = Math.max(strip.scrollHeight, strip.getBoundingClientRect().height, window.innerHeight * 2);
+        const offset = ((elapsed * speeds[index % speeds.length] + index * cycle / strips.length) % cycle);
+        strip.style.setProperty("translate", `0 ${offset}px`, "important");
+      });
+      frame = window.requestAnimationFrame(animate);
+    };
+    frame = window.requestAnimationFrame(animate);
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
   useEffect(() => { let active = true; fetch(SUPABASE_URL + "/rest/v1/site_images?select=image_url&slot=eq.tracking-stamp-logo", { headers: { apikey: SUPABASE_KEY || "" }, cache: "no-store" }).then(res => res.ok ? res.json() : []).then(rows => { if (active && rows?.[0]?.image_url) setTrackingStampImage(rows[0].image_url); }).catch(() => {}); return () => { active = false; }; }, []);
   useEffect(() => { let active=true; (async()=>{setAccountLoading(true);try{const raw=localStorage.getItem("brasilpizzas:customer-auth:v1");if(!raw){if(active){setAccountSignedIn(false);setAccountOrders([]);}return;}let auth=JSON.parse(raw);if(!auth?.user?.id||!auth?.access_token){if(active)setAccountSignedIn(false);return;}if(auth.expires_at&&auth.expires_at<Date.now()+60000&&auth.refresh_token){const rr=await fetch(SUPABASE_URL+"/auth/v1/token?grant_type=refresh_token",{method:"POST",headers:{apikey:SUPABASE_KEY||"","Content-Type":"application/json"},body:JSON.stringify({refresh_token:auth.refresh_token})});if(rr.ok){const n=await rr.json();auth={...auth,...n,user:n.user||auth.user,expires_at:n.expires_at?n.expires_at*1000:Date.now()+((n.expires_in||3600)*1000)};localStorage.setItem("brasilpizzas:customer-auth:v1",JSON.stringify(auth));}}const res=await fetch(SUPABASE_URL+"/rest/v1/orders?customer_id=eq."+encodeURIComponent(auth.user.id)+"&select=order_number,status,payment_status,created_at,updated_at,estimated_delivery_at,order_items(product_name,quantity)&order=created_at.desc&limit=20",{headers:{apikey:SUPABASE_KEY||"",Authorization:"Bearer "+auth.access_token},cache:"no-store"});if(res.ok){const rows=await res.json();if(active){setAccountSignedIn(true);setAccountOrders(rows);const latest=rows.find((o:Tracking)=>!["delivered","cancelled"].includes(o.status))||rows[0];if(latest)setSelectedOrderNumber(latest.order_number);}}else if(active)setAccountSignedIn(false);}catch{if(active)setAccountSignedIn(false);}finally{if(active)setAccountLoading(false);}})();return()=>{active=false;};}, []);
 
@@ -45,7 +65,7 @@ function TrackOrder() {
 
   return (
     <main className="tracking-page min-h-screen overflow-hidden bg-[#f5f2e9] px-4 py-10 text-[#174d38]">
-      <div className="tracking-ribbons" aria-hidden="true">{Array.from({length:9},(_,i)=><div key={i} className={`tracking-ribbon tracking-ribbon-${i+1}`} style={{left:`${4+i*11.5}%`,animationDuration:`${21+i*4.7}s`,animationDelay:`${-i*2.3}s`}}><span>{"BRASIL PIZZAS  •  ".repeat(18)}</span></div>)}</div>
+      <div className="tracking-ribbons" aria-hidden="true" ref={ribbonsRef}>{Array.from({length:9},(_,i)=><div key={i} className={`tracking-ribbon tracking-ribbon-${i+1}`} style={{left:`${4+i*11.5}%`,animationDuration:`${21+i*4.7}s`,animationDelay:`${-i*2.3}s`}}><span>{"BRASIL PIZZAS  •  ".repeat(18)}</span></div>)}</div>
       <div className="relative mx-auto min-h-[620px] max-w-xl">
         <a href="/" className="tracking-back-link relative z-20 mb-8 inline-flex items-center gap-2"><ArrowLeft size={16}/> Voltar à Brasil Pizzas</a>
         {trackingStampImage && <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[90px] z-0 h-[285px] w-[285px] -translate-x-1/2 sm:left-[-190px] sm:top-[105px] sm:h-[490px] sm:w-[490px] sm:translate-x-0"><svg viewBox="0 0 400 400" className="absolute inset-0 h-full w-full animate-[spin_28s_linear_infinite] overflow-visible"><defs><path id="tracking-stamp-circle" d="M 200,200 m -153,0 a153,153 0 1,1 306,0 a153,153 0 1,1 -306,0"/></defs><text fill="#762f2f" fontSize="18" fontWeight="700" letterSpacing="3.1"><textPath href="#tracking-stamp-circle" startOffset="0%">BRASIL PIZZAS · BRASIL PIZZAS · BRASIL PIZZAS · BRASIL PIZZAS · BRASIL PIZZAS · BRASIL PIZZAS · </textPath></text></svg><img src={trackingStampImage} alt="" className="absolute left-1/2 top-1/2 h-[74%] w-[74%] -translate-x-1/2 -translate-y-1/2 object-contain opacity-90"/></div>} 
