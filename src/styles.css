@@ -1098,3 +1098,17 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
  .tracking-ribbon span{position:absolute!important;top:0!important;left:50%!important;width:max-content!important;display:block!important;white-space:nowrap!important;writing-mode:vertical-rl!important;text-orientation:mixed!important;transform:translateX(-50%)!important;letter-spacing:.13em!important;font-size:13px!important;line-height:1.5!important}
  @keyframes bpMobileRibbonDown{from{transform:translate3d(0,-25vh,0)}to{transform:translate3d(0,25vh,0)}}
 }
+
+/* FIX DEFINITIVO — faixas mobile: movimento contínuo descendente e texto preenchendo toda a faixa.
+   Desativa as regras conflitantes anteriores e anima o trilho duplicado para loop sem salto. */
+@media(max-width:640px){
+ .tracking-page{position:relative!important;min-height:100svh!important;overflow:hidden!important}
+ .tracking-ribbons{position:absolute!important;inset:0!important;height:100%!important;overflow:hidden!important;z-index:0!important}
+ .tracking-ribbon{position:absolute!important;top:0!important;height:100%!important;width:30px!important;overflow:hidden!important;transform:none!important;animation:none!important;opacity:.13!important;filter:none!important}
+ .tracking-ribbon span{position:absolute!important;left:50%!important;top:0!important;height:max-content!important;width:auto!important;display:block!important;white-space:normal!important;writing-mode:vertical-rl!important;text-orientation:mixed!important;transform:translateX(-50%)!important;line-height:1.5!important;letter-spacing:.13em!important;font-size:13px!important;animation:bpRibbonLoopDown var(--bp-speed,30s) linear infinite!important}
+ .tracking-ribbon:nth-child(odd){opacity:.1!important}
+ .tracking-ribbon:nth-child(3n){opacity:.16!important}
+ .tracking-ribbon:nth-child(4n){opacity:.08!important}
+ .tracking-ribbon:after{background:repeating-linear-gradient(0deg,transparent 0 17px,#f8f4ec42 17px 19px,transparent 19px 37px),radial-gradient(ellipse at 30% 18%,#f8f4ec 0 3%,transparent 5%),radial-gradient(ellipse at 75% 63%,#f8f4ec 0 3%,transparent 5%)!important}
+ @keyframes bpRibbonLoopDown{0%{transform:translate(-50%,-50%)}100%{transform:translate(-50%,0)}}
+}
