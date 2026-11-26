@@ -1025,3 +1025,13 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 .tracking-page::before,.tracking-page::after{background-image:repeating-linear-gradient(0deg,#762f2f08 0 3px,transparent 3px 11px),radial-gradient(ellipse at 15% 22%,#f8f4ec 0 5%,transparent 7%),radial-gradient(ellipse at 82% 48%,#f8f4ec 0 4%,transparent 6%),radial-gradient(ellipse at 35% 77%,#f8f4ec 0 6%,transparent 8%),linear-gradient(90deg,#762f2f0a,#762f2f19,#762f2f0a);}
 @media(max-width:640px){.tracking-page::before,.tracking-page::after{width:34px;font-size:13px;letter-spacing:.1em;opacity:.11;filter:blur(1.8px)}.tracking-page::before{left:0}.tracking-page::after{right:0}}
 @media(prefers-reduced-motion:reduce){.tracking-page::before,.tracking-page::after{animation:none!important}}
+
+/* Correção das faixas: orientação vertical real, blur bem mais leve */
+.tracking-page::before,.tracking-page::after{top:50%;bottom:auto;width:150vh;height:84px;display:block;white-space:nowrap;overflow:visible;text-align:center;line-height:84px;letter-spacing:.2em;font-size:clamp(22px,2.8vw,34px);opacity:.14;filter:blur(.45px);background:linear-gradient(90deg,transparent,#762f2f12 18%,#762f2f1b 50%,#762f2f12 82%,transparent);box-shadow:none;}
+.tracking-page::before{left:46px;right:auto;transform:translate(-50%,-50%) rotate(-90deg);animation:trackingVerticalLeft 34s ease-in-out infinite alternate;}
+.tracking-page::after{right:46px;left:auto;transform:translate(50%,-50%) rotate(90deg);animation:trackingVerticalRight 41s ease-in-out infinite alternate;}
+@keyframes trackingVerticalLeft{from{transform:translate(-50%,-50%) rotate(-90deg) translateX(-3%)}to{transform:translate(-50%,-50%) rotate(-90deg) translateX(3%)}}
+@keyframes trackingVerticalRight{from{transform:translate(50%,-50%) rotate(90deg) translateX(-3%)}to{transform:translate(50%,-50%) rotate(90deg) translateX(3%)}}
+.tracking-page::before,.tracking-page::after{background-image:repeating-linear-gradient(90deg,transparent 0 18px,#f8f4ec22 18px 20px,transparent 20px 38px),radial-gradient(ellipse at 12% 50%,#f8f4ec 0 2%,transparent 4%),radial-gradient(ellipse at 67% 50%,#f8f4ec 0 2.5%,transparent 5%),linear-gradient(90deg,transparent,#762f2f17,transparent);}
+@media(max-width:640px){.tracking-page::before,.tracking-page::after{width:120vh;height:42px;line-height:42px;font-size:16px;letter-spacing:.12em;opacity:.1;filter:blur(.35px)}.tracking-page::before{left:24px}.tracking-page::after{right:24px}}
+@media(prefers-reduced-motion:reduce){.tracking-page::before,.tracking-page::after{animation:none!important}}
