@@ -992,3 +992,21 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 .hero-picks .pick .pick-body h3{font-size:19px!important;line-height:1.22!important;font-weight:900!important}
 .hero-picks .pick .pick-foot{margin-top:9px!important}
 @media(max-width:760px){.hero-picks .pick .pick-photo{height:164px!important}}
+
+/* Acompanhe pedido — acabamento premium */
+.tracking-page{background:radial-gradient(ellipse at 18% 12%,#f0dfc8 0,transparent 36%),linear-gradient(135deg,#f8f4ec,#eee7da)!important;min-height:100vh;padding-top:32px!important;padding-bottom:60px!important;color:#351d18!important}
+.tracking-page>a{color:#762f2f!important;font-weight:700;transition:transform .2s,color .2s}.tracking-page>a:hover{transform:translateX(-3px);color:#a51e28!important}
+.tracking-panel{margin-top:150px!important;border:1px solid #d9c9b5!important;border-radius:28px!important;background:linear-gradient(145deg,#fffdf9 0%,#fff 68%,#fbf3e8)!important;box-shadow:0 24px 65px #4a28151a,0 4px 14px #4a28150b!important;padding:clamp(22px,4vw,36px)!important}
+.tracking-panel>p:first-child{letter-spacing:.28em!important;color:#a67b34!important;font-weight:900!important}
+.tracking-panel h1{font-family:Anton,Impact,sans-serif!important;text-transform:uppercase!important;letter-spacing:.02em!important;font-size:clamp(32px,6vw,46px)!important;line-height:1.05!important;color:#351d18!important;margin-top:10px!important}
+.tracking-panel select{appearance:none!important;background:#fff url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23762f2f" stroke-width="2"%3E%3Cpath d="m6 9 6 6 6-6"/%3E%3C/svg%3E') no-repeat right 14px center!important;border:1px solid #e4d5c4!important;border-radius:14px!important;padding:14px 42px 14px 14px!important;color:#451f1b!important;font-weight:700!important;box-shadow:0 4px 12px #451f1b08!important}
+.tracking-panel select:focus{outline:none!important;border-color:#b98b42!important;box-shadow:0 0 0 3px #b98b4222!important}
+.tracking-panel .rounded-xl.bg-\[\#f8f6f0\]{background:linear-gradient(145deg,#fbf6ef,#f5ebdf)!important;border:1px solid #eadbca!important;border-radius:20px!important;padding:20px!important}
+.tracking-panel .rounded-full.bg-\[\#e4eee6\]{background:#762f2f!important;color:#fff!important;border:1px solid #762f2f!important;letter-spacing:.04em!important;padding:9px 14px!important}
+.tracking-panel .border-t{border-color:#eadfD2!important}
+.tracking-panel .mt-5.space-y-2>div{background:#fff;border:1px solid #eee3d7;border-radius:12px;padding:11px 13px;color:#45231d!important;font-weight:600}
+.tracking-panel .mt-5.space-y-2 svg{color:#b98b42!important}
+.tracking-panel .mt-4.rounded-xl.border{border:1px solid #e5d4bd!important;background:#fffaf4!important;border-radius:16px!important}
+.tracking-panel button.mt-4{background:#762f2f!important;color:white!important;border:0!important;border-radius:999px!important;padding:11px 16px!important;box-shadow:0 8px 20px #762f2f22!important;transition:transform .2s,filter .2s}.tracking-panel button.mt-4:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.tracking-review-card{border-radius:22px!important;border:1px solid #e4c98f!important;background:radial-gradient(circle at top,#fff5d9,#fffaf3 60%)!important;box-shadow:0 12px 35px #9b6e2315!important}
+@media(max-width:640px){.tracking-panel{margin-top:190px!important;padding:21px!important;border-radius:23px!important}.tracking-page{padding-top:22px!important}.tracking-panel h1{font-size:34px!important}.tracking-panel .rounded-xl.bg-\[\#f8f6f0\]{padding:15px!important}}
