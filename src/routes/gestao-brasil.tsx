@@ -584,42 +584,92 @@ function ProjectManual({session}:{session:Session}){
  </div>;
 }
 
-function VisualEditor(){
-  type Section={id:string;name:string;eyebrow:string;title:string;description:string;kind:string};
-  const sections:Section[]=[
-    {id:"hero",name:"Hero / Destaque principal",eyebrow:"BRASIL PIZZAS · DELIVERY",title:"Uma pizza que acende o momento.",description:"Destaque cinematográfico com imagem ou vídeo, marca, navegação, chamada principal, selo e produtos em destaque.",kind:"hero"},
-    {id:"ribbon",name:"Faixa de marca",eyebrow:"IDENTIDADE",title:"Feita na hora · Sabor que aproxima · Delivery com carinho",description:"Faixa animada com frases da marca.",kind:"ribbon"},
-    {id:"promise",name:"Diferenciais",eyebrow:"NOSSO CUIDADO",title:"Ingredientes selecionados · Preparada na hora · Delivery com cuidado",description:"Três compromissos da loja em uma faixa de benefícios.",kind:"promise"},
-    {id:"how",name:"Como pedir",eyebrow:"SIMPLES ASSIM",title:"Seu pedido em 3 passos",description:"Escolha seus sabores; informe a entrega; acompanhe seu pedido.",kind:"how"},
-    {id:"experiences",name:"Experiências",eyebrow:"FEITO PARA CADA MOMENTO",title:"Escolha seu próximo momento",description:"Cards de Pizzas Premium, Bebidas geladas e Combos & ofertas.",kind:"experiences"},
-    {id:"menu",name:"Cardápio",eyebrow:"ESCOLHA O SEU FAVORITO",title:"Nosso cardápio",description:"Categorias: Promoções, Salgadas, Doces e Bebidas. A categoria inicial é Salgadas.",kind:"menu"},
-    {id:"cart",name:"Sacola e finalização",eyebrow:"SEU PEDIDO",title:"Sacola · Entrega · Pagamento",description:"Itens, sugestão de bebidas, endereço, bairros atendidos, taxa de entrega e formas de pagamento.",kind:"cart"},
-    {id:"account",name:"Minha conta",eyebrow:"ÁREA DO CLIENTE",title:"Minha conta",description:"Login Google ou e-mail, pedidos, perfil, endereços e escolha de avatar.",kind:"account"},
-    {id:"tracking",name:"Acompanhamento",eyebrow:"PEDIDO",title:"Acompanhe seu pedido",description:"Página separada para acompanhar o status do pedido.",kind:"tracking"},
-    {id:"about",name:"Nossa casa / Rodapé",eyebrow:"BRASIL PIZZAS",title:"O sabor que aproxima.",description:"Área institucional, informações e links da loja.",kind:"about"}
+function VisualEditor() {
+  const sections = [
+    { id: "hero", name: "Hero / Destaque principal", title: "Uma pizza que acende o momento.", desc: "Imagem ou vídeo principal, marca, navegação, chamada, selo e destaques." },
+    { id: "ribbon", name: "Faixa de marca", title: "Feita na hora · Sabor que aproxima", desc: "Faixa animada com frases da marca." },
+    { id: "promise", name: "Diferenciais", title: "Ingredientes selecionados", desc: "Preparada na hora e delivery com cuidado." },
+    { id: "how", name: "Como pedir", title: "Seu pedido em 3 passos", desc: "Escolha seus sabores, informe a entrega e acompanhe." },
+    { id: "experiences", name: "Experiências", title: "Pizzas Premium · Bebidas · Combos", desc: "Cards para as categorias de experiência." },
+    { id: "menu", name: "Cardápio", title: "Nosso cardápio", desc: "Promoções, Salgadas, Doces e Bebidas. Salgadas inicia selecionada." },
+    { id: "cart", name: "Sacola e finalização", title: "Sua sacola", desc: "Itens, sugestões, endereço, entrega e pagamento." },
+    { id: "account", name: "Minha conta", title: "Olá, cliente!", desc: "Login, pedidos, perfil, endereços e avatar." },
+    { id: "tracking", name: "Acompanhamento", title: "Acompanhe seu pedido", desc: "Consulta de status em página própria." },
+    { id: "about", name: "Nossa casa / Rodapé", title: "O sabor que aproxima.", desc: "Informações institucionais e links." },
   ];
-  const [selected,setSelected]=useState("hero");
-  const [device,setDevice]=useState<"desktop"|"mobile">("desktop");
-  const current=sections.find(s=>s.id===selected)||sections[0];
-  const box="rounded-xl border border-[#ead8c8] bg-white";
-  const renderPreview=()=>{
-    if(current.kind==="hero")return <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[#7f1119] via-[#c51f29] to-[#27090d] px-5 py-8 text-white" style={{minHeight:device==="mobile"?360:430}}><div className="absolute inset-0 opacity-20" style={{backgroundImage:"radial-gradient(circle at 80% 30%,#ffcc7a 0,transparent 35%),radial-gradient(circle at 20% 90%,#ff6b35 0,transparent 35%)"}}/><div className="relative flex items-center justify-between gap-3 border-b border-white/20 pb-4"><div><b className="tracking-wide">BRASIL <span className="text-[#ffd28a]">PIZZAS</span></b><small className="block text-white/70">O sabor que aproxima.</small></div><div className="text-xs">{device==="mobile"?"☰　◉":"Início　Cardápio　Como pedir　Nossa casa　Acompanhar　◉"}</div></div><div className="relative mt-7 max-w-xl"><span className="text-xs font-bold tracking-[.18em]">{current.eyebrow}</span><h2 className="mt-3 text-3xl font-black leading-tight">Uma pizza<br/>que acende<br/><span className="text-[#ffd28a]">o momento.</span></h2><p className="mt-3 max-w-sm text-sm text-white/80">O sabor que aproxima. Escolha sua pizza favorita e transforme qualquer momento em uma ocasião especial.</p><div className="mt-5 flex flex-wrap gap-2"><span className="rounded-full bg-[#f8c65d] px-4 py-2 text-sm font-bold text-[#491016]">Ver cardápio</span><span className="rounded-full border border-white/40 px-4 py-2 text-sm">Conheça a loja</span></div></div><div className="absolute bottom-5 right-5 rounded-lg bg-black/30 p-3 text-right"><small className="block">Preparada</small><b>Na hora</b><small className="block">Do forno para você</small></div></div>;
-    if(current.kind==="ribbon")return <div className="overflow-hidden rounded-lg bg-[#b71924] py-4 text-center text-sm font-bold text-white">Feita na hora　✦　Sabor que aproxima　✦　Delivery com carinho　✦　Ingredientes selecionados　✦　Brasil Pizzas</div>;
-    if(current.kind==="promise")return <div className="grid gap-3 sm:grid-cols-3">{[["✳","Ingredientes selecionados","Carinho em cada detalhe"],["◷","Preparada na hora","Do forno direto para você"],["⌂","Delivery com cuidado","Seu pedido, nossa prioridade"]].map(x=><div className={box+" p-4 text-center"} key={x[1]}><div className="text-2xl text-[#b71924]">{x[0]}</div><b className="block text-sm">{x[1]}</b><small className="text-[#8a776b]">{x[2]}</small></div>)}</div>;
-    if(current.kind==="how")return <div className={box+" p-5"}><p className="text-xs font-bold tracking-widest text-[#b71924]">SIMPLES ASSIM</p><h2 className="mt-2 text-2xl font-bold text-[#302b28]">Seu pedido em <span className="text-[#b71924]">3 passos</span></h2><div className="mt-5 grid gap-3 sm:grid-cols-3">{[["01","Escolha seus sabores","Explore o cardápio e coloque seus favoritos na sacola."],["02","Informe a entrega","Preencha seus dados e escolha como prefere pagar."],["03","Acompanhe seu pedido","Receba um código privado para acompanhar o andamento."]].map(x=><div key={x[0]} className="rounded-lg bg-[#f7f0e8] p-3"><b className="text-xl text-[#b71924]">{x[0]}</b><strong className="mt-2 block">{x[1]}</strong><p className="mt-1 text-xs text-[#78685d]">{x[2]}</p></div>)}</div></div>;
-    if(current.kind==="experiences")return <div className="grid gap-3 sm:grid-cols-3">{[["01 · FEITAS PARA IMPRESSIONAR","Pizzas Premium","Sabores especiais e ingredientes."],["02 · REFRESCÂNCIA NA MEDIDA","Bebidas geladas","Para acompanhar sua pizza."],["03 · MAIS SABOR PARA COMPARTILHAR","Combos & ofertas","Combinações e ofertas especiais."]].map(x=><div key={x[1]} className="flex min-h-36 flex-col justify-end rounded-xl bg-gradient-to-br from-[#8d1b20] to-[#271316] p-4 text-white"><small>{x[0]}</small><b className="mt-2 text-xl">{x[1]}</b><span className="text-xs text-white/75">{x[2]}</span><span className="mt-2 text-sm font-semibold text-[#ffd28a]">Explorar ↗</span></div>)}</div>;
-    if(current.kind==="menu")return <div className={box+" p-4"}><p className="text-xs font-bold tracking-widest text-[#b71924]">ESCOLHA O SEU FAVORITO</p><h2 className="mt-2 text-2xl font-bold">Nosso <span className="text-[#b71924">cardápio</span></h2><p className="text-sm text-[#827267]">Seu próximo momento gostoso começa aqui.</p><div className="mt-4 flex flex-wrap gap-2">{["Promoções","Salgadas","Doces","Bebidas"].map((x,i)=><span key={x} className={"rounded-full px-4 py-2 text-sm font-semibold "+(i===1?"bg-[#b71924] text-white":"bg-[#f5e9df] text-[#624b3c]")}>{x}</span>)}</div><div className="mt-4 grid grid-cols-2 gap-3">{["Pizza da casa","Seu sabor favorito"].map((x,i)=>(<div className="overflow-hidden rounded-lg bg-[#f7f0e8]" key={i}><div className="flex h-24 items-center justify-center bg-gradient-to-br from-[#e5b36c] to-[#bb492c] text-4xl">🍕</div><div className="p-3"><small className="text-[#9b6550]">Salgadas</small><b className="block">{x}</b><div className="mt-2 flex justify-between text-sm"><span>Preço cadastrado</span><span className="rounded-full bg-[#b71924] px-2 text-white">+</span></div></div></div>))}</div></div>;
-    if(current.kind==="cart")return <div className={box+" p-4"}><div className="flex items-center justify-between"><h2 className="text-xl font-bold">Sua sacola</h2><span className="rounded-full bg-[#f6e9df] px-3 py-1 text-sm">Itens e quantidades</span></div><div className="mt-4 rounded-lg bg-[#f7f0e8] p-3"><b>Que tal incluir uma bebida?</b><small className="mt-1 block">Adicionais sugeridos direto na sacola</small></div><h3 className="mt-4 font-semibold">Onde entregamos?</h3><div className="mt-2 grid gap-2 sm:grid-cols-2">{["Nome e WhatsApp","Rua e número","Cidade e bairro atendido","Referência","Forma de pagamento: Pix, dinheiro ou cartão na entrega","Taxa e total calculados"].map(x=><span className="rounded-lg border border-[#ead8c8] p-2 text-sm" key={x}>{x}</span>)}</div><p className="mt-3 text-xs text-[#827267]">Pagamento online não está integrado.</p></div>;
-    if(current.kind==="account")return <div className={box+" p-4"}><div className="flex items-center gap-3"><div className="grid size-12 place-items-center rounded-full border border-[#d8c4a8] bg-[#f2e6d5] text-2xl">🍕</div><div><b>Olá, cliente!</b><small className="block text-[#827267]">e-mail da conta</small></div></div><div className="mt-4 grid grid-cols-2 gap-2">{["Visão geral","Meus pedidos","Meu perfil","Endereços","Escolher avatar","Sair da conta"].map(x=><div key={x} className="rounded-lg bg-[#f7f0e8] p-3 text-sm font-medium">{x}</div>)}</div><p className="mt-3 text-xs text-[#827267]">Login Google ou e-mail e senha.</p></div>;
-    if(current.kind==="tracking")return <div className={box+" p-5"}><span className="text-xs font-bold tracking-widest text-[#b71924]">ACOMPANHAMENTO</span><h2 className="mt-2 text-2xl font-bold">Acompanhe seu pedido</h2><p className="mt-2 text-sm text-[#827267]">Consulta do status do pedido em uma página própria.</p><div className="mt-4 flex gap-2"><div className="flex-1 rounded-lg border p-3 text-sm">Número do pedido</div><span className="rounded-lg bg-[#b71924] px-4 py-3 text-white">Consultar</span></div>;
-    return <div className="rounded-xl bg-[#2b1718] p-6 text-white"><b className="text-xl">BRASIL PIZZAS</b><p className="mt-2 text-[#f4d9c8]">O sabor que aproxima.</p><div className="mt-5 flex flex-wrap gap-3 text-sm text-white/70">Cardápio · Como pedir · Nossa casa · Acompanhar pedido</div></div>;
-  };
-  return <div className="space-y-4">
-    <div className="rounded-xl border border-[#ead8c8] bg-white p-4"><div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-xl font-bold text-[#302b28]">Editor visual · estrutura atual do site</h2><p className="mt-1 text-sm text-[#827267]">Prévia atualizada para refletir as seções e recursos que existem hoje na Brasil Pizzas.</p></div><div className="flex gap-2"><button onClick={()=>setDevice("desktop")} className={"flex items-center gap-2 rounded-lg border px-3 py-2 text-sm "+(device==="desktop"?"bg-[#b71924] text-white":"bg-white text-[#59463b]")}><Monitor size={16}/> Desktop</button><button onClick={()=>setDevice("mobile")} className={"flex items-center gap-2 rounded-lg border px-3 py-2 text-sm "+(device==="mobile"?"bg-[#b71924] text-white":"bg-white text-[#59463b]")}><Smartphone size={16}/> Mobile</button></div></div></div>
-    <div className="grid gap-4 xl:grid-cols-[250px_minmax(0,1fr)_260px]">
-      <aside className="rounded-xl border border-[#ead8c8] bg-white p-3"><h3 className="mb-1 font-bold text-[#302b28]">Seções existentes</h3><p className="mb-3 text-xs text-[#827267]">Selecione para visualizar o trecho correspondente.</p><div className="space-y-1">{sections.map((s,i)=><button key={s.id} onClick={()=>setSelected(s.id)} className={"w-full rounded-lg px-3 py-2 text-left text-sm "+(selected===s.id?"bg-[#b71924] text-white":"text-[#59463b] hover:bg-[#f7f0e8]")}><span className="mr-2 text-xs opacity-70">{String(i+1).padStart(2,"0")}</span>{s.name}</button>)}</div></aside>
-      <div className="min-w-0 rounded-xl border border-[#ead8c8] bg-[#f1e8df] p-3"><div className="mb-3 flex items-center justify-between text-xs font-semibold text-[#827267]"><span>PRÉVIA DO SITE · {device.toUpperCase()}</span><span>{current.name}</span></div><div className={"mx-auto overflow-hidden rounded-xl bg-[#fffaf5] shadow-lg "+(device==="mobile"?"max-w-[390px]":"max-w-full")}><div className="bg-[#251416] px-4 py-3 text-white"><div className="flex items-center justify-between"><b>BRASIL <span className="text-[#e3aa58]">PIZZAS</span></b><span className="text-xs">{device==="mobile"?"☰　◉":"Início　Cardápio　Como pedir　Nossa casa　Acompanhar　◉"}</span></div><small className="text-white/60">O sabor que aproxima.</small></div><div className="p-3">{renderPreview()}</div></div></div>
-      <aside className="rounded-xl border border-[#ead8c8] bg-white p-4"><h3 className="font-bold text-[#302b28]">Sobre esta seção</h3><span className="mt-2 inline-block rounded-full bg-[#f7f0e8] px-2 py-1 text-xs font-semibold text-[#9c392e]">{current.eyebrow}</span><h4 className="mt-2 text-lg font-bold text-[#302b28]">{current.title}</h4><p className="mt-2 text-sm text-[#827267]">{current.description}</p><div className="mt-4 rounded-lg bg-[#fff5e8] p-3 text-xs text-[#8b5b34]"><b>Prévia de referência</b><p className="mt-1">Este painel representa a estrutura atual. Não altera nem publica o site; conteúdo e layout são gerenciados pelos módulos próprios do ADM ou pelo código.</p></div></aside>
+  const [selected, setSelected] = useState("hero");
+  const [device, setDevice] = useState<"desktop" | "mobile">("desktop");
+  const current = sections.find((section) => section.id === selected) ?? sections[0];
+
+  return (
+    <div className="space-y-4">
+      <div className="rounded-xl border border-[#ead8c8] bg-white p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="text-xl font-bold text-[#302b28]">Editor visual · estrutura atual</h2>
+            <p className="mt-1 text-sm text-[#827267]">Prévia das seções que existem hoje no site.</p>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={() => setDevice("desktop")} className={`rounded-lg border px-3 py-2 text-sm ${device === "desktop" ? "bg-[#b71924] text-white" : "bg-white text-[#59463b]"}`}>Desktop</button>
+            <button onClick={() => setDevice("mobile")} className={`rounded-lg border px-3 py-2 text-sm ${device === "mobile" ? "bg-[#b71924] text-white" : "bg-white text-[#59463b]"}`}>Mobile</button>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid gap-4 xl:grid-cols-[250px_minmax(0,1fr)_260px]">
+        <aside className="rounded-xl border border-[#ead8c8] bg-white p-3">
+          <h3 className="mb-3 font-bold text-[#302b28]">Seções do site</h3>
+          <div className="space-y-1">
+            {sections.map((section, index) => (
+              <button key={section.id} onClick={() => setSelected(section.id)} className={`w-full rounded-lg px-3 py-2 text-left text-sm ${selected === section.id ? "bg-[#b71924] text-white" : "text-[#59463b] hover:bg-[#f7f0e8]"}`}>
+                <span className="mr-2 opacity-70">{String(index + 1).padStart(2, "0")}</span>{section.name}
+              </button>
+            ))}
+          </div>
+        </aside>
+
+        <div className="min-w-0 rounded-xl border border-[#ead8c8] bg-[#f1e8df] p-3">
+          <div className="mb-3 flex items-center justify-between text-xs font-semibold text-[#827267]">
+            <span>PRÉVIA · {device.toUpperCase()}</span><span>{current.name}</span>
+          </div>
+          <div className={`mx-auto overflow-hidden rounded-xl bg-[#fffaf5] shadow-lg ${device === "mobile" ? "max-w-[390px]" : "max-w-full"}`}>
+            <header className="bg-[#251416] px-4 py-3 text-white">
+              <b>BRASIL <span className="text-[#e3aa58]">PIZZAS</span></b>
+              <div className="mt-1 text-xs text-white/70">O sabor que aproxima.</div>
+            </header>
+            <div className="p-4">
+              <div className="rounded-xl bg-gradient-to-br from-[#7f1119] via-[#c51f29] to-[#27090d] p-5 text-white">
+                <div className="text-xs font-bold tracking-widest">{current.name.toUpperCase()}</div>
+                <h2 className="mt-3 text-2xl font-black">{current.title}</h2>
+                <p className="mt-2 text-sm text-white/80">{current.desc}</p>
+                <div className="mt-5 inline-flex rounded-full bg-[#f8c65d] px-4 py-2 text-sm font-bold text-[#491016]">Ver / explorar</div>
+              </div>
+              {current.id === "menu" && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {["Promoções", "Salgadas", "Doces", "Bebidas"].map((category) => (
+                    <span key={category} className={`rounded-full px-3 py-2 text-sm ${category === "Salgadas" ? "bg-[#b71924] text-white" : "bg-[#f5e9df] text-[#624b3c]"}`}>{category}</span>
+                  ))}
+                </div>
+              )}
+              {current.id === "experiences" && (
+                <div className="mt-4 grid grid-cols-3 gap-2">
+                  {["Pizzas Premium", "Bebidas geladas", "Combos & ofertas"].map((item) => <div key={item} className="rounded-lg bg-[#f5e9df] p-3 text-center text-xs font-semibold text-[#624b3c]">{item}</div>)}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <aside className="rounded-xl border border-[#ead8c8] bg-white p-4">
+          <h3 className="font-bold text-[#302b28]">Sobre esta seção</h3>
+          <h4 className="mt-3 text-lg font-bold text-[#302b28]">{current.title}</h4>
+          <p className="mt-2 text-sm text-[#827267]">{current.desc}</p>
+          <div className="mt-4 rounded-lg bg-[#fff5e8] p-3 text-xs text-[#8b5b34]">
+            <b>Prévia de referência</b>
+            <p className="mt-1">Esta visualização é ilustrativa e não altera nem publica o site. As configurações são feitas nos módulos do ADM ou no código.</p>
+          </div>
+        </aside>
+      </div>
     </div>
-  </div>;
+  );
 }
