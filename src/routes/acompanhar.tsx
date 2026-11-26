@@ -44,11 +44,11 @@ function TrackOrder() {
   useEffect(()=>{if(!selectedOrderNumber||!accountSignedIn)return;const refresh=async()=>{try{const raw=localStorage.getItem("brasilpizzas:customer-auth:v1");if(!raw)return;const auth=JSON.parse(raw);const res=await fetch(SUPABASE_URL+"/rest/v1/orders?customer_id=eq."+encodeURIComponent(auth.user.id)+"&order_number=eq."+selectedOrderNumber+"&select=order_number,status,payment_status,created_at,updated_at,estimated_delivery_at,order_items(product_name,quantity)",{headers:{apikey:SUPABASE_KEY||"",Authorization:"Bearer "+auth.access_token},cache:"no-store"});if(res.ok){const rows=await res.json();if(rows[0])setTracking(rows[0]);}}catch{}};void refresh();const timer=window.setInterval(refresh,20000);return()=>window.clearInterval(timer);},[selectedOrderNumber,accountSignedIn]);
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#f5f2e9] px-4 py-10 text-[#174d38]">
+    <main className="tracking-page min-h-screen overflow-hidden bg-[#f5f2e9] px-4 py-10 text-[#174d38]">
       <div className="relative mx-auto min-h-[620px] max-w-xl">
         <a href="/" className="relative z-20 mb-8 inline-flex items-center gap-2 text-sm text-[#64746a] hover:text-[#174d38]"><ArrowLeft size={16}/> Voltar à Brasil Pizzas</a>
         {trackingStampImage && <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[90px] z-0 h-[285px] w-[285px] -translate-x-1/2 sm:left-[-190px] sm:top-[105px] sm:h-[490px] sm:w-[490px] sm:translate-x-0"><svg viewBox="0 0 400 400" className="absolute inset-0 h-full w-full animate-[spin_28s_linear_infinite] overflow-visible"><defs><path id="tracking-stamp-circle" d="M 200,200 m -153,0 a153,153 0 1,1 306,0 a153,153 0 1,1 -306,0"/></defs><text fill="#762f2f" fontSize="18" fontWeight="700" letterSpacing="3.1"><textPath href="#tracking-stamp-circle" startOffset="0%">BRASIL PIZZAS · BRASIL PIZZAS · BRASIL PIZZAS · BRASIL PIZZAS · BRASIL PIZZAS · BRASIL PIZZAS · </textPath></text></svg><img src={trackingStampImage} alt="" className="absolute left-1/2 top-1/2 h-[74%] w-[74%] -translate-x-1/2 -translate-y-1/2 object-contain opacity-90"/></div>} 
-        <section className="relative z-10 mx-auto mt-[205px] max-w-xl rounded-2xl border border-[#e4ddca] bg-white/95 p-6 shadow-xl shadow-[#174d38]/5 backdrop-blur-sm sm:mt-[130px] sm:p-8">
+        <section className="tracking-panel relative z-10 mx-auto mt-[205px] max-w-xl rounded-2xl border border-[#e4ddca] bg-white/95 p-6 shadow-xl shadow-[#174d38]/5 backdrop-blur-sm sm:mt-[130px] sm:p-8">
           <p className="text-xs font-semibold tracking-[.25em] text-[#9b7930]">BRASIL PIZZAS</p>
           <h1 className="mt-2 text-3xl font-semibold">Acompanhe seu pedido</h1>
           
