@@ -1035,3 +1035,16 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 .tracking-page::before,.tracking-page::after{background-image:repeating-linear-gradient(90deg,transparent 0 18px,#f8f4ec22 18px 20px,transparent 20px 38px),radial-gradient(ellipse at 12% 50%,#f8f4ec 0 2%,transparent 4%),radial-gradient(ellipse at 67% 50%,#f8f4ec 0 2.5%,transparent 5%),linear-gradient(90deg,transparent,#762f2f17,transparent);}
 @media(max-width:640px){.tracking-page::before,.tracking-page::after{width:120vh;height:42px;line-height:42px;font-size:16px;letter-spacing:.12em;opacity:.1;filter:blur(.35px)}.tracking-page::before{left:24px}.tracking-page::after{right:24px}}
 @media(prefers-reduced-motion:reduce){.tracking-page::before,.tracking-page::after{animation:none!important}}
+
+/* Faixas múltiplas com movimento vertical em velocidades independentes */
+.tracking-page::before,.tracking-page::after{display:none!important;content:none!important;}
+.tracking-ribbons{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.tracking-ribbon{position:absolute;top:-45vh;height:190vh;width:clamp(48px,7vw,92px);transform:rotate(180deg);writing-mode:vertical-rl;white-space:nowrap;overflow:hidden;color:#762f2f;opacity:.13;font-family:Anton,Impact,sans-serif;font-weight:900;font-size:clamp(19px,2vw,28px);letter-spacing:.15em;text-shadow:0 0 0 #762f2f;animation-name:bpRibbonScroll;animation-timing-function:linear;animation-iteration-count:infinite;filter:blur(.25px);}
+.tracking-ribbon span{display:block;}
+.tracking-ribbon:nth-child(odd){opacity:.10;filter:blur(.5px);}
+.tracking-ribbon:nth-child(3n){opacity:.16;}
+.tracking-ribbon:nth-child(4n){opacity:.08;}
+.tracking-ribbon:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 24px,#f8f4ec45 24px 26px,transparent 26px 53px),radial-gradient(ellipse at 20% 15%,#f8f4ec 0 3%,transparent 5%),radial-gradient(ellipse at 80% 60%,#f8f4ec 0 2%,transparent 4%);mix-blend-mode:screen;}
+@keyframes bpRibbonScroll{0%{transform:translateY(-18%) rotate(180deg)}100%{transform:translateY(18%) rotate(180deg)}}
+@media(max-width:640px){.tracking-ribbon{width:27px;font-size:12px;letter-spacing:.1em;opacity:.08;filter:none}.tracking-ribbon:nth-child(3n){opacity:.1}}
+@media(prefers-reduced-motion:reduce){.tracking-ribbon{animation:none!important}}
