@@ -1048,3 +1048,11 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 @keyframes bpRibbonScroll{0%{transform:translateY(-18%) rotate(180deg)}100%{transform:translateY(18%) rotate(180deg)}}
 @media(max-width:640px){.tracking-ribbon{width:27px;font-size:12px;letter-spacing:.1em;opacity:.08;filter:none}.tracking-ribbon:nth-child(3n){opacity:.1}}
 @media(prefers-reduced-motion:reduce){.tracking-ribbon{animation:none!important}}
+
+/* Garantir movimento visível das fitas: amplitude maior e sem desativação automática */
+.tracking-ribbons{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.tracking-ribbon{top:-65vh!important;height:230vh!important;overflow:hidden!important;will-change:transform!important;animation-name:bpRibbonScrollStrong!important;animation-timing-function:linear!important;animation-iteration-count:infinite!important;}
+@keyframes bpRibbonScrollStrong{0%{transform:translate3d(0,-28vh,0) rotate(180deg)}100%{transform:translate3d(0,28vh,0) rotate(180deg)}}
+.tracking-ribbon:nth-child(2n){animation-direction:alternate!important;}
+.tracking-ribbon:nth-child(3n){animation-direction:alternate-reverse!important;}
+@media(max-width:640px){.tracking-ribbon{top:-55vh!important;height:210vh!important} @keyframes bpRibbonScrollStrong{0%{transform:translate3d(0,-18vh,0) rotate(180deg)}100%{transform:translate3d(0,18vh,0) rotate(180deg)}}}
