@@ -61,3 +61,13 @@ export async function fetchStoreImages(): Promise<StoreImages> {
     };
   } catch { return fallback; }
 }
+
+export async function fetchAccountAvatars(): Promise<string[]> {
+  if (!SUPABASE_URL || !SUPABASE_KEY) return [];
+  try {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/site_images?select=slot,image_url&slot=like.account-avatar-*&order=slot.asc`, { headers: { apikey: SUPABASE_KEY }, cache: "no-store" });
+    if (!response.ok) return [];
+    const rows = await response.json() as Array<{slot:string;image_url:string|null}>;
+    return rows.map(row => row.image_url).filter((url): url is string => !!url);
+  } catch { return []; }
+}
