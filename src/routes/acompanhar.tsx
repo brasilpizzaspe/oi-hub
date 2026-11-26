@@ -48,67 +48,7 @@ function TrackOrder() {
   const [accountSignedIn, setAccountSignedIn] = useState(false);
   useEffect(() => { let active = true; fetch(SUPABASE_URL + "/rest/v1/site_images?select=image_url&slot=eq.tracking-stamp-logo", { headers: { apikey: SUPABASE_KEY || "" }, cache: "no-store" }).then(res => res.ok ? res.json() : []).then(rows => { if (active && rows?.[0]?.image_url) setTrackingStampImage(rows[0].image_url); }).catch(() => {}); return () => { active = false; }; }, []);\n  useEffect(() => { let active=true; (async()=>{setAccountLoading(true);try{const raw=localStorage.getItem("brasilpizzas:customer-auth:v1");if(!raw){if(active){setAccountSignedIn(false);setAccountOrders([]);}return;}let auth=JSON.parse(raw);if(!auth?.user?.id||!auth?.access_token){if(active)setAccountSignedIn(false);return;}if(auth.expires_at&&auth.expires_at<Date.now()+60000&&auth.refresh_token){const rr=await fetch(SUPABASE_URL+"/auth/v1/token?grant_type=refresh_token",{method:"POST",headers:{apikey:SUPABASE_KEY||"","Content-Type":"application/json"},body:JSON.stringify({refresh_token:auth.refresh_token})});if(rr.ok){const n=await rr.json();auth={...auth,...n,user:n.user||auth.user,expires_at:n.expires_at?n.expires_at*1000:Date.now()+((n.expires_in||3600)*1000)};localStorage.setItem("brasilpizzas:customer-auth:v1",JSON.stringify(auth));}}const res=await fetch(SUPABASE_URL+"/rest/v1/orders?customer_id=eq."+encodeURIComponent(auth.user.id)+"&select=order_number,status,payment_status,created_at,updated_at,estimated_delivery_at,order_items(product_name,quantity)&order=created_at.desc&limit=20",{headers:{apikey:SUPABASE_KEY||"",Authorization:"Bearer "+auth.access_token},cache:"no-store"});if(res.ok){const rows=await res.json();if(active){setAccountSignedIn(true);setAccountOrders(rows);const latest=rows.find((o:Tracking)=>!["delivered","cancelled"].includes(o.status))||rows[0];if(latest)setSelectedOrderNumber(latest.order_number);}}else if(active)setAccountSignedIn(false);}catch{if(active)setAccountSignedIn(false);}finally{if(active)setAccountLoading(false);}})();return()=>{active=false;};}, []);
 
-  const lookup = useCallback(async (value: string) => {
-    const cleanToken = value.trim();
-    if (!/^[a-f0-9]{64}$/i.test(cleanToken)) {
-      setError("Digite o código privado de 64 caracteres que recebeu ao registrar o pedido.");
-      setTracking(null);
-      setTrackingToken("");
-      return;
-    }
-    if (!SUPABASE_URL || !SUPABASE_KEY) {
-      setError("O acompanhamento ainda não está configurado.");
-      return;
-    }
-    setBusy(true);
-    try {
-      const response = await fetch(SUPABASE_URL + "/functions/v1/orders", {
-        method: "POST",
-        headers: { apikey: SUPABASE_KEY, "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "track", token: cleanToken }),
-      });
-      const payload = await response.json();
-      if (!response.ok) throw new Error(payload.error || "Não foi possível localizar o pedido.");
-      setTracking(payload.order);
-      try { localStorage.setItem(TRACKING_STORAGE_KEY, cleanToken); } catch {}
-      setTrackingToken(cleanToken);
-      setError("");
-    } catch (e) {
-      setTracking(null);
-      setTrackingToken("");
-      setError(e instanceof Error ? e.message : "Erro ao consultar o pedido.");
-    } finally {
-      setBusy(false);
-    }
-  }, []);
-
-  const lookupByOrder = useCallback(async (orderValue: string, phoneValue: string) => {
-    const orderDigits = orderValue.trim();
-    const phoneDigits = phoneValue.replace(/[^0-9]/g, "");
-    if (!/^[0-9]+$/.test(orderDigits) || phoneDigits.length < 10 || phoneDigits.length > 15) {
-      setError("Informe o número do pedido e o WhatsApp usado na compra.");
-      return;
-    }
-    if (!SUPABASE_URL || !SUPABASE_KEY) { setError("O acompanhamento ainda não está configurado."); return; }
-    setBusy(true);
-    try {
-      const response = await fetch(SUPABASE_URL + "/functions/v1/orders", {
-        method: "POST", headers: { apikey: SUPABASE_KEY, "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "track_by_order", order_number: Number(orderDigits), phone: phoneValue }),
-      });
-      const payload = await response.json();
-      if (!response.ok) throw new Error(payload.error || "Não foi possível localizar o pedido.");
-      setTracking(payload.order); setTrackingOrderNumber(orderDigits); setTrackingPhone(phoneValue); setTrackingToken(""); setError("");
-    } catch (e) {
-      setTracking(null); setTrackingOrderNumber(""); setTrackingPhone("");
-      setError(e instanceof Error ? e.message : "Erro ao consultar o pedido.");
-    } finally { setBusy(false); }
-  }, []);
-
-  useEffect(()=>{try{setReviewDismissedToken(localStorage.getItem(REVIEW_DISMISSED_STORAGE_KEY)||"");}catch{}},[]);\n  useEffect(()=>{if(!selectedOrderNumber||!accountSignedIn)return;const refresh=async()=>{try{const raw=localStorage.getItem("brasilpizzas:customer-auth:v1");if(!raw)return;const auth=JSON.parse(raw);const res=await fetch(SUPABASE_URL+"/rest/v1/orders?customer_id=eq."+encodeURIComponent(auth.user.id)+"&order_number=eq."+selectedOrderNumber+"&select=order_number,status,payment_status,created_at,updated_at,estimated_delivery_at,order_items(product_name,quantity)",{headers:{apikey:SUPABASE_KEY||"",Authorization:"Bearer "+auth.access_token},cache:"no-store"});if(res.ok){const rows=await res.json();if(rows[0])setTracking(rows[0]);}}catch{}};void refresh();const timer=window.setInterval(refresh,20000);return()=>window.clearInterval(timer);},[selectedOrderNumber,accountSignedIn]);\n\n  return () => window.clearInterval(timer);
-  }, [tracking, trackingToken, trackingOrderNumber, trackingPhone, lookup, lookupByOrder]);
-
-  return (
+  useEffect(()=>{try{setReviewDismissedToken(localStorage.getItem(REVIEW_DISMISSED_STORAGE_KEY)||"");}catch{}},[]);\n  useEffect(()=>{if(!selectedOrderNumber||!accountSignedIn)return;const refresh=async()=>{try{const raw=localStorage.getItem("brasilpizzas:customer-auth:v1");if(!raw)return;const auth=JSON.parse(raw);const res=await fetch(SUPABASE_URL+"/rest/v1/orders?customer_id=eq."+encodeURIComponent(auth.user.id)+"&order_number=eq."+selectedOrderNumber+"&select=order_number,status,payment_status,created_at,updated_at,estimated_delivery_at,order_items(product_name,quantity)",{headers:{apikey:SUPABASE_KEY||"",Authorization:"Bearer "+auth.access_token},cache:"no-store"});if(res.ok){const rows=await res.json();if(rows[0])setTracking(rows[0]);}}catch{}};void refresh();const timer=window.setInterval(refresh,20000);return()=>window.clearInterval(timer);},[selectedOrderNumber,accountSignedIn]);\n\n  return (
     <main className="min-h-screen overflow-hidden bg-[#f5f2e9] px-4 py-10 text-[#174d38]">
       <div className="relative mx-auto min-h-[620px] max-w-xl">
         <a href="/" className="relative z-20 mb-8 inline-flex items-center gap-2 text-sm text-[#64746a] hover:text-[#174d38]"><ArrowLeft size={16}/> Voltar à Brasil Pizzas</a>
