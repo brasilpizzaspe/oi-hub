@@ -897,3 +897,76 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 .customer-order-card.is-finished .customer-order-status{background:#dedede;color:#555}
 .customer-order-card.is-finished .customer-order-total{border-color:#ddd}
 .customer-order-card.is-finished:hover,.customer-order-card.is-finished:focus-visible{border-color:#aaa;box-shadow:0 4px 12px rgba(0,0,0,.06);outline:none}
+
+/* ===== Conta — linguagem do hero (vinho, vermelho, dourado) ===== */
+.store .customer-account-button .hero-bag-icon{transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
+.store .customer-account-button:hover .hero-bag-icon{transform:translateY(-2px);box-shadow:0 0 0 2px #e9b85a,0 10px 24px -8px #e9b85a99}
+.customer-auth-overlay{background:radial-gradient(120% 90% at 100% 0,#5a0f1a99,#0b0205cc)!important;backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important}
+.customer-auth-drawer{background:radial-gradient(130% 60% at 100% 0,#4a0c16 0,#1c060b 55%,#12040a 100%)!important;color:#f7eee2!important;border-left:1px solid #e9b85a40;box-shadow:-30px 0 80px -20px #000c!important}
+.customer-auth-drawer.customer-account-modal{background:radial-gradient(110% 50% at 100% 0,#4a0c16 0,#1c060b 55%,#12040a 100%)!important}
+.customer-auth-drawer .panel-head{border-bottom:1px solid #e9b85a2e;padding-bottom:16px}
+.customer-auth-drawer .panel-head .eyebrow{color:#e9b85a;letter-spacing:.28em}
+.customer-auth-drawer .panel-head h2,.customer-account-content h3,.customer-account-content h4,.customer-account-welcome strong{font-family:Anton,Impact,sans-serif!important;font-weight:400!important;text-transform:uppercase;letter-spacing:.01em;color:#fff8ee}
+.customer-auth-drawer .panel-head h2{font-size:clamp(28px,4vw,38px);line-height:1}
+.customer-auth-drawer .icon-btn{background:#ffffff12;color:#f7eee2;border:1px solid #ffffff22;border-radius:50%;transition:transform .3s,background .3s}
+.customer-auth-drawer .icon-btn:hover{background:#e1251b;transform:rotate(90deg)}
+.customer-auth-drawer p,.customer-auth-drawer .muted{color:#e8d9c8cc}
+.customer-auth-intro{display:grid;justify-items:center;text-align:center;gap:14px;padding:18px 0 8px}
+.customer-auth-seal{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;color:#2a0a06;background:radial-gradient(circle at 32% 28%,#fff1c4,#e9b85a 45%,#9c6a1f);box-shadow:0 0 0 6px #e9b85a1f,0 18px 40px -12px #e9b85a88;animation:bpSealPulse 3.2s ease-in-out infinite}
+@keyframes bpSealPulse{50%{box-shadow:0 0 0 12px #e9b85a10,0 18px 46px -10px #e9b85aaa}}
+.customer-auth-intro p{font-size:15px;max-width:30ch;margin:0}
+.customer-auth-drawer .full-btn{border-radius:999px!important;min-height:52px;font-weight:800;letter-spacing:.02em;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s,filter .3s}
+.customer-auth-drawer .primary-btn{background:linear-gradient(180deg,#f2392d,#e1251b 45%,#a3130f)!important;color:#fff!important;border:0!important;box-shadow:inset 0 1px 0 #ffffff40,0 14px 30px -10px #e1251bb3}
+.customer-auth-drawer .primary-btn:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.07)}
+.customer-auth-drawer .primary-btn:disabled{opacity:.45}
+.google-btn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;background:#fffaf2;color:#1f1410;border:1px solid #e9b85a66;cursor:pointer;font-size:15px;box-shadow:0 12px 30px -14px #000}
+.google-btn:hover{transform:translateY(-2px);box-shadow:0 0 0 3px #e9b85a40,0 16px 34px -14px #000}
+.customer-auth-divider{display:flex;align-items:center;gap:12px;color:#e9b85a;font-size:11px;letter-spacing:.3em;text-transform:uppercase}
+.customer-auth-divider::before,.customer-auth-divider::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,#e9b85a55,transparent)}
+.customer-auth-drawer .checkout-form{display:grid;gap:14px;animation:bpAccIn .5s cubic-bezier(.2,.8,.2,1) both}
+.customer-auth-drawer label{color:#e9b85a;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+.customer-auth-drawer input,.customer-auth-drawer select,.customer-auth-drawer textarea{background:#ffffff0d!important;border:1px solid #ffffff26!important;color:#fff8ee!important;border-radius:14px!important;padding:13px 14px!important;font-size:15px!important;letter-spacing:0;text-transform:none;transition:border-color .25s,box-shadow .25s}
+.customer-auth-drawer input:focus,.customer-auth-drawer select:focus,.customer-auth-drawer textarea:focus{outline:0;border-color:#e9b85a!important;box-shadow:0 0 0 4px #e9b85a26}
+.customer-auth-drawer input[type=checkbox]{width:18px;height:18px;padding:0!important;accent-color:#e1251b}
+.customer-auth-drawer .text-link{color:#e9b85a!important;font-weight:700;background:none;border:0;cursor:pointer}
+.customer-auth-error{background:#e1251b1f;border:1px solid #e1251b66;color:#ffb4ad!important;padding:11px 13px;border-radius:12px;font-size:13px}
+.customer-auth-ok{background:#e9b85a1a;border:1px solid #e9b85a55;color:#f6d892!important;padding:11px 13px;border-radius:12px;font-size:13px}
+@keyframes bpAccIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.customer-account{color:#f7eee2!important}
+.customer-account-welcome{padding:18px!important;margin:6px 0 18px;border-radius:22px;background:linear-gradient(135deg,#ffffff10,#ffffff04);border:1px solid #e9b85a33;box-shadow:inset 0 1px 0 #ffffff14}
+.customer-account-avatar{width:60px!important;height:60px!important;flex:none;color:#2a0a06!important;background:radial-gradient(circle at 32% 28%,#fff1c4,#e9b85a 45%,#9c6a1f)!important;box-shadow:0 0 0 4px #e9b85a22,0 12px 28px -10px #e9b85a99}
+.customer-account-welcome small{color:#e9b85acc!important}
+.customer-account-nav{border-bottom:1px solid #e9b85a26!important;gap:8px!important;background:none!important}
+.customer-account-nav button{background:#ffffff0a!important;border:1px solid #ffffff1f!important;color:#e8d9c8!important;font-weight:700;letter-spacing:.04em;transition:all .3s cubic-bezier(.2,.8,.2,1)}
+.customer-account-nav button:hover{border-color:#e9b85a88!important;color:#fff!important}
+.customer-account-nav button.is-active{background:linear-gradient(180deg,#f2392d,#a3130f)!important;border-color:#e9b85a!important;color:#fff!important;box-shadow:0 10px 22px -10px #e1251b}
+.customer-account-content{animation:bpAccIn .45s cubic-bezier(.2,.8,.2,1) both}
+.customer-account-content h3 span,.customer-account-content h3 em{color:#e9b85a}
+.customer-account-tiles button,.customer-account-last,.customer-order-card,.customer-address-card{background:linear-gradient(160deg,#ffffff10,#ffffff05)!important;border:1px solid #ffffff1c!important;border-radius:18px!important;color:#f7eee2!important;transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .35s,box-shadow .35s}
+.customer-account-tiles button:hover,.customer-order-card:hover,.customer-address-card:hover{transform:translateY(-3px);border-color:#e9b85a77!important;box-shadow:0 20px 40px -22px #000,0 0 0 1px #e9b85a22}
+.customer-account-tiles button svg{color:#e9b85a!important}
+.customer-account-tiles small,.customer-account-last span,.customer-account-last small,.customer-order-card>small,.customer-address-card small,.customer-account-loading,.customer-account-empty,.customer-account-empty p{color:#e8d9c8a8!important}
+.customer-account-tiles b,.customer-account-last b,.customer-order-card header b,.customer-address-card p,.customer-account-empty b{color:#fff8ee!important}
+.customer-account-last button{color:#e9b85a!important;font-weight:700}
+.customer-account-empty svg{color:#e9b85a;opacity:.8}
+.customer-account-notice{background:#e9b85a1a!important;border:1px solid #e9b85a55!important;color:#f6d892!important;border-radius:14px!important}
+.customer-account-loading::before{content:"";display:inline-block;width:12px;height:12px;margin-right:8px;vertical-align:-2px;border-radius:50%;border:2px solid #e9b85a44;border-top-color:#e9b85a;animation:bpSpin .8s linear infinite}
+@keyframes bpSpin{to{transform:rotate(360deg)}}
+.customer-order-card.is-active{border-left:3px solid #e1251b!important}
+.customer-order-card.is-finished{opacity:.88}
+.customer-order-items{color:#e8d9c8cc!important;border-top:1px dashed #ffffff1f;margin-top:8px}
+.customer-order-total{border-top:1px solid #e9b85a33!important;color:#fff8ee}
+.customer-order-total b,.customer-order-total strong{color:#e9b85a}
+.customer-order-status{background:#e9b85a22!important;color:#f6d892!important;border:1px solid #e9b85a55;letter-spacing:.06em;text-transform:uppercase}
+.customer-order-status.status-delivered{background:#3fae6a22!important;color:#9fe0b4!important;border-color:#3fae6a66}
+.customer-order-status.status-cancelled{background:#e1251b22!important;color:#ffb4ad!important;border-color:#e1251b66}
+.customer-address-default{background:linear-gradient(180deg,#f6d892,#e9b85a)!important;color:#2a0a06!important;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.customer-account-empty button,.customer-order-actions button,.customer-order-actions a,.customer-address-actions button{background:#ffffff0d!important;border:1px solid #e9b85a66!important;color:#f6d892!important;font-weight:700;transition:all .3s}
+.customer-account-empty button:hover,.customer-order-actions button:hover,.customer-order-actions a:hover,.customer-address-actions button:hover{background:#e9b85a!important;color:#2a0a06!important}
+.customer-address-actions button.danger{border-color:#e1251b77!important;color:#ffb4ad!important}
+.customer-address-actions button.danger:hover{background:#e1251b!important;color:#fff!important}
+.customer-account-signout{border:1px solid #e1251b66!important;color:#ffb4ad!important;margin:14px 0 4px;width:100%;transition:all .3s}
+.customer-account-signout:hover{background:#e1251b!important;color:#fff!important;border-color:#e1251b!important}
+.customer-account-modal ::-webkit-scrollbar{width:8px}.customer-account-modal ::-webkit-scrollbar-thumb{background:#e9b85a44;border-radius:9px}
+@media (prefers-reduced-motion:reduce){.customer-auth-seal,.customer-account-content,.customer-auth-drawer .checkout-form,.customer-account-loading::before{animation:none!important}}
+.customer-auth-drawer .checkout-form label{color:#e9b85a!important;opacity:1!important}
