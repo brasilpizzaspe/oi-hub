@@ -601,7 +601,7 @@ const editorDefaults: StoreContent = {
   "promise.1.title":"Ingredientes selecionados","promise.1.subtitle":"Carinho em cada detalhe","promise.2.title":"Preparada na hora","promise.2.subtitle":"Do forno direto para você","promise.3.title":"Delivery com cuidado","promise.3.subtitle":"Seu pedido, nossa prioridade",
   "how.eyebrow":"SIMPLES ASSIM","how.title":"Seu pedido em 3 passos","how.1.title":"Escolha seus sabores","how.1.desc":"Explore o cardápio e coloque seus favoritos na sacola.","how.2.title":"Informe a entrega","how.2.desc":"Preencha seus dados e escolha como prefere pagar.","how.3.title":"Acompanhe seu pedido","how.3.desc":"Receba um código privado para acompanhar o andamento.",
   "experience.eyebrow":"FEITO PARA CADA MOMENTO","experience.title":"Escolha seu próximo momento","experience.subtitle":"Do sabor da pizza à bebida bem gelada, tudo combina com compartilhar.","experience.1.title":"Pizzas Premium","experience.2.title":"Bebidas geladas","experience.3.title":"Combos & ofertas",
-  "menu.title":"Nosso cardápio","menu.subtitle":"Sabores feitos para compartilhar.","about.title":"O sabor que aproxima.","about.subtitle":"Pizza preparada com carinho, ingredientes selecionados e entrega cuidadosa."
+  "menu.title":"Nosso cardápio","menu.subtitle":"Sabores feitos para compartilhar.","about.title":"Feita para criar\nbons momentos.","about.subtitle":"A Brasil Pizzas acredita que uma boa pizza tem o poder de reunir pessoas. Estamos preparando tudo com cuidado para fazer parte dos seus melhores momentos."
 };
 function VisualEditor({ session }: { session: VisualEditorSession | null }) {
   const [content,setContent]=useState<StoreContent>(editorDefaults);
