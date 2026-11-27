@@ -1182,3 +1182,9 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 .tracking-panel [class*="bg-[#f8f6f0]"] [class*="text-[#174d38]"]{color:#174d38!important}
 .tracking-panel [class*="bg-[#f8f6f0]"] [class*="text-[#762f2f]"]{color:#762f2f!important}
 @media(max-width:640px){.tracking-panel{margin-top:clamp(75px,17vh,130px)!important}}
+
+/* Força apenas o card de etapas a usar o bege, acima dos overrides antigos */
+.tracking-panel .rounded-xl[class*="bg-[#f8f6f0]"]{background:#f5f0e6!important;background-image:none!important;border:1px solid #e5d4bd!important;color:#45231d!important;box-shadow:none!important}
+.tracking-panel .rounded-xl[class*="bg-[#f8f6f0]"] [class*="text-[#64746a]"]{color:#786d62!important}
+.tracking-panel .rounded-xl[class*="bg-[#f8f6f0]"] [class*="text-[#174d38]"]{color:#174d38!important}
+.tracking-panel .rounded-xl[class*="bg-[#f8f6f0]"] [class*="text-[#762f2f]"]{color:#762f2f!important}
