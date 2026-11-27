@@ -54,7 +54,7 @@ function TrackOrder() {
       last = now;
       tracks.forEach((t, i) => {
         const c = cycles[i] || 1;
-        offsets[i] = ((offsets[i] ?? 0) + dt * speeds[i % speeds.length] ?? 10) % c;
+        offsets[i] = ((offsets[i] ?? 0) + dt * (speeds[i % speeds.length] ?? 10)) % c;
         t.style.transform = `translate3d(0, ${(offsets[i] ?? 0) - c}px, 0)`;
       });
       frame = requestAnimationFrame(step);
