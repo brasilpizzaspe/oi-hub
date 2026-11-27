@@ -1152,3 +1152,26 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 .bp-belt:nth-child(odd){opacity:.09}.bp-belt:nth-child(3n){opacity:.15}
 .bp-belt-track{position:absolute;top:0;left:50%;margin-left:-.5em;will-change:transform}
 .bp-belt-track span{display:block;writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap}
+
+/* /acompanhar — identidade do hero (vinho, vermelho, dourado, vidro) */
+.tracking-page{background:radial-gradient(ellipse at 20% 0%,#7a1f26 0,transparent 55%),radial-gradient(ellipse at 90% 100%,#5a1219 0,transparent 50%),linear-gradient(160deg,#2a0b0f,#3b1015 55%,#1e0709)!important;color:#f6e9d6!important}
+.tracking-page .bp-belt{color:#e9b85a}
+.tracking-page>a,.tracking-back-link{color:#f6e9d6!important;background:#ffffff10;border:1px solid #e9b85a55;border-radius:999px;padding:9px 16px;backdrop-filter:blur(10px)}
+.tracking-page>a:hover,.tracking-back-link:hover{color:#e9b85a!important;border-color:#e9b85a}
+.tracking-panel{background:linear-gradient(150deg,#ffffff14,#ffffff08)!important;border:1px solid #e9b85a40!important;box-shadow:0 30px 80px #0008,inset 0 1px 0 #ffffff1a!important;backdrop-filter:blur(18px);color:#f6e9d6!important}
+.tracking-panel>p:first-child{color:#e9b85a!important}
+.tracking-panel h1{color:#fff!important}
+.tracking-panel [class*="text-[#64746a]"]{color:#f6e9d6b3!important}
+.tracking-panel [class*="text-[#b71924]"]{color:#e9b85a!important}
+.tracking-panel .rounded-xl.bg-\[\#f8f6f0\],.tracking-panel .mt-4.rounded-xl.border,.tracking-login-box,.tracking-panel .rounded-xl.bg-\[\#f5f2e9\]{background:#00000030!important;border:1px solid #e9b85a33!important;border-radius:20px!important;color:#f6e9d6!important}
+.tracking-panel .mt-5.space-y-2>div{background:#ffffff0d;border-color:#e9b85a26;color:#f6e9d6!important}
+.tracking-panel .mt-5.space-y-2 svg{color:#e9b85a!important}
+.tracking-panel .border-t{border-color:#e9b85a26!important}
+.tracking-panel .rounded-full.bg-\[\#e4eee6\],.tracking-panel button.mt-4,.tracking-login-button{background:linear-gradient(135deg,#d3202b,#a51e28)!important;color:#fff!important;border:1px solid #e9b85a66!important;border-radius:999px!important;box-shadow:0 10px 26px #d3202b40!important}
+.tracking-panel [class*="bg-[#c9cfc8]"]{background:#e9b85a66!important}
+.tracking-panel [class*="bg-[#762f2f]/10"]{background:#e9b85a22!important;color:#e9b85a!important}
+.tracking-panel select,.tracking-panel input{background-color:#1e0709cc!important;color:#f6e9d6!important;border-color:#e9b85a40!important}
+.tracking-panel select option{background:#2a0b0f;color:#f6e9d6}
+.tracking-panel select:focus,.tracking-panel input:focus{border-color:#e9b85a!important;box-shadow:0 0 0 3px #e9b85a33!important;outline:none}
+.tracking-login-message{color:#f6e9d6!important}
+.tracking-review-card{background:radial-gradient(circle at top,#7a1f26,#3b1015 70%)!important;border-color:#e9b85a77!important}
