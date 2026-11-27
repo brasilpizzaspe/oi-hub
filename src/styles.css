@@ -1175,3 +1175,10 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 .tracking-panel select:focus,.tracking-panel input:focus{border-color:#e9b85a!important;box-shadow:0 0 0 3px #e9b85a33!important;outline:none}
 .tracking-login-message{color:#f6e9d6!important}
 .tracking-review-card{background:radial-gradient(circle at top,#7a1f26,#3b1015 70%)!important;border-color:#e9b85a77!important}
+
+/* Ajustes pontuais solicitados em /acompanhar: somente o card das etapas e posição do painel */
+.tracking-panel .rounded-xl.bg-\\[\\#f8f6f0\\]{background:#f5f0e6!important;border:1px solid #e5d4bd!important;color:#45231d!important;box-shadow:none!important}
+.tracking-panel .rounded-xl.bg-\\[\\#f8f6f0\\] [class*=text-\\[\\#64746a\\\\]\\]]{color:#786d62!important}
+.tracking-panel .rounded-xl.bg-\\[\\#f8f6f0\\\\] .text-\\[\\#174d38\\\\]{color:#174d38!important}
+.tracking-panel .rounded-xl.bg-\\[\\#f8f6f0\\\\] .text-\\[\\#762f2f\\\\]{color:#762f2f!important}
+@media(max-width:640px){.tracking-panel{margin-top:clamp(75px,17vh,130px)!important}}
