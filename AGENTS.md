@@ -33,3 +33,4 @@ use the editor.
 - Hero media is always loaded at runtime from `site_images` (slot `hero`: `video_url` + `image_url` as poster) via `fetchStoreImages`; never hardcode a hero video/image — the admin panel must stay the single source.
 - Hero video renders inside a 16:9 `aspect-ratio` stage with `object-fit: cover` at native resolution — keeps any uploaded source (up to 4K) undistorted.
 - Hero product carousel motion lives in `src/hooks/use-focus-carousel.ts` (spring-driven, writes transforms straight to the DOM each frame); never re-add native scroll/scroll-snap or CSS transform transitions/animations on `.hero-picks .pick` — they fight the per-frame transforms.
+- /acompanhar background belts: single rAF loop in `src/routes/acompanhar.tsx` moves `.bp-belt-track` (two identical halves, wraps at half height) — never add CSS animations/transforms to the belts; old `.tracking-ribbon` rules are dead.

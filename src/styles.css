@@ -1145,3 +1145,10 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 @media(max-width:640px){
  .tracking-ribbon span{animation:none!important;translate:0 0!important;will-change:translate!important}
 }
+
+/* /acompanhar — faixas "BRASIL PIZZAS" (esteira infinita). Único mecanismo: rAF em acompanhar.tsx move .bp-belt-track; duas metades idênticas => loop contínuo. */
+.bp-belts{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;display:flex;justify-content:space-between;padding:0 1.5vw}
+.bp-belt{position:relative;height:100%;width:clamp(26px,4vw,64px);overflow:hidden;color:#762f2f;opacity:.12;font-family:Anton,Impact,sans-serif;font-size:clamp(13px,1.8vw,26px);letter-spacing:.15em;line-height:1}
+.bp-belt:nth-child(odd){opacity:.09}.bp-belt:nth-child(3n){opacity:.15}
+.bp-belt-track{position:absolute;top:0;left:50%;margin-left:-.5em;will-change:transform}
+.bp-belt-track span{display:block;writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap}

@@ -41,21 +41,26 @@ function TrackOrder() {
   useEffect(() => {
     const container = ribbonsRef.current;
     if (!container) return;
-    const strips = Array.from(container.querySelectorAll<HTMLElement>(".tracking-ribbon span"));
+    const tracks = Array.from(container.querySelectorAll<HTMLElement>(".bp-belt-track"));
     const speeds = [11, 14, 9, 16, 12, 18, 10, 15, 8];
-    const startedAt = performance.now();
+    const offsets = tracks.map((_, i) => (i * 137) % 400);
+    let cycles = tracks.map(t => t.scrollHeight / 2);
+    const measure = () => { cycles = tracks.map(t => t.scrollHeight / 2); };
+    window.addEventListener("resize", measure);
+    let last = performance.now();
     let frame = 0;
-    const animate = (now: number) => {
-      const elapsed = (now - startedAt) / 1000;
-      strips.forEach((strip, index) => {
-        const cycle = Math.max(1, strip.scrollHeight / 2);
-        const offset = ((elapsed * speeds[index % speeds.length] + index * cycle / strips.length) % cycle);
-        strip.style.setProperty("translate", `0 ${offset}px`, "important");
+    const step = (now: number) => {
+      const dt = Math.min(0.1, (now - last) / 1000);
+      last = now;
+      tracks.forEach((t, i) => {
+        const c = cycles[i] || 1;
+        offsets[i] = (offsets[i] + dt * speeds[i % speeds.length]) % c;
+        t.style.transform = `translate3d(0, ${offsets[i] - c}px, 0)`;
       });
-      frame = window.requestAnimationFrame(animate);
+      frame = requestAnimationFrame(step);
     };
-    frame = window.requestAnimationFrame(animate);
-    return () => window.cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(step);
+    return () => { cancelAnimationFrame(frame); window.removeEventListener("resize", measure); };
   }, []);
   useEffect(() => { let active = true; fetch(SUPABASE_URL + "/rest/v1/site_images?select=image_url&slot=eq.tracking-stamp-logo", { headers: { apikey: SUPABASE_KEY || "" }, cache: "no-store" }).then(res => res.ok ? res.json() : []).then(rows => { if (active && rows?.[0]?.image_url) setTrackingStampImage(rows[0].image_url); }).catch(() => {}); return () => { active = false; }; }, []);
   useEffect(() => { let active=true; (async()=>{setAccountLoading(true);try{const raw=localStorage.getItem("brasilpizzas:customer-auth:v1");if(!raw){if(active){setAccountSignedIn(false);setAccountOrders([]);}return;}let auth=JSON.parse(raw);if(!auth?.user?.id||!auth?.access_token){if(active)setAccountSignedIn(false);return;}if(auth.expires_at&&auth.expires_at<Date.now()+60000&&auth.refresh_token){const rr=await fetch(SUPABASE_URL+"/auth/v1/token?grant_type=refresh_token",{method:"POST",headers:{apikey:SUPABASE_KEY||"","Content-Type":"application/json"},body:JSON.stringify({refresh_token:auth.refresh_token})});if(rr.ok){const n=await rr.json();auth={...auth,...n,user:n.user||auth.user,expires_at:n.expires_at?n.expires_at*1000:Date.now()+((n.expires_in||3600)*1000)};localStorage.setItem("brasilpizzas:customer-auth:v1",JSON.stringify(auth));}}const res=await fetch(SUPABASE_URL+"/rest/v1/orders?customer_id=eq."+encodeURIComponent(auth.user.id)+"&select=order_number,status,payment_status,created_at,updated_at,estimated_delivery_at,order_items(product_name,quantity)&order=created_at.desc&limit=20",{headers:{apikey:SUPABASE_KEY||"",Authorization:"Bearer "+auth.access_token},cache:"no-store"});if(res.ok){const rows=await res.json();if(active){setAccountSignedIn(true);setAccountOrders(rows);const latest=rows.find((o:Tracking)=>!["delivered","cancelled"].includes(o.status))||rows[0];if(latest)setSelectedOrderNumber(latest.order_number);}}else if(active)setAccountSignedIn(false);}catch{if(active)setAccountSignedIn(false);}finally{if(active)setAccountLoading(false);}})();return()=>{active=false;};}, []);
@@ -65,7 +70,7 @@ function TrackOrder() {
 
   return (
     <main className="tracking-page min-h-screen overflow-hidden bg-[#f5f2e9] px-4 py-10 text-[#174d38]">
-      <div className="tracking-ribbons" aria-hidden="true" ref={ribbonsRef}>{Array.from({length:9},(_,i)=><div key={i} className={`tracking-ribbon tracking-ribbon-${i+1}`} style={{left:`${4+i*11.5}%`,animationDuration:`${21+i*4.7}s`,animationDelay:`${-i*2.3}s`}}><span>{"BRASIL PIZZAS  •  ".repeat(36)}</span></div>)}</div>
+      <div className="bp-belts" aria-hidden="true" ref={ribbonsRef}>{Array.from({length:9},(_,i)=><div key={i} className="bp-belt"><div className="bp-belt-track">{[0,1].map(h=><span key={h}>{"BRASIL PIZZAS • ".repeat(24)}</span>)}</div></div>)}</div>
       <div className="relative mx-auto min-h-[620px] max-w-xl">
         <a href="/" className="tracking-back-link relative z-20 mb-8 inline-flex items-center gap-2"><ArrowLeft size={16}/> Voltar à Brasil Pizzas</a>
         {trackingStampImage && <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[90px] z-0 h-[285px] w-[285px] -translate-x-1/2 sm:left-[-190px] sm:top-[105px] sm:h-[490px] sm:w-[490px] sm:translate-x-0"><svg viewBox="0 0 400 400" className="absolute inset-0 h-full w-full animate-[spin_28s_linear_infinite] overflow-visible"><defs><path id="tracking-stamp-circle" d="M 200,200 m -153,0 a153,153 0 1,1 306,0 a153,153 0 1,1 -306,0"/></defs><text fill="#762f2f" fontSize="18" fontWeight="700" letterSpacing="3.1"><textPath href="#tracking-stamp-circle" startOffset="0%">BRASIL PIZZAS · BRASIL PIZZAS · BRASIL PIZZAS · BRASIL PIZZAS · BRASIL PIZZAS · BRASIL PIZZAS · </textPath></text></svg><img src={trackingStampImage} alt="" className="absolute left-1/2 top-1/2 h-[74%] w-[74%] -translate-x-1/2 -translate-y-1/2 object-contain opacity-90"/></div>} 
