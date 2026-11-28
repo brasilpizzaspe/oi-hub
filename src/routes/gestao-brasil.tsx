@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { ImagePlus, LogOut, Package, Plus, RefreshCw, Save, ShieldCheck, ShoppingBag, Tag, LayoutTemplate, Smartphone, Monitor, Undo2, Trash2, ChevronUp, ChevronDown, BookOpen, Pencil, CalendarDays, CheckCircle2, Clock3, CircleDashed, ClipboardCopy, Search, FileText, Image as ImageIcon, Link2, ChevronLeft } from "lucide-react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { ImagePlus, LogOut, Package, Plus, RefreshCw, Save, ShieldCheck, ShoppingBag, Tag, LayoutTemplate, Smartphone, Monitor, Undo2, Trash2, ChevronUp, ChevronDown, BookOpen, Pencil, CalendarDays, CheckCircle2, Clock3, CircleDashed, ClipboardCopy, Search, FileText, Image as ImageIcon, Link2, ChevronLeft, Bell, Volume2, VolumeX } from "lucide-react";
 
 const SUPABASE_URL = (import.meta.env["VITE_SUPABASE_URL"] as string | undefined) || "https://scocgrreppdbtqctesio.supabase.co";
 const SUPABASE_KEY = (import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"] as string | undefined) || "sb_publishable_JGN8bSFsGCxTOIubmNmHIA_J36i5Mpp";
@@ -56,6 +56,12 @@ function PrivateManagement() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [resetMode, setResetMode] = useState(false);
   const [resetSent, setResetSent] = useState(false);
+  type AdminNotification = { id: string; title: string; detail: string; created_at: string; read: boolean; kind: "order" | "payment" | "status" };
+  const [adminNotifications, setAdminNotifications] = useState<AdminNotification[]>([]);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(false);
+  const seenOrdersRef = useRef<Map<string, { status: string; payment_status: string }> | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -121,12 +127,63 @@ function PrivateManagement() {
     ]);
     if (!productResponse.ok || !orderResponse.ok || !imageResponse.ok || !zoneResponse.ok || !customerResponse.ok) throw new Error("Não foi possível carregar os dados da loja. Verifique sua autorização.");
     setProducts(await productResponse.json());
-    setOrders(await orderResponse.json());
+    const fetchedOrders: Order[] = await orderResponse.json();
+    const previousOrders = seenOrdersRef.current;
+    if (previousOrders === null) {
+      seenOrdersRef.current = new Map(fetchedOrders.map(order => [order.id, { status: order.status, payment_status: order.payment_status }]));
+    } else {
+      const events: AdminNotification[] = [];
+      for (const order of fetchedOrders) {
+        const previous = previousOrders.get(order.id);
+        if (!previous) {
+          events.push({ id: `new-order-${order.id}`, title: `Novo pedido #${order.order_number}`, detail: `${order.customer_name} · ${money(Number(order.total))}`, created_at: order.created_at, read: false, kind: "order" });
+        } else if (previous.payment_status !== order.payment_status) {
+          events.push({ id: `payment-${order.id}-${order.payment_status}-${Date.now()}`, title: `Pagamento do pedido #${order.order_number}`, detail: `Status: ${order.payment_status}`, created_at: new Date().toISOString(), read: false, kind: "payment" });
+        } else if (previous.status !== order.status && ["cancelled", "out_for_delivery", "delivered"].includes(order.status)) {
+          const label = order.status === "cancelled" ? "cancelado" : order.status === "out_for_delivery" ? "saiu para entrega" : "entregue";
+          events.push({ id: `status-${order.id}-${order.status}-${Date.now()}`, title: `Pedido #${order.order_number} ${label}`, detail: `Status atualizado: ${label}`, created_at: new Date().toISOString(), read: false, kind: "status" });
+        }
+      }
+      seenOrdersRef.current = new Map(fetchedOrders.map(order => [order.id, { status: order.status, payment_status: order.payment_status }]));
+      if (events.length) {
+        setAdminNotifications(old => [...events, ...old].slice(0, 60));
+        if (events.some(event => event.kind === "order") && soundEnabled && audioContextRef.current?.state === "running") {
+          const ctx = audioContextRef.current;
+          const now = ctx.currentTime;
+          [880, 1175, 1568].forEach((frequency, index) => {
+            const oscillator = ctx.createOscillator();
+            const gain = ctx.createGain();
+            oscillator.type = "sine";
+            oscillator.frequency.value = frequency;
+            gain.gain.setValueAtTime(0.0001, now + index * 0.13);
+            gain.gain.exponentialRampToValueAtTime(0.16, now + index * 0.13 + 0.025);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.13 + 0.2);
+            oscillator.connect(gain); gain.connect(ctx.destination);
+            oscillator.start(now + index * 0.13); oscillator.stop(now + index * 0.13 + 0.22);
+          });
+        }
+      }
+    }
+    setOrders(fetchedOrders);
     setSiteImages(await imageResponse.json());
     setDeliveryZones((await zoneResponse.json()).map((zone: DeliveryZone) => ({ ...zone, fee: Number(zone.fee) })));
     setCustomers(await customerResponse.json());
   }
 
+  useEffect(() => {
+    try { const saved = localStorage.getItem("brasilpizzas:admin-notifications:v1"); if (saved) setAdminNotifications(JSON.parse(saved)); } catch {}
+  }, []);
+  useEffect(() => { try { localStorage.setItem("brasilpizzas:admin-notifications:v1", JSON.stringify(adminNotifications)); } catch {} }, [adminNotifications]);
+  function enableNotificationSound() {
+    try {
+      if (!audioContextRef.current) audioContextRef.current = new AudioContext();
+      if (audioContextRef.current.state === "suspended") void audioContextRef.current.resume();
+      setSoundEnabled(true);
+      setNotice("Som de notificações ativado neste navegador.");
+    } catch { setError("Seu navegador não permitiu ativar o som. Verifique as permissões."); }
+  }
+  function disableNotificationSound() { setSoundEnabled(false); }
+  function markNotificationsRead() { setAdminNotifications(old => old.map(item => ({ ...item, read: true }))); }
   async function requestPasswordReset(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setBusy(true); setError(""); setNotice("");
     try {
@@ -533,7 +590,7 @@ async function updateOrder(order: Order, status: string) {
       <header className="border-b border-[#332b29] bg-[#211d1b] text-white shadow-lg shadow-black/10">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
           <div className="flex items-center gap-3"><div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#c92822] text-white shadow-md shadow-red-950/30"><ShieldCheck size={23}/></div><div><p className="text-[10px] font-bold tracking-[.25em] text-[#e6b94e]">BRASIL PIZZAS · ADM</p><h1 className="text-xl font-bold tracking-tight">Central de gestão</h1></div></div>
-          <div className="flex items-center gap-3"><button onClick={() => void refresh()} disabled={busy} className="rounded-lg border border-white/15 bg-white/5 p-2.5 text-white transition hover:bg-white/10" aria-label="Atualizar"><RefreshCw size={17}/></button><button onClick={() => { setSession(null); setProducts([]); setOrders([]); setCustomers([]); setSiteImages([]); window.localStorage.removeItem(PERSISTENT_SESSION_KEY); setKeepConnected(false); setNotice("Você saiu da área administrativa."); setError(""); }} className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white transition hover:bg-white/10"><LogOut size={16}/> Sair</button></div>
+          <div className="flex items-center gap-3"><div className="relative"><button onClick={() => setNotificationsOpen(open => !open)} className="relative rounded-lg border border-white/15 bg-white/5 p-2.5 text-white transition hover:bg-white/10" aria-label="Notificações" title="Notificações"><Bell size={18}/>{adminNotifications.some(n=>!n.read)&&<span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#c92822] px-1 text-[10px] font-bold">{adminNotifications.filter(n=>!n.read).length}</span>}</button>{notificationsOpen&&<div className="absolute right-0 z-50 mt-2 w-[min(92vw,360px)] overflow-hidden rounded-xl border border-[#e4ddca] bg-white text-[#282321] shadow-2xl"><div className="flex items-center justify-between border-b p-3"><b>Notificações</b><button onClick={markNotificationsRead} className="text-xs font-semibold text-[#b71924]">Marcar como lidas</button></div><div className="max-h-80 overflow-y-auto">{adminNotifications.length===0?<p className="p-4 text-sm text-[#64746a]">Nenhuma notificação por enquanto.</p>:adminNotifications.map(item=><div key={item.id} className={"border-b p-3 text-sm "+(!item.read?"bg-[#fff8f0]":"")}><p className="font-semibold">{item.title}</p><p className="mt-1 text-[#64746a]">{item.detail}</p><p className="mt-1 text-[11px] text-[#8b918b]">{new Date(item.created_at).toLocaleString("pt-BR")}</p></div>)}</div><div className="flex items-center justify-between border-t p-3"><span className="text-xs text-[#64746a]">{soundEnabled?"Som ativado":"Som desativado"}</span><button onClick={soundEnabled?disableNotificationSound:enableNotificationSound} className="flex items-center gap-1.5 rounded-lg bg-[#f5f2e9] px-2.5 py-1.5 text-xs font-semibold">{soundEnabled?<VolumeX size={14}/>:<Volume2 size={14}/>} {soundEnabled?"Silenciar":"Ativar som"}</button></div></div>}</div><button onClick={() => void refresh()} disabled={busy} className="rounded-lg border border-white/15 bg-white/5 p-2.5 text-white transition hover:bg-white/10" aria-label="Atualizar"><RefreshCw size={17}/></button><button onClick={() => { setSession(null); setProducts([]); setOrders([]); setCustomers([]); setSiteImages([]); window.localStorage.removeItem(PERSISTENT_SESSION_KEY); setKeepConnected(false); setNotice("Você saiu da área administrativa."); setError(""); }} className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white transition hover:bg-white/10"><LogOut size={16}/> Sair</button></div>
         </div>
       </header>
       <section className="mx-auto max-w-7xl px-4 py-7 sm:px-6">
