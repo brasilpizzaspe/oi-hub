@@ -697,11 +697,9 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 @keyframes bpReveal{from{opacity:0;transform:translateY(42px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
 @keyframes bpGlowDrift{from{transform:translate(-50%,0) scale(1)}to{transform:translate(-46%,-20px) scale(1.12)}}
 @keyframes bpGlowFloat{from{transform:none}to{transform:translate(6%,-24px) scale(1.12)}}
-@media(prefers-reduced-motion:no-preference){
-  .store .bp-reveal-pending:not(.bp-in-view){opacity:0;translate:0 28px}
-  .store .bp-reveal-pending{transition:opacity .7s var(--bp-ease),translate .7s var(--bp-ease),transform .45s var(--bp-ease),box-shadow .45s ease,border-color .45s ease}
-  .store .bp-reveal-pending.bp-in-view{opacity:1;translate:0 0}
-}
+.store[data-motion="full"] .bp-reveal-pending:not(.bp-in-view){opacity:0;translate:0 28px}
+.store[data-motion="full"] .bp-reveal-pending{transition:opacity .7s var(--bp-ease),translate .7s var(--bp-ease),transform .45s var(--bp-ease),box-shadow .45s ease,border-color .45s ease}
+.store[data-motion="full"] .bp-reveal-pending.bp-in-view{opacity:1;translate:0 0}
 
 /* ---------- Ajustes para telas menores ---------- */
 @media(max-width:850px){.store .about{gap:56px}.store .product-grid{grid-template-columns:repeat(2,1fr)}}
@@ -1187,3 +1185,13 @@ html{scroll-behavior:smooth;scroll-padding-top:22px}
 .tracking-panel .rounded-xl[class*="bg-[#f8f6f0]"] [class*="text-[#64746a]"]{color:#786d62!important}
 .tracking-panel .rounded-xl[class*="bg-[#f8f6f0]"] [class*="text-[#174d38]"]{color:#174d38!important}
 .tracking-panel .rounded-xl[class*="bg-[#f8f6f0]"] [class*="text-[#762f2f]"]{color:#762f2f!important}
+
+/* Explicit visitor choice can enable motion without changing device settings. */
+.store .ribbon-motion-toggle{position:absolute;right:4vw;top:50%;z-index:3;transform:translateY(-50%) rotate(1.6deg);border-radius:50%;background:var(--bp-red-deep);color:var(--bp-paper);border:1px solid var(--bp-gold);box-shadow:none}
+.store .ribbon-motion-toggle:hover{background:var(--bp-red)}
+.store[data-motion="full"] .bp-ribbon-track{animation:bpMarquee 32s linear infinite;animation-timeline:auto}
+.store[data-motion="full"] .hero-seal>svg,.store[data-motion="full"] .about-seal>svg{animation:heroSpin 22s linear infinite}
+.store[data-motion="full"] .hero-float{animation:heroFloat 6s ease-in-out infinite}
+.store[data-motion="full"] .how-order:before{animation:bpGlowDrift 14s ease-in-out infinite alternate}
+.store[data-motion="full"] .about:before{animation:bpGlowFloat 16s ease-in-out infinite alternate}
+.store[data-motion="reduced"] .bp-ribbon-track,.store[data-motion="reduced"] .hero-seal>svg,.store[data-motion="reduced"] .about-seal>svg,.store[data-motion="reduced"] .hero-float,.store[data-motion="reduced"] .how-order:before,.store[data-motion="reduced"] .about:before{animation:none}

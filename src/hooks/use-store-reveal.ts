@@ -3,11 +3,10 @@ import { useEffect, type RefObject } from "react";
 const targets = ".promise>div,.how-order-heading,.how-order-steps article,.experience-heading,.experience-card,.section-heading,.product-card,.about-frame,.about>div:last-child";
 
 /** One browser-compatible reveal mechanism, independent of viewport size. */
-export function useStoreReveal(ref: RefObject<HTMLElement | null>) {
+export function useStoreReveal(ref: RefObject<HTMLElement | null>, motionAllowed: boolean | null) {
   useEffect(() => {
     const root = ref.current;
-    if (!root || !("IntersectionObserver" in window)) return;
-    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (!root || motionAllowed === null || !("IntersectionObserver" in window)) return;
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
@@ -17,7 +16,7 @@ export function useStoreReveal(ref: RefObject<HTMLElement | null>) {
     }, { threshold: 0.08 });
     const register = () => {
       root.querySelectorAll<HTMLElement>(targets).forEach(element => {
-        if (motion.matches) {
+        if (!motionAllowed) {
           element.classList.remove("bp-reveal-pending");
           element.classList.add("bp-in-view");
           observer.unobserve(element);
@@ -30,11 +29,9 @@ export function useStoreReveal(ref: RefObject<HTMLElement | null>) {
     register();
     const changes = new MutationObserver(register);
     changes.observe(root, { childList: true, subtree: true });
-    motion.addEventListener("change", register);
     return () => {
       observer.disconnect();
       changes.disconnect();
-      motion.removeEventListener("change", register);
     };
-  }, [ref]);
+  }, [ref, motionAllowed]);
 }
