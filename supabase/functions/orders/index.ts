@@ -179,7 +179,7 @@ Deno.serve(async (req: Request) => {
           await db.from("customer_addresses").insert({ user_id: customerId, ...addressRecord, is_default: (savedAddresses || []).length === 0 });
         }
       }
-      const trackingUrl = "https://brasil-pizzas.lovable.app/acompanhar?codigo=" + token;
+      const trackingUrl = "https://brasil-pizzas.lovable.app/acompanhar?token=" + token;
       const now = new Date();
       const postSale = new Date(now.getTime() + 90 * 60 * 1000).toISOString();
       const orderPayload = { customer_name, order_number: order.order_number, total: Number((subtotal + (deliveryFee ?? 0)).toFixed(2)), tracking_url: trackingUrl };
