@@ -148,6 +148,7 @@ function PrivateManagement() {
       seenOrdersRef.current = new Map(fetchedOrders.map(order => [order.id, { status: order.status, payment_status: order.payment_status }]));
       if (events.length) {
         setAdminNotifications(old => [...events, ...old].slice(0, 60));
+        if ("Notification" in window && Notification.permission === "granted") { events.forEach(event => { const desktop = new Notification(event.title, { body: event.detail, tag: event.id }); desktop.onclick = () => { window.focus(); setTab("orders"); desktop.close(); }; }); }
         if (events.some(event => event.kind === "order") && soundEnabledRef.current && audioContextRef.current?.state === "running") {
           const ctx = audioContextRef.current;
           const now = ctx.currentTime;
@@ -180,6 +181,7 @@ function PrivateManagement() {
     try {
       if (!audioContextRef.current) audioContextRef.current = new AudioContext();
       if (audioContextRef.current.state === "suspended") void audioContextRef.current.resume();
+      if ("Notification" in window && Notification.permission === "default") void Notification.requestPermission();
       setSoundEnabled(true);
       setNotice("Som de notificações ativado neste navegador.");
     } catch { setError("Seu navegador não permitiu ativar o som. Verifique as permissões."); }
