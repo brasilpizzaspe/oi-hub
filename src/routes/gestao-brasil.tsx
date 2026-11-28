@@ -60,6 +60,7 @@ function PrivateManagement() {
   const [adminNotifications, setAdminNotifications] = useState<AdminNotification[]>([]);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(false);
+  const soundEnabledRef = useRef(false);
   const seenOrdersRef = useRef<Map<string, { status: string; payment_status: string }> | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
 
@@ -147,7 +148,7 @@ function PrivateManagement() {
       seenOrdersRef.current = new Map(fetchedOrders.map(order => [order.id, { status: order.status, payment_status: order.payment_status }]));
       if (events.length) {
         setAdminNotifications(old => [...events, ...old].slice(0, 60));
-        if (events.some(event => event.kind === "order") && soundEnabled && audioContextRef.current?.state === "running") {
+        if (events.some(event => event.kind === "order") && soundEnabledRef.current && audioContextRef.current?.state === "running") {
           const ctx = audioContextRef.current;
           const now = ctx.currentTime;
           [880, 1175, 1568].forEach((frequency, index) => {
@@ -173,6 +174,7 @@ function PrivateManagement() {
   useEffect(() => {
     try { const saved = localStorage.getItem("brasilpizzas:admin-notifications:v1"); if (saved) setAdminNotifications(JSON.parse(saved)); } catch {}
   }, []);
+  useEffect(() => { soundEnabledRef.current = soundEnabled; }, [soundEnabled]);
   useEffect(() => { try { localStorage.setItem("brasilpizzas:admin-notifications:v1", JSON.stringify(adminNotifications)); } catch {} }, [adminNotifications]);
   function enableNotificationSound() {
     try {
